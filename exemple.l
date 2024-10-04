@@ -18,7 +18,6 @@ digit   [0-9]
 
 %%
 
-
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
                               yylval.ident.lenght = yyleng;
@@ -34,6 +33,8 @@ digit   [0-9]
                               return INTEGER;
                             }
 
+"+"                         { return PLUS; }
+
 ^[ \t]*[\n]                 {}
 
 [\n]                        { return ENDLINE; }
@@ -41,4 +42,3 @@ digit   [0-9]
 .                           {}
 
 %%
-

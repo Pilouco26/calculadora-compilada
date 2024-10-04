@@ -29,7 +29,7 @@ extern int yylex();
     void *sense_valor;
 }
 
-%token <sense_valor> ASSIGN ENDLINE
+%token <sense_valor> ASSIGN ENDLINE PLUS
 %token <enter> INTEGER
 %token <ident> ID
 
@@ -40,14 +40,26 @@ extern int yylex();
 
 %%
 
-programa : expressio {
-             fprintf(yyout, "programa -> expressio :\n  expressio = '%s'\n", value_info_to_str($1));
+programa : expressio_list {
+             fprintf(yyout, "programa -> expressio_list\n");
            }
 
-expressio : ID ASSIGN INTEGER ENDLINE  {
-              fprintf(yyout, "ID: %s pren per valor: %d\n",$1.lexema, $3);
+expressio_list : expressio ENDLINE {
+                   fprintf(yyout, "expressio_list -> expressio\n");
+                }
+               | expressio_list expressio ENDLINE {
+                   fprintf(yyout, "expressio_list -> expressio_list expressio\n");
+                }
+
+expressio : ID ASSIGN INTEGER {
+              fprintf(yyout, "ID: %s pren per valor: %d\n", $1.lexema, $3);
               $$.val_type = INT_TYPE;
               $$.val_int = $3;
+            }
+          | expressio PLUS expressio {
+              fprintf(yyout, "expressio -> expressio + expressio : %d + %d = %d\n", $1.val_int, $3.val_int, $1.val_int + $3.val_int);
+              $$.val_type = INT_TYPE;
+              $$.val_int = $1.val_int + $3.val_int;
             }
 
 %%

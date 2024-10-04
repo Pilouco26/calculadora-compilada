@@ -20,19 +20,17 @@ YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
 OTHERS = exemple.output
 OBJ = *.o
 
-SRC = main.c
+SRC = exemple_main.c
 BIN = exemple.exe
 
 SRC_EXTRA = exemple_dades.c exemple_funcions.c
 
-LFLAGS =
-YFLAGS = -d -v
+LFLAGS = -d
+YFLAGS = -d -v --debug
 CFLAGS = -Wall -g
 
 EG_IN = ex_entrada.txt
 EG_OUT = ex_sortida.txt
-
-
 
 ######################################################################
 

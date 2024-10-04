@@ -35,23 +35,15 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_EXEMPLE_TAB_H_INCLUDED
-# define YY_YY_EXEMPLE_TAB_H_INCLUDED
+#ifndef YY_YY_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
-/* "%code requires" blocks.  */
-#line 13 "exemple.y"
-
-  /* Les definicions que s'utilitzen al %union han d'estar aqui */
-  #include "exemple_dades.h"
-  #include "exemple_funcions.h"
-
-#line 55 "exemple.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -62,11 +54,11 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    ASSIGN = 258,                  /* ASSIGN  */
-    ENDLINE = 259,                 /* ENDLINE  */
-    PLUS = 260,                    /* PLUS  */
-    INTEGER = 261,                 /* INTEGER  */
-    ID = 262                       /* ID  */
+    INTEGER = 258,                 /* INTEGER  */
+    REAL = 259,                    /* REAL  */
+    STRING = 260,                  /* STRING  */
+    IDENTIFIER = 261,              /* IDENTIFIER  */
+    BOOLEAN = 262                  /* BOOLEAN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -75,20 +67,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "exemple.y"
+#line 8 "parser.y"
 
-    struct {
-        char *lexema;
-        int lenght;
-        int line;
-        value_info id_val;
-    } ident;
-    int enter;
-    float real;
-    value_info expr_val;
-    void *sense_valor;
+  int ival;
+  float fval;
+  char *sval;
+  int bval;
+  int expr_val;  // Assuming expression evaluates to an int for simplicity
 
-#line 92 "exemple.tab.h"
+#line 79 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -103,4 +90,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_EXEMPLE_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */

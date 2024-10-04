@@ -1,6 +1,0 @@
-#ifndef CALCULADORA_LIBRARY_H
-#define CALCULADORA_LIBRARY_H
-
-void hello(void);
-
-#endif //CALCULADORA_LIBRARY_H
