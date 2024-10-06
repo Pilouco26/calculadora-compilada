@@ -1,4 +1,8 @@
-ID: x pren per valor: 27
+Debug: 5 + 6 = 11
+ID: z pren per valor: 11
 expressio_list -> expressio
-ID: y pren per valor: 3
+Debug: 7 + 8 = 15
+ID: x pren per valor: 15
 expressio_list -> expressio_list expressio
+Debug: 80 / 8 = 10
+ID: p pren per valor: 10

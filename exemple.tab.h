@@ -64,9 +64,14 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     ASSIGN = 258,                  /* ASSIGN  */
     ENDLINE = 259,                 /* ENDLINE  */
-    PLUS = 260,                    /* PLUS  */
+    SEMICOLON = 260,               /* SEMICOLON  */
     INTEGER = 261,                 /* INTEGER  */
-    ID = 262                       /* ID  */
+    ID = 262,                      /* ID  */
+    STRING = 263,                  /* STRING  */
+    PLUS = 264,                    /* PLUS  */
+    MINUS = 265,                   /* MINUS  */
+    MULTIPLY = 266,                /* MULTIPLY  */
+    DIVIDE = 267                   /* DIVIDE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -87,8 +92,9 @@ union YYSTYPE
     float real;
     value_info expr_val;
     void *sense_valor;
+    char cadena;
 
-#line 92 "exemple.tab.h"
+#line 98 "exemple.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

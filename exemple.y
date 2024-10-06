@@ -27,14 +27,18 @@ extern int yylex();
     float real;
     value_info expr_val;
     void *sense_valor;
+    char cadena;
 }
 
-%token <sense_valor> ASSIGN ENDLINE PLUS
+%token <sense_valor> ASSIGN ENDLINE SEMICOLON
 %token <enter> INTEGER
 %token <ident> ID
+%token <cadena> STRING
+%token <sense_valor> PLUS MINUS MULTIPLY DIVIDE
 
 %type <sense_valor> programa
 %type <expr_val> expressio
+%type <enter> OPERATION
 
 %start programa
 
@@ -56,10 +60,47 @@ expressio : ID ASSIGN INTEGER {
               $$.val_type = INT_TYPE;
               $$.val_int = $3;
             }
-          | expressio PLUS expressio {
-              fprintf(yyout, "expressio -> expressio + expressio : %d + %d = %d\n", $1.val_int, $3.val_int, $1.val_int + $3.val_int);
+            | ID ASSIGN OPERATION {
+              fprintf(yyout, "ID: %s pren per valor: %d\n", $1.lexema, $3);
               $$.val_type = INT_TYPE;
-              $$.val_int = $1.val_int + $3.val_int;
+              $$.val_int = $3;
             }
+            ;
+
+OPERATION:
+    OPERATION PLUS INTEGER {
+        $$ = $1 + $3;
+        fprintf(yyout, "Debug: %d + %d = %d\n", $1, $3, $$);
+    }
+    | OPERATION MINUS INTEGER {
+        $$ = $1 - $3;
+        fprintf(yyout, "Debug: %d - %d = %d\n", $1, $3, $$);
+    }
+    | OPERATION MULTIPLY INTEGER {
+        $$ = $1 * $3;
+        fprintf(yyout, "Debug: %d * %d = %d\n", $1, $3, $$);
+    }
+    | OPERATION DIVIDE INTEGER {
+        $$ = $1 / $3;
+        fprintf(yyout, "Debug: %d / %d = %d\n", $1, $3, $$);
+    }
+    | INTEGER PLUS INTEGER {
+        $$ = $1 + $3;
+        fprintf(yyout, "Debug: %d + %d = %d\n", $1, $3, $$);
+    }
+    | INTEGER MINUS INTEGER {
+        $$ = $1 - $3;
+        fprintf(yyout, "Debug: %d - %d = %d\n", $1, $3, $$);
+    }
+    | INTEGER MULTIPLY INTEGER {
+        $$ = $1 * $3;
+        fprintf(yyout, "Debug: %d * %d = %d\n", $1, $3, $$);
+    }
+    | INTEGER DIVIDE INTEGER {
+        $$ = $1 / $3;
+        fprintf(yyout, "Debug: %d / %d = %d\n", $1, $3, $$);
+    }
+    ;
+
 
 %%
