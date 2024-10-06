@@ -126,7 +126,11 @@ OPERATION:
         $$ = $1 * $3;
     }
     | INTEGER DIVIDE INTEGER {
-        $$ = $1 / $3;
+        if ($1 % $3 == 0) {
+            $$ = $1 / $3;
+        } else {
+            $$ = (float)$1 / $3;
+        }
     }
     | INTEGER DIVIDE FLOAT {
         $$ = $1 / $3;

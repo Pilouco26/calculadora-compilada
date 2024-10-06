@@ -514,8 +514,8 @@ static const yytype_uint8 yyrline[] =
 {
        0,    50,    50,    54,    57,    61,    66,    71,    86,    89,
       92,    95,    98,   101,   104,   107,   110,   113,   116,   119,
-     122,   125,   128,   131,   134,   137,   140,   143,   146,   149,
-     152,   155
+     122,   125,   128,   135,   138,   141,   144,   147,   150,   153,
+     156,   159
 };
 #endif
 
@@ -1274,85 +1274,89 @@ yyreduce:
   case 22: /* OPERATION: INTEGER DIVIDE INTEGER  */
 #line 128 "exemple.y"
                              {
-        (yyval.number) = (yyvsp[-2].enter) / (yyvsp[0].enter);
+        if ((yyvsp[-2].enter) % (yyvsp[0].enter) == 0) {
+            (yyval.number) = (yyvsp[-2].enter) / (yyvsp[0].enter);
+        } else {
+            (yyval.number) = (float)(yyvsp[-2].enter) / (yyvsp[0].enter);
+        }
     }
-#line 1280 "exemple.tab.c"
+#line 1284 "exemple.tab.c"
     break;
 
   case 23: /* OPERATION: INTEGER DIVIDE FLOAT  */
-#line 131 "exemple.y"
+#line 135 "exemple.y"
                            {
         (yyval.number) = (yyvsp[-2].enter) / (yyvsp[0].real);
     }
-#line 1288 "exemple.tab.c"
+#line 1292 "exemple.tab.c"
     break;
 
   case 24: /* OPERATION: FLOAT PLUS INTEGER  */
-#line 134 "exemple.y"
+#line 138 "exemple.y"
                          {
         (yyval.number) = (yyvsp[-2].real) + (yyvsp[0].enter);
     }
-#line 1296 "exemple.tab.c"
+#line 1300 "exemple.tab.c"
     break;
 
   case 25: /* OPERATION: FLOAT PLUS FLOAT  */
-#line 137 "exemple.y"
+#line 141 "exemple.y"
                        {
         (yyval.number) = (yyvsp[-2].real) + (yyvsp[0].real);
     }
-#line 1304 "exemple.tab.c"
+#line 1308 "exemple.tab.c"
     break;
 
   case 26: /* OPERATION: FLOAT MINUS INTEGER  */
-#line 140 "exemple.y"
+#line 144 "exemple.y"
                           {
         (yyval.number) = (yyvsp[-2].real) - (yyvsp[0].enter);
     }
-#line 1312 "exemple.tab.c"
+#line 1316 "exemple.tab.c"
     break;
 
   case 27: /* OPERATION: FLOAT MINUS FLOAT  */
-#line 143 "exemple.y"
+#line 147 "exemple.y"
                         {
         (yyval.number) = (yyvsp[-2].real) - (yyvsp[0].real);
     }
-#line 1320 "exemple.tab.c"
+#line 1324 "exemple.tab.c"
     break;
 
   case 28: /* OPERATION: FLOAT MULTIPLY INTEGER  */
-#line 146 "exemple.y"
+#line 150 "exemple.y"
                              {
         (yyval.number) = (yyvsp[-2].real) * (yyvsp[0].enter);
     }
-#line 1328 "exemple.tab.c"
+#line 1332 "exemple.tab.c"
     break;
 
   case 29: /* OPERATION: FLOAT MULTIPLY FLOAT  */
-#line 149 "exemple.y"
+#line 153 "exemple.y"
                            {
         (yyval.number) = (yyvsp[-2].real) * (yyvsp[0].real);
     }
-#line 1336 "exemple.tab.c"
+#line 1340 "exemple.tab.c"
     break;
 
   case 30: /* OPERATION: FLOAT DIVIDE INTEGER  */
-#line 152 "exemple.y"
+#line 156 "exemple.y"
                            {
         (yyval.number) = (yyvsp[-2].real) / (yyvsp[0].enter);
     }
-#line 1344 "exemple.tab.c"
+#line 1348 "exemple.tab.c"
     break;
 
   case 31: /* OPERATION: FLOAT DIVIDE FLOAT  */
-#line 155 "exemple.y"
+#line 159 "exemple.y"
                          {
         (yyval.number) = (yyvsp[-2].real) / (yyvsp[0].real);
     }
-#line 1352 "exemple.tab.c"
+#line 1356 "exemple.tab.c"
     break;
 
 
-#line 1356 "exemple.tab.c"
+#line 1360 "exemple.tab.c"
 
       default: break;
     }
@@ -1545,5 +1549,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 160 "exemple.y"
+#line 164 "exemple.y"
 

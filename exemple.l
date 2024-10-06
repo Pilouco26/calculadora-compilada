@@ -1,11 +1,10 @@
 %{
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "exemple.tab.h"
 #include "exemple_funcions.h"
-
 %}
 
 %option yylineno
@@ -15,9 +14,16 @@
 
 lletra  [a-zA-Z]
 digit   [0-9]
+exponent [eE][+-]?{digit}+
+sign    [+-]?
 
 %%
-{digit}                     {yylval.enter = atoi(yytext); return (INTEGER);}
+
+{sign}?{digit}+             { yylval.enter = atoi(yytext); return INTEGER; }
+{sign}?{digit}"."{digit}+({exponent})? {
+                              yylval.real = atof(yytext);
+                              return FLOAT;
+                            }
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
                               yylval.ident.lenght = yyleng;
@@ -27,26 +33,17 @@ digit   [0-9]
                             }
 
 ":="                        { return ASSIGN; }
-
-{digit}+                    {
-                              yylval.enter = atoi(yytext);
-                              return INTEGER;
-                            }
-{digit}"."{digit}+          {
-                              yylval.real = atof(yytext);
-                              return FLOAT;
-                            }
 ";"                         { return SEMICOLON; }
 "+"                         { return PLUS; }
 "-"                         { return MINUS; }
 "*"                         { return MULTIPLY; }
 "/"                         { return DIVIDE; }
 
-
-
 ^[ \t]*[\n]                 {}
 
 [\n]                        { return ENDLINE; }
 
 .                           {}
+
+%%
 
