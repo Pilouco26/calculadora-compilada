@@ -66,12 +66,13 @@ extern int yydebug;
     ENDLINE = 259,                 /* ENDLINE  */
     SEMICOLON = 260,               /* SEMICOLON  */
     INTEGER = 261,                 /* INTEGER  */
-    ID = 262,                      /* ID  */
-    STRING = 263,                  /* STRING  */
-    PLUS = 264,                    /* PLUS  */
-    MINUS = 265,                   /* MINUS  */
-    MULTIPLY = 266,                /* MULTIPLY  */
-    DIVIDE = 267                   /* DIVIDE  */
+    FLOAT = 262,                   /* FLOAT  */
+    ID = 263,                      /* ID  */
+    STRING = 264,                  /* STRING  */
+    PLUS = 265,                    /* PLUS  */
+    MINUS = 266,                   /* MINUS  */
+    MULTIPLY = 267,                /* MULTIPLY  */
+    DIVIDE = 268                   /* DIVIDE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -90,11 +91,12 @@ union YYSTYPE
     } ident;
     int enter;
     float real;
+    double number;  // Add this to handle both int and float
     value_info expr_val;
     void *sense_valor;
     char cadena;
 
-#line 98 "exemple.tab.h"
+#line 100 "exemple.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

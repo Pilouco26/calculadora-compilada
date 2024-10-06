@@ -14,11 +14,9 @@
 %option nounput
 
 lletra  [a-zA-Z]
-alpha   ((a-zA-Z))+
 digit   [0-9]
 
 %%
-{alpha}		                {sscanf(yytext, "%s", yylval.cadena); return (STRING);}
 {digit}                     {yylval.enter = atoi(yytext); return (INTEGER);}
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
@@ -28,15 +26,17 @@ digit   [0-9]
                               return ID;
                             }
 
-"="                         { return ASSIGN; }
+":="                        { return ASSIGN; }
 
-{digit}({digit})*           {
+{digit}+                    {
                               yylval.enter = atoi(yytext);
                               return INTEGER;
                             }
-
+{digit}"."{digit}+          {
+                              yylval.real = atof(yytext);
+                              return FLOAT;
+                            }
 ";"                         { return SEMICOLON; }
-
 "+"                         { return PLUS; }
 "-"                         { return MINUS; }
 "*"                         { return MULTIPLY; }
