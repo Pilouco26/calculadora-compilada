@@ -19,14 +19,14 @@ sign    [+-]?
 
 %%
 
-{sign}?{digit}+             { yylval.enter = atoi(yytext); return INTEGER; }
+{sign}?{digit}+ { yylval.enter = atoi(yytext); return INTEGER; }
 {sign}?{digit}"."{digit}+({exponent})? {
                               yylval.real = atof(yytext);
                               return FLOAT;
                             }
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
-                              yylval.ident.lenght = yyleng;
+                              yylval.ident.length = yyleng;
                               yylval.ident.line = yylineno;
                               yylval.ident.id_val.val_type = UNKNOWN_TYPE;
                               return ID;
@@ -39,11 +39,16 @@ sign    [+-]?
 "*"                         { return MULTIPLY; }
 "/"                         { return DIVIDE; }
 
+"//".*                      { return ENDLINE; }
+"#".*                       { return ENDLINE; }
+
 ^[ \t]*[\n]                 {}
 
 [\n]                        { return ENDLINE; }
 
 .                           {}
+
+<<EOF>>                     { return  0; }   /* Signal end of input to Bison */
 
 %%
 

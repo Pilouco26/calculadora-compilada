@@ -45,13 +45,12 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 13 "exemple.y"
+#line 12 "exemple.y"
 
-  /* Les definicions que s'utilitzen al %union han d'estar aqui */
   #include "exemple_dades.h"
   #include "exemple_funcions.h"
 
-#line 55 "exemple.tab.h"
+#line 54 "exemple.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -81,22 +80,22 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "exemple.y"
+#line 17 "exemple.y"
 
     struct {
         char *lexema;
-        int lenght;
+        int length;
         int line;
         value_info id_val;
     } ident;
     int enter;
     float real;
-    double number;  // Add this to handle both int and float
+    double number;
     value_info expr_val;
     void *sense_valor;
     char cadena;
 
-#line 100 "exemple.tab.h"
+#line 99 "exemple.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

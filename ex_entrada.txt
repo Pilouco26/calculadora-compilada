@@ -1,1 +1,4 @@
-o := -4e-2
+oasd := 4
+xsada := 5 + 7
+// commetnu
+zasdasd := 7 + 81
