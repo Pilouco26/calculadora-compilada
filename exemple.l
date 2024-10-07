@@ -39,8 +39,10 @@ sign    [+-]?
 "*"                         { return MULTIPLY; }
 "/"                         { return DIVIDE; }
 
-"//".*                      { return ENDLINE; }
-"#".*                       { return ENDLINE; }
+"//".*[\n]                  { /* Ignore comment and newline */ }
+"#".*[\n]                   { /* Ignore comment and newline */ }
+"/*"([^*]|\*+[^*/])*\*+\/  { /* Ignore multi-line comments */ }
+
 
 ^[ \t]*[\n]                 {}
 
