@@ -24,6 +24,7 @@ sign    [+-]?
                               yylval.real = atof(yytext);
                               return FLOAT;
                             }
+
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
                               yylval.ident.length = yyleng;

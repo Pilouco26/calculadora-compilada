@@ -38,7 +38,9 @@ extern int yylex();
 
 %type <sense_valor> programa
 %type <expr_val> expressio
-%type <number> OPERATION
+%type <expr_val> OPERATION
+%type <expr_val> OPERATION2
+%type <expr_val> OPERATION3
 
 
 %start programa
@@ -69,95 +71,100 @@ expressio : ID ASSIGN INTEGER  {
                 $$.val_float = $3;
             }
             | ID ASSIGN OPERATION  {
-              if ($3 == (int)$3) {
-                  fprintf(yyout, "ID: %s pren per valor: %d\n", $1.lexema, (int)$3);
-                  $$.val_type = INT_TYPE;
-                  $$.val_int = (int)$3;
+              if ($3.val_type == INT_TYPE) {
+                  fprintf(yyout, "ID: %s pren per valor: %d\n", $1.lexema, (int)$3.val_int);
+                  $3.val_type = INT_TYPE;
+                  $3.val_int = (int)$3.val_int;
               } else {
-                  fprintf(yyout, "ID: %s pren per valor: %f\n", $1.lexema, $3);
-                  $$.val_type = FLOAT_TYPE;
-                  $$.val_float = $3;
+                  fprintf(yyout, "ID: %s pren per valor: %f\n", $1.lexema, $3.val_float);
+                  $3.val_type = FLOAT_TYPE;
+                  $3.val_float = $3.val_int;
               }
             }
 
+
 OPERATION:
-    OPERATION PLUS INTEGER {
-        $$ = $1 + $3;
-    }
-    | OPERATION PLUS FLOAT {
-        $$ = $1 + $3;
-    }
-    | OPERATION MINUS INTEGER {
-        $$ = $1 - $3;
-    }
-    | OPERATION MINUS FLOAT {
-        $$ = $1 - $3;
-    }
-    | OPERATION MULTIPLY INTEGER {
-        $$ = $1 * $3;
-    }
-    | OPERATION MULTIPLY FLOAT {
-        $$ = $1 * $3;
-    }
-    | OPERATION DIVIDE INTEGER {
-        $$ = $1 / $3;
-    }
-    | OPERATION DIVIDE FLOAT {
-        $$ = $1 / $3;
-    }
-    | INTEGER PLUS INTEGER {
-        $$ = $1 + $3;
-    }
-    | INTEGER PLUS FLOAT {
-        $$ = $1 + $3;
-    }
-    | INTEGER MINUS INTEGER {
-        $$ = $1 - $3;
-    }
-    | INTEGER MINUS FLOAT {
-        $$ = $1 - $3;
-    }
-    | INTEGER MULTIPLY INTEGER {
-        $$ = $1 * $3;
-    }
-    | INTEGER MULTIPLY FLOAT {
-        $$ = $1 * $3;
-    }
-    | INTEGER DIVIDE INTEGER {
-        if ($1 % $3 == 0) {
-            $$ = $1 / $3;
+    OPERATION PLUS OPERATION2 {
+        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+            // Ensure both operands are treated as floats
+            if ($1.val_type == INT_TYPE) {
+                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+            }
+            if ($3.val_type == INT_TYPE) {
+                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+            }
+
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = $1.val_float + $3.val_float;
         } else {
-            $$ = (float)$1 / $3;
+            // Both operands are integers
+            $$.val_type = INT_TYPE;
+            $$.val_int = $1.val_int + $3.val_int;
         }
     }
-    | INTEGER DIVIDE FLOAT {
-        $$ = $1 / $3;
+    | OPERATION MINUS OPERATION2 {
+        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+            if ($1.val_type == INT_TYPE) {
+                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+            }
+            if ($3.val_type == INT_TYPE) {
+                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+            }
+
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = $1.val_float - $3.val_float;
+        } else {
+            // Both operands are integers
+            $$.val_type = INT_TYPE;
+            $$.val_int = $1.val_int - $3.val_int;
+        }
     }
-    | FLOAT PLUS INTEGER {
-        $$ = $1 + $3;
-    }
-    | FLOAT PLUS FLOAT {
-        $$ = $1 + $3;
-    }
-    | FLOAT MINUS INTEGER {
-        $$ = $1 - $3;
-    }
-    | FLOAT MINUS FLOAT {
-        $$ = $1 - $3;
-    }
-    | FLOAT MULTIPLY INTEGER {
-        $$ = $1 * $3;
-    }
-    | FLOAT MULTIPLY FLOAT {
-        $$ = $1 * $3;
-    }
-    | FLOAT DIVIDE INTEGER {
-        $$ = $1 / $3;
-    }
-    | FLOAT DIVIDE FLOAT {
-        $$ = $1 / $3;
-    }
+    | OPERATION2
     ;
+
+OPERATION2:
+    OPERATION2 MULTIPLY OPERATION3 {
+        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+            if ($1.val_type == INT_TYPE) {
+                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+            }
+            if ($3.val_type == INT_TYPE) {
+                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+            }
+
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = $1.val_float * $3.val_float;
+        } else {
+            // Both operands are integers
+            $$.val_type = INT_TYPE;
+            $$.val_int = $1.val_int * $3.val_int;
+        }
+    }
+    | OPERATION2 DIVIDE OPERATION3 {
+        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+            if ($1.val_type == INT_TYPE) {
+                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+            }
+            if ($3.val_type == INT_TYPE) {
+                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+            }
+
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = $1.val_float / $3.val_float;
+        } else {
+            // Both operands are integers
+            $$.val_type = INT_TYPE;
+            $$.val_int = $1.val_int / $3.val_int;
+        }
+    }
+    | OPERATION3
+    ;
+
+OPERATION3:
+    INTEGER{$$.val_type = INT_TYPE;
+                    $$.val_int = $1;} | OPERATION | FLOAT{$$.val_type = FLOAT_TYPE;
+                                                                  $$.val_float = $1;}
+
 
 %%
 

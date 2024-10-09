@@ -562,8 +562,8 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[16] =
     {   0,
-       22,   23,   27,   35,   36,   37,   38,   39,   40,   42,
-       43,   44,   47,   49,   51
+       22,   23,   28,   36,   37,   38,   39,   40,   41,   43,
+       44,   45,   48,   50,   52
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -974,7 +974,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "exemple.l"
+#line 28 "exemple.l"
 {
                               yylval.ident.lexema = strdup(yytext);
                               yylval.ident.length = yyleng;
@@ -985,76 +985,76 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 35 "exemple.l"
+#line 36 "exemple.l"
 { return ASSIGN; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 36 "exemple.l"
+#line 37 "exemple.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 37 "exemple.l"
+#line 38 "exemple.l"
 { return PLUS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 38 "exemple.l"
+#line 39 "exemple.l"
 { return MINUS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 39 "exemple.l"
+#line 40 "exemple.l"
 { return MULTIPLY; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 40 "exemple.l"
+#line 41 "exemple.l"
 { return DIVIDE; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 42 "exemple.l"
+#line 43 "exemple.l"
 { /* Ignore comment and newline */ }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 43 "exemple.l"
+#line 44 "exemple.l"
 { /* Ignore comment and newline */ }
 	YY_BREAK
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 44 "exemple.l"
+#line 45 "exemple.l"
 { /* Ignore multi-line comments */ }
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 47 "exemple.l"
+#line 48 "exemple.l"
 {}
 	YY_BREAK
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
-#line 49 "exemple.l"
+#line 50 "exemple.l"
 { return ENDLINE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 51 "exemple.l"
+#line 52 "exemple.l"
 {}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 53 "exemple.l"
+#line 54 "exemple.l"
 { return  0; }   /* Signal end of input to Bison */
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 55 "exemple.l"
+#line 56 "exemple.l"
 ECHO;
 	YY_BREAK
 #line 1061 "lex.yy.c"
@@ -2170,7 +2170,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 55 "exemple.l"
+#line 56 "exemple.l"
 
 
 

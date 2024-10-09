@@ -1,9 +1,5 @@
-ID: oasd pren per valor: 4
-ID: xsada pren per valor: 12
-ID: zasdasd pren per valor: 88
-ID: z pren per valor: 14
+ID: xsada pren per valor: 15
+ID: x pren per valor: 33.200001
 expressio_list -> expressio ENDLINE
-expressio_list -> expressio ENDLINE expressio_list
-expressio_list -> expressio ENDLINE expressio_list
 expressio_list -> expressio ENDLINE expressio_list
 End of input reached.
