@@ -1,5 +1,7 @@
-xsada := 5 + 5 * 2
-x := 5.2 + 7 * 4
+x := 5
+/* nigga
+gigga nicca
 
+*/
 
-
+y := 10

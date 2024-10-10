@@ -32,6 +32,16 @@ sign    [+-]?
                               yylval.ident.id_val.val_type = UNKNOWN_TYPE;
                               return ID;
                             }
+\"([^\\"\n\r]*)\" {
+    yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
+    yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
+    yylval.ident.length = yyleng - 2;          // Adjust the length to exclude the quotes
+    yylval.ident.line = yylineno;              // Store the line number
+    yylval.ident.id_val.val_type = STRING_TYPE; // Set the type to STRING_TYPE (assuming it's defined)
+    return STRING;                             // Return STRING token
+}
+
+
 
 ":="                        { return ASSIGN; }
 ";"                         { return SEMICOLON; }
@@ -39,13 +49,21 @@ sign    [+-]?
 "-"                         { return MINUS; }
 "*"                         { return MULTIPLY; }
 "/"                         { return DIVIDE; }
+"%"                         { return MOD; }
+"**"                         { return POWER; }
+"("                         { return OPEN_PARENTHESIS; }
+")"                         { return CLOSED_PARENTHESIS; }
 
 "//".*[\n]                  { /* Ignore comment and newline */ }
 "#".*[\n]                   { /* Ignore comment and newline */ }
-"/*"([^*]|\*+[^*/])*\*+\/  { /* Ignore multi-line comments */ }
+"/*"([^*]|\*+[^*/]|(\*+\/))*"\*/"[\n] { /* Ignore multi-line comments */ }
 
 
-^[ \t]*[\n]                 {}
+
+
+
+^[ \t]*[\n]                 { /* Ignore empty lines */ }
+
 
 [\n]                        { return ENDLINE; }
 

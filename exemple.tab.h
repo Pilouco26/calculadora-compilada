@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 12 "exemple.y"
+#line 14 "exemple.y"
 
   #include "exemple_dades.h"
   #include "exemple_funcions.h"
@@ -61,17 +61,21 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    ASSIGN = 258,                  /* ASSIGN  */
-    ENDLINE = 259,                 /* ENDLINE  */
-    SEMICOLON = 260,               /* SEMICOLON  */
-    INTEGER = 261,                 /* INTEGER  */
-    FLOAT = 262,                   /* FLOAT  */
-    ID = 263,                      /* ID  */
-    STRING = 264,                  /* STRING  */
-    PLUS = 265,                    /* PLUS  */
-    MINUS = 266,                   /* MINUS  */
-    MULTIPLY = 267,                /* MULTIPLY  */
-    DIVIDE = 268                   /* DIVIDE  */
+    INTEGER = 258,                 /* INTEGER  */
+    FLOAT = 259,                   /* FLOAT  */
+    ID = 260,                      /* ID  */
+    STRING = 261,                  /* STRING  */
+    PLUS = 262,                    /* PLUS  */
+    MINUS = 263,                   /* MINUS  */
+    MULTIPLY = 264,                /* MULTIPLY  */
+    DIVIDE = 265,                  /* DIVIDE  */
+    MOD = 266,                     /* MOD  */
+    POWER = 267,                   /* POWER  */
+    CLOSED_PARENTHESIS = 268,      /* CLOSED_PARENTHESIS  */
+    OPEN_PARENTHESIS = 269,        /* OPEN_PARENTHESIS  */
+    ASSIGN = 270,                  /* ASSIGN  */
+    ENDLINE = 271,                 /* ENDLINE  */
+    SEMICOLON = 272                /* SEMICOLON  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -80,7 +84,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "exemple.y"
+#line 19 "exemple.y"
 
     struct {
         char *lexema;
@@ -90,12 +94,11 @@ union YYSTYPE
     } ident;
     int enter;
     float real;
-    double number;
     value_info expr_val;
     void *sense_valor;
-    char cadena;
+    char *cadena;
 
-#line 99 "exemple.tab.h"
+#line 102 "exemple.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

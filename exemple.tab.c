@@ -71,13 +71,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
 extern FILE *yyout;
 extern int yylineno;
 extern int yylex();
 /*extern void yyerror(char*);*/
 
-#line 81 "exemple.tab.c"
+#line 83 "exemple.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -108,24 +110,29 @@ enum yysymbol_kind_t
   YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
-  YYSYMBOL_ASSIGN = 3,                     /* ASSIGN  */
-  YYSYMBOL_ENDLINE = 4,                    /* ENDLINE  */
-  YYSYMBOL_SEMICOLON = 5,                  /* SEMICOLON  */
-  YYSYMBOL_INTEGER = 6,                    /* INTEGER  */
-  YYSYMBOL_FLOAT = 7,                      /* FLOAT  */
-  YYSYMBOL_ID = 8,                         /* ID  */
-  YYSYMBOL_STRING = 9,                     /* STRING  */
-  YYSYMBOL_PLUS = 10,                      /* PLUS  */
-  YYSYMBOL_MINUS = 11,                     /* MINUS  */
-  YYSYMBOL_MULTIPLY = 12,                  /* MULTIPLY  */
-  YYSYMBOL_DIVIDE = 13,                    /* DIVIDE  */
-  YYSYMBOL_YYACCEPT = 14,                  /* $accept  */
-  YYSYMBOL_programa = 15,                  /* programa  */
-  YYSYMBOL_expressio_list = 16,            /* expressio_list  */
-  YYSYMBOL_expressio = 17,                 /* expressio  */
-  YYSYMBOL_OPERATION = 18,                 /* OPERATION  */
-  YYSYMBOL_OPERATION2 = 19,                /* OPERATION2  */
-  YYSYMBOL_OPERATION3 = 20                 /* OPERATION3  */
+  YYSYMBOL_INTEGER = 3,                    /* INTEGER  */
+  YYSYMBOL_FLOAT = 4,                      /* FLOAT  */
+  YYSYMBOL_ID = 5,                         /* ID  */
+  YYSYMBOL_STRING = 6,                     /* STRING  */
+  YYSYMBOL_PLUS = 7,                       /* PLUS  */
+  YYSYMBOL_MINUS = 8,                      /* MINUS  */
+  YYSYMBOL_MULTIPLY = 9,                   /* MULTIPLY  */
+  YYSYMBOL_DIVIDE = 10,                    /* DIVIDE  */
+  YYSYMBOL_MOD = 11,                       /* MOD  */
+  YYSYMBOL_POWER = 12,                     /* POWER  */
+  YYSYMBOL_CLOSED_PARENTHESIS = 13,        /* CLOSED_PARENTHESIS  */
+  YYSYMBOL_OPEN_PARENTHESIS = 14,          /* OPEN_PARENTHESIS  */
+  YYSYMBOL_ASSIGN = 15,                    /* ASSIGN  */
+  YYSYMBOL_ENDLINE = 16,                   /* ENDLINE  */
+  YYSYMBOL_SEMICOLON = 17,                 /* SEMICOLON  */
+  YYSYMBOL_YYACCEPT = 18,                  /* $accept  */
+  YYSYMBOL_programa = 19,                  /* programa  */
+  YYSYMBOL_expressio_list = 20,            /* expressio_list  */
+  YYSYMBOL_expressio = 21,                 /* expressio  */
+  YYSYMBOL_OPERATION = 22,                 /* OPERATION  */
+  YYSYMBOL_OPERATION2 = 23,                /* OPERATION2  */
+  YYSYMBOL_OPERATION3 = 24,                /* OPERATION3  */
+  YYSYMBOL_OPERATION4 = 25                 /* OPERATION4  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -453,19 +460,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   25
+#define YYLAST   33
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  14
+#define YYNTOKENS  18
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  7
+#define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  16
+#define YYNRULES  21
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  25
+#define YYNSTATES  34
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   268
+#define YYMAXUTOK   272
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -505,15 +512,17 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    51,    51,    55,    58,    63,    68,    73,    87,   105,
-     122,   126,   143,   160,   164,   165,   165
+       0,    48,    48,    52,    55,    60,    65,    70,    75,    94,
+     132,   149,   153,   170,   187,   196,   200,   217,   224,   228,
+     232,   236
 };
 #endif
 
@@ -529,10 +538,11 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "ASSIGN", "ENDLINE",
-  "SEMICOLON", "INTEGER", "FLOAT", "ID", "STRING", "PLUS", "MINUS",
-  "MULTIPLY", "DIVIDE", "$accept", "programa", "expressio_list",
-  "expressio", "OPERATION", "OPERATION2", "OPERATION3", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "INTEGER", "FLOAT",
+  "ID", "STRING", "PLUS", "MINUS", "MULTIPLY", "DIVIDE", "MOD", "POWER",
+  "CLOSED_PARENTHESIS", "OPEN_PARENTHESIS", "ASSIGN", "ENDLINE",
+  "SEMICOLON", "$accept", "programa", "expressio_list", "expressio",
+  "OPERATION", "OPERATION2", "OPERATION3", "OPERATION4", YY_NULLPTR
 };
 
 static const char *
@@ -542,7 +552,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-10)
+#define YYPACT_NINF (-14)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -556,9 +566,10 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    11,    17,   -10,    14,    -5,   -10,    -3,    15,    16,
-      -4,    -9,   -10,   -10,     2,     2,     2,     2,   -10,   -10,
-       0,    -9,    -9,   -10,   -10
+      17,   -13,     6,   -14,    -2,    -3,   -14,    17,    10,    11,
+      12,     1,     9,    -1,    13,   -14,   -14,   -14,   -14,   -14,
+       5,     1,     1,     1,     1,     1,     1,   -14,    -1,    -1,
+      13,    13,    13,   -14
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -566,21 +577,22 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     2,     0,     0,     1,     3,    14,    16,
-      15,    10,    13,     4,     0,     0,     0,     0,    14,    16,
-      15,     8,     9,    11,    12
+       0,     0,     0,     2,     0,     0,     1,     3,    18,    19,
+      20,     0,     8,    11,    15,    17,     4,    18,    19,    20,
+       0,     0,     0,     0,     0,     0,     0,    21,     9,    10,
+      12,    13,    14,    16
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -10,   -10,    18,   -10,    19,    -2,    -1
+     -14,   -14,    22,   -14,    19,     2,    -4,     7
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     4,    20,    11,    12
+       0,     2,     3,     4,    12,    13,    14,    15
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -588,39 +600,44 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      -7,     8,     9,    16,    17,     1,    14,    15,    18,    19,
-      14,    15,    21,    22,     5,    23,    24,     6,     7,    -5,
-      -6,     0,     0,     0,    10,    13
+       8,     9,     5,    10,    17,    18,     6,    19,    23,    24,
+      25,    11,    21,    22,     7,    11,    21,    22,    27,    30,
+      31,    32,     1,    28,    29,    26,    -5,    -6,    -7,    16,
+      20,     0,     0,    33
 };
 
 static const yytype_int8 yycheck[] =
 {
-       4,     6,     7,    12,    13,     8,    10,    11,     6,     7,
-      10,    11,    14,    15,     3,    16,    17,     0,     4,     4,
-       4,    -1,    -1,    -1,     5,     7
+       3,     4,    15,     6,     3,     4,     0,     6,     9,    10,
+      11,    14,     7,     8,    16,    14,     7,     8,    13,    23,
+      24,    25,     5,    21,    22,    12,    16,    16,    16,     7,
+      11,    -1,    -1,    26
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     8,    15,    16,    17,     3,     0,     4,     6,     7,
-      18,    19,    20,    16,    10,    11,    12,    13,     6,     7,
-      18,    19,    19,    20,    20
+       0,     5,    19,    20,    21,    15,     0,    16,     3,     4,
+       6,    14,    22,    23,    24,    25,    20,     3,     4,     6,
+      22,     7,     8,     9,    10,    11,    12,    13,    23,    23,
+      24,    24,    24,    25
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    14,    15,    16,    16,    17,    17,    17,    18,    18,
-      18,    19,    19,    19,    20,    20,    20
+       0,    18,    19,    20,    20,    21,    21,    21,    21,    22,
+      22,    22,    23,    23,    23,    23,    24,    24,    25,    25,
+      25,    25
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     3,     3,     3,     3,     3,     3,
-       1,     3,     3,     1,     1,     1,     1
+       3,     1,     3,     3,     3,     1,     3,     1,     1,     1,
+       1,     3
 };
 
 
@@ -1084,69 +1101,103 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* programa: expressio_list  */
-#line 51 "exemple.y"
+#line 48 "exemple.y"
                           {
              fprintf(yyout, "End of input reached.\n");
            }
-#line 1092 "exemple.tab.c"
+#line 1109 "exemple.tab.c"
     break;
 
   case 3: /* expressio_list: expressio ENDLINE  */
-#line 55 "exemple.y"
+#line 52 "exemple.y"
                                    {
                   fprintf(yyout, "expressio_list -> expressio ENDLINE\n");
                 }
-#line 1100 "exemple.tab.c"
+#line 1117 "exemple.tab.c"
     break;
 
   case 4: /* expressio_list: expressio ENDLINE expressio_list  */
-#line 58 "exemple.y"
+#line 55 "exemple.y"
                                                    {
                   fprintf(yyout, "expressio_list -> expressio ENDLINE expressio_list\n");
                 }
-#line 1108 "exemple.tab.c"
+#line 1125 "exemple.tab.c"
     break;
 
   case 5: /* expressio: ID ASSIGN INTEGER  */
-#line 63 "exemple.y"
+#line 60 "exemple.y"
                                {
               fprintf(yyout, "ID: %s pren per valor: %d\n", (yyvsp[-2].ident).lexema, (yyvsp[0].enter));
               (yyval.expr_val).val_type = INT_TYPE;
               (yyval.expr_val).val_int = (yyvsp[0].enter);
             }
-#line 1118 "exemple.tab.c"
+#line 1135 "exemple.tab.c"
     break;
 
   case 6: /* expressio: ID ASSIGN FLOAT  */
-#line 68 "exemple.y"
+#line 65 "exemple.y"
                                {
                 fprintf(yyout, "ID: %s pren per valor: %f\n", (yyvsp[-2].ident).lexema, (yyvsp[0].real));
                 (yyval.expr_val).val_type = FLOAT_TYPE;
                 (yyval.expr_val).val_float = (yyvsp[0].real);
             }
-#line 1128 "exemple.tab.c"
+#line 1145 "exemple.tab.c"
     break;
 
-  case 7: /* expressio: ID ASSIGN OPERATION  */
-#line 73 "exemple.y"
+  case 7: /* expressio: ID ASSIGN STRING  */
+#line 70 "exemple.y"
+                                {
+                fprintf(yyout, "ID: %s pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].cadena));
+                (yyval.expr_val).val_type = STRING_TYPE;
+                (yyval.expr_val).val_string = (yyvsp[0].cadena);
+            }
+#line 1155 "exemple.tab.c"
+    break;
+
+  case 8: /* expressio: ID ASSIGN OPERATION  */
+#line 75 "exemple.y"
                                    {
               if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
                   fprintf(yyout, "ID: %s pren per valor: %d\n", (yyvsp[-2].ident).lexema, (int)(yyvsp[0].expr_val).val_int);
                   (yyvsp[0].expr_val).val_type = INT_TYPE;
                   (yyvsp[0].expr_val).val_int = (int)(yyvsp[0].expr_val).val_int;
-              } else {
+              } else if((yyvsp[0].expr_val).val_type == FLOAT_TYPE){
                   fprintf(yyout, "ID: %s pren per valor: %f\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_float);
                   (yyvsp[0].expr_val).val_type = FLOAT_TYPE;
                   (yyvsp[0].expr_val).val_float = (yyvsp[0].expr_val).val_int;
               }
+              else{
+                   fprintf(yyout, "ID: %s pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_string);
+                   (yyval.expr_val).val_type = STRING_TYPE;
+                   (yyval.expr_val).val_string = (yyvsp[0].expr_val).val_string;
+              }
             }
-#line 1144 "exemple.tab.c"
+#line 1176 "exemple.tab.c"
     break;
 
-  case 8: /* OPERATION: OPERATION PLUS OPERATION2  */
-#line 87 "exemple.y"
+  case 9: /* OPERATION: OPERATION PLUS OPERATION2  */
+#line 94 "exemple.y"
                               {
-        if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+        if ((yyvsp[-2].expr_val).val_type == STRING_TYPE || (yyvsp[0].expr_val).val_type == STRING_TYPE) {
+            // One or both operands are strings, we need to concatenate them
+            char* result;
+
+            // Allocate enough space for the concatenated string
+            // +1 for the null terminator
+            result = (char*) malloc(strlen((yyvsp[-2].expr_val).val_string) + strlen((yyvsp[0].expr_val).val_string) + 1);
+            if (!result) {
+                fprintf(stderr, "Error: Memory allocation failed\n");
+                exit(1);
+            }
+
+            // Copy the first string and concatenate the second one
+            strcpy(result, (yyvsp[-2].expr_val).val_string);
+            strcat(result, (yyvsp[0].expr_val).val_string);
+
+            (yyval.expr_val).val_type = STRING_TYPE;
+            (yyval.expr_val).val_string = result;
+
+        } else if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             // Ensure both operands are treated as floats
             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
                 (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
@@ -1157,17 +1208,18 @@ yyreduce:
 
             (yyval.expr_val).val_type = FLOAT_TYPE;
             (yyval.expr_val).val_float = (yyvsp[-2].expr_val).val_float + (yyvsp[0].expr_val).val_float;
+
         } else {
             // Both operands are integers
             (yyval.expr_val).val_type = INT_TYPE;
             (yyval.expr_val).val_int = (yyvsp[-2].expr_val).val_int + (yyvsp[0].expr_val).val_int;
         }
     }
-#line 1167 "exemple.tab.c"
+#line 1219 "exemple.tab.c"
     break;
 
-  case 9: /* OPERATION: OPERATION MINUS OPERATION2  */
-#line 105 "exemple.y"
+  case 10: /* OPERATION: OPERATION MINUS OPERATION2  */
+#line 132 "exemple.y"
                                  {
         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
@@ -1185,11 +1237,11 @@ yyreduce:
             (yyval.expr_val).val_int = (yyvsp[-2].expr_val).val_int - (yyvsp[0].expr_val).val_int;
         }
     }
-#line 1189 "exemple.tab.c"
+#line 1241 "exemple.tab.c"
     break;
 
-  case 11: /* OPERATION2: OPERATION2 MULTIPLY OPERATION3  */
-#line 126 "exemple.y"
+  case 12: /* OPERATION2: OPERATION2 MULTIPLY OPERATION3  */
+#line 153 "exemple.y"
                                    {
         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
@@ -1207,11 +1259,11 @@ yyreduce:
             (yyval.expr_val).val_int = (yyvsp[-2].expr_val).val_int * (yyvsp[0].expr_val).val_int;
         }
     }
-#line 1211 "exemple.tab.c"
+#line 1263 "exemple.tab.c"
     break;
 
-  case 12: /* OPERATION2: OPERATION2 DIVIDE OPERATION3  */
-#line 143 "exemple.y"
+  case 13: /* OPERATION2: OPERATION2 DIVIDE OPERATION3  */
+#line 170 "exemple.y"
                                    {
         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
@@ -1229,25 +1281,87 @@ yyreduce:
             (yyval.expr_val).val_int = (yyvsp[-2].expr_val).val_int / (yyvsp[0].expr_val).val_int;
         }
     }
-#line 1233 "exemple.tab.c"
+#line 1285 "exemple.tab.c"
     break;
 
-  case 14: /* OPERATION3: INTEGER  */
-#line 164 "exemple.y"
-           {(yyval.expr_val).val_type = INT_TYPE;
-                    (yyval.expr_val).val_int = (yyvsp[0].enter);}
-#line 1240 "exemple.tab.c"
+  case 14: /* OPERATION2: OPERATION2 MOD OPERATION3  */
+#line 187 "exemple.y"
+                                {
+
+    //NOMES PER INT
+            if ((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == INT_TYPE) {
+                // Both operands are integers
+                (yyval.expr_val).val_type = INT_TYPE;
+                (yyval.expr_val).val_int = (yyvsp[-2].expr_val).val_int % (yyvsp[0].expr_val).val_int;
+            }
+        }
+#line 1299 "exemple.tab.c"
     break;
 
-  case 16: /* OPERATION3: FLOAT  */
-#line 165 "exemple.y"
-                                                         {(yyval.expr_val).val_type = FLOAT_TYPE;
-                                                                  (yyval.expr_val).val_float = (yyvsp[0].real);}
-#line 1247 "exemple.tab.c"
+  case 16: /* OPERATION3: OPERATION3 POWER OPERATION4  */
+#line 200 "exemple.y"
+                                {
+            if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+                        if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                            (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+                        }
+                        if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                            (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+                        }
+
+                        (yyval.expr_val).val_type = FLOAT_TYPE;
+                        (yyval.expr_val).val_float = pow((yyvsp[-2].expr_val).val_float, (yyvsp[0].expr_val).val_float);
+                    } else {
+                        // Both operands are integers
+                        (yyval.expr_val).val_type = INT_TYPE;
+                        (yyval.expr_val).val_int = pow((yyvsp[-2].expr_val).val_int,(yyvsp[0].expr_val).val_int);
+                    }
+        }
+#line 1321 "exemple.tab.c"
+    break;
+
+  case 18: /* OPERATION4: INTEGER  */
+#line 224 "exemple.y"
+            {
+        (yyval.expr_val).val_type = INT_TYPE;
+        (yyval.expr_val).val_int = (yyvsp[0].enter);
+    }
+#line 1330 "exemple.tab.c"
+    break;
+
+  case 19: /* OPERATION4: FLOAT  */
+#line 228 "exemple.y"
+            {
+        (yyval.expr_val).val_type = FLOAT_TYPE;
+        (yyval.expr_val).val_float = (yyvsp[0].real);
+    }
+#line 1339 "exemple.tab.c"
+    break;
+
+  case 20: /* OPERATION4: STRING  */
+#line 232 "exemple.y"
+             {
+            (yyval.expr_val).val_type = STRING_TYPE;
+            (yyval.expr_val).val_string = (yyvsp[0].cadena);
+    }
+#line 1348 "exemple.tab.c"
+    break;
+
+  case 21: /* OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS  */
+#line 236 "exemple.y"
+                                                    {
+        (yyval.expr_val).val_type = (yyvsp[-1].expr_val).val_type;
+        if ((yyvsp[-1].expr_val).val_type == INT_TYPE) {
+            (yyval.expr_val).val_int = (yyvsp[-1].expr_val).val_int;
+        } else {
+            (yyval.expr_val).val_float = (yyvsp[-1].expr_val).val_float;
+        }
+    }
+#line 1361 "exemple.tab.c"
     break;
 
 
-#line 1251 "exemple.tab.c"
+#line 1365 "exemple.tab.c"
 
       default: break;
     }
@@ -1440,6 +1554,6 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 169 "exemple.y"
+#line 248 "exemple.y"
 
 

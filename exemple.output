@@ -1,5 +1,5 @@
-ID: xsada pren per valor: 15
-ID: x pren per valor: 33.200001
+ID: x pren per valor: 5
+ID: y pren per valor: 10
 expressio_list -> expressio ENDLINE
 expressio_list -> expressio ENDLINE expressio_list
 End of input reached.
