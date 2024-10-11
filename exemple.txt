@@ -235,7 +235,91 @@ OPERATION4:
 ;
 
 OPERATION_BOOLEAN:
-    OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
+    OPERATION EQUAL OPERATION2 {
+                $$.val_type = BOOL_TYPE;
+                if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                    if ($1.val_type == INT_TYPE) {
+                        $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                    }
+                    if ($3.val_type == INT_TYPE) {
+                        $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                    }
+                    $$.val_bool = $1.val_float == $3.val_float;
+                } else {
+                    $$.val_bool = $1.val_int == $3.val_int;
+                }
+    }
+    | OPERATION NOT_EQUAL OPERATION2 {
+                    $$.val_type = BOOL_TYPE;
+                    if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                        if ($1.val_type == INT_TYPE) {
+                            $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                        }
+                        if ($3.val_type == INT_TYPE) {
+                            $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                        }
+                        $$.val_bool = $1.val_float != $3.val_float;
+                    } else {
+                        $$.val_bool = $1.val_int != $3.val_int;
+                    }
+    }
+    | OPERATION GREATER_EQUAL OPERATION2 {
+                                        $$.val_type = BOOL_TYPE;
+                                        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                                            if ($1.val_type == INT_TYPE) {
+                                                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                                            }
+                                            if ($3.val_type == INT_TYPE) {
+                                                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                                            }
+                                            $$.val_bool = $1.val_float >= $3.val_float;
+                                        } else {
+                                            $$.val_bool = $1.val_int >= $3.val_int;
+                                        }
+    }
+    | OPERATION GREATER_THAN OPERATION2 {
+                        $$.val_type = BOOL_TYPE;
+                        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                            if ($1.val_type == INT_TYPE) {
+                                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                            }
+                            if ($3.val_type == INT_TYPE) {
+                                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                            }
+                            $$.val_bool = $1.val_float > $3.val_float;
+                        } else {
+                            $$.val_bool = $1.val_int > $3.val_int;
+                        }
+    }
+    | OPERATION LESS_THAN OPERATION2 {
+                            $$.val_type = BOOL_TYPE;
+                            if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                                if ($1.val_type == INT_TYPE) {
+                                    $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                                }
+                                if ($3.val_type == INT_TYPE) {
+                                    $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                                }
+                                $$.val_bool = $1.val_float < $3.val_float;
+                            } else {
+                                $$.val_bool = $1.val_int < $3.val_int;
+                            }
+    }
+    | OPERATION LESS_EQUAL OPERATION2 {
+                                $$.val_type = BOOL_TYPE;
+                                if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                                    if ($1.val_type == INT_TYPE) {
+                                        $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                                    }
+                                    if ($3.val_type == INT_TYPE) {
+                                        $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                                    }
+                                    $$.val_bool = $1.val_float <= $3.val_float;
+                                } else {
+                                    $$.val_bool = $1.val_int <= $3.val_int;
+                                }
+    }
+    | OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
                                 $$.val_type = BOOL_TYPE;
                                 if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
                                     $$.val_bool = $1.val_bool || $3.val_bool; }
@@ -281,89 +365,5 @@ OPERATION_BOOLEAN3:
             // Debug print
             fprintf(stderr, "Debug: FALSE encountered, val_bool set to false\n");
      }
-     | OPERATION EQUAL OPERATION {
-                     $$.val_type = BOOL_TYPE;
-                     if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                         if ($1.val_type == INT_TYPE) {
-                             $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                         }
-                         if ($3.val_type == INT_TYPE) {
-                             $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                         }
-                         $$.val_bool = $1.val_float == $3.val_float;
-                     } else {
-                         $$.val_bool = $1.val_int == $3.val_int;
-                     }
-         }
-         | OPERATION NOT_EQUAL OPERATION {
-                         $$.val_type = BOOL_TYPE;
-                         if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                             if ($1.val_type == INT_TYPE) {
-                                 $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                             }
-                             if ($3.val_type == INT_TYPE) {
-                                 $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                             }
-                             $$.val_bool = $1.val_float != $3.val_float;
-                         } else {
-                             $$.val_bool = $1.val_int != $3.val_int;
-                         }
-         }
-         | OPERATION GREATER_EQUAL OPERATION {
-                                             $$.val_type = BOOL_TYPE;
-                                             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                                 if ($1.val_type == INT_TYPE) {
-                                                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                                 }
-                                                 if ($3.val_type == INT_TYPE) {
-                                                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                                 }
-                                                 $$.val_bool = $1.val_float >= $3.val_float;
-                                             } else {
-                                                 $$.val_bool = $1.val_int >= $3.val_int;
-                                             }
-         }
-         | OPERATION GREATER_THAN OPERATION {
-                             $$.val_type = BOOL_TYPE;
-                             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                 if ($1.val_type == INT_TYPE) {
-                                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                 }
-                                 if ($3.val_type == INT_TYPE) {
-                                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                 }
-                                 $$.val_bool = $1.val_float > $3.val_float;
-                             } else {
-                                 $$.val_bool = $1.val_int > $3.val_int;
-                             }
-         }
-         | OPERATION LESS_THAN OPERATION {
-                                 $$.val_type = BOOL_TYPE;
-                                 if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                     if ($1.val_type == INT_TYPE) {
-                                         $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                     }
-                                     if ($3.val_type == INT_TYPE) {
-                                         $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                     }
-                                     $$.val_bool = $1.val_float < $3.val_float;
-                                 } else {
-                                     $$.val_bool = $1.val_int < $3.val_int;
-                                 }
-         }
-         | OPERATION LESS_EQUAL OPERATION {
-                                     $$.val_type = BOOL_TYPE;
-                                     if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                         if ($1.val_type == INT_TYPE) {
-                                             $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                         }
-                                         if ($3.val_type == INT_TYPE) {
-                                             $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                         }
-                                         $$.val_bool = $1.val_float <= $3.val_float;
-                                     } else {
-                                         $$.val_bool = $1.val_int <= $3.val_int;
-                                     }
-         }
 %%
 

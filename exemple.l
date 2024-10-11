@@ -24,6 +24,21 @@ sign    [+-]?
                               yylval.real = atof(yytext);
                               return FLOAT;
                             }
+"false"                     {
+                              return FALSE;
+                            }
+"true"                      {
+                              return TRUE;
+                            }
+"and"                       {
+                              return AND;
+                            }
+"or"                        {
+                              return OR;
+                            }
+"not"                       {
+                              return NOT;
+                            }
 
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
@@ -54,16 +69,18 @@ sign    [+-]?
 "("                         { return OPEN_PARENTHESIS; }
 ")"                         { return CLOSED_PARENTHESIS; }
 
+">"                         { return GREATER_THAN; }
+">="                        { return GREATER_EQUAL; }
+"<"                         { return LESS_THAN; }
+"<="                        { return LESS_EQUAL; }
+"="                         { return EQUAL; }
+"<>"                        { return NOT_EQUAL; }
+
 "//".*[\n]                  { /* Ignore comment and newline */ }
 "#".*[\n]                   { /* Ignore comment and newline */ }
 "/*"([^*]|\*+[^*/]|(\*+\/))*"\*/"[\n] { /* Ignore multi-line comments */ }
 
-
-
-
-
 ^[ \t]*[\n]                 { /* Ignore empty lines */ }
-
 
 [\n]                        { return ENDLINE; }
 
@@ -72,4 +89,3 @@ sign    [+-]?
 <<EOF>>                     { return  0; }   /* Signal end of input to Bison */
 
 %%
-

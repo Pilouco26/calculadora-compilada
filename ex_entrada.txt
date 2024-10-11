@@ -1,7 +1,3 @@
-x := 5
-/* nigga
-gigga nicca
+x := 5 * 4 = 20 and  not 7 = 5 + 2
 
-*/
 
-y := 10

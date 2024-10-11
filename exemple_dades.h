@@ -1,6 +1,6 @@
 #ifndef EXEMPLE_DADES_H
 #define EXEMPLE_DADES_H
-
+#include <stdbool.h>
 
 #define STR_MAX_LENGTH 200
 
@@ -8,7 +8,8 @@ typedef enum {
   UNKNOWN_TYPE = 1,
   INT_TYPE,
   FLOAT_TYPE,
-  STRING_TYPE
+  STRING_TYPE,
+  BOOL_TYPE
 } data_type;
 
 
@@ -17,6 +18,7 @@ typedef struct {
   int val_int;
   float val_float;
   char *val_string;    // To store strings
+  bool val_bool;    // To store strings
 } value_info;
 
 

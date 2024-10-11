@@ -26,7 +26,8 @@ BIN = exemple.exe
 SRC_EXTRA = exemple_dades.c exemple_funcions.c
 
 LFLAGS = -d
-YFLAGS = -d -v --debug
+# Add the -Wcounterexamples option to YFLAGS
+YFLAGS = -d -v --debug -Wcounterexamples
 CFLAGS = -Wall -g
 
 EG_IN = ex_entrada.txt
