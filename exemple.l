@@ -39,6 +39,15 @@ sign    [+-]?
 "not"                       {
                               return NOT;
                             }
+"sin"                       {
+                              return SIN;
+                            }
+"cos"                        {
+                              return COS;
+                            }
+"tan"                       {
+                              return TAN;
+                            }
 
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);

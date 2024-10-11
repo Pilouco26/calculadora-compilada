@@ -67,26 +67,29 @@ extern int yydebug;
     FLOAT = 261,                   /* FLOAT  */
     ID = 262,                      /* ID  */
     STRING = 263,                  /* STRING  */
-    AND = 264,                     /* AND  */
-    OR = 265,                      /* OR  */
-    NOT = 266,                     /* NOT  */
-    PLUS = 267,                    /* PLUS  */
-    MINUS = 268,                   /* MINUS  */
-    MULTIPLY = 269,                /* MULTIPLY  */
-    DIVIDE = 270,                  /* DIVIDE  */
-    MOD = 271,                     /* MOD  */
-    POWER = 272,                   /* POWER  */
-    CLOSED_PARENTHESIS = 273,      /* CLOSED_PARENTHESIS  */
-    OPEN_PARENTHESIS = 274,        /* OPEN_PARENTHESIS  */
-    ASSIGN = 275,                  /* ASSIGN  */
-    ENDLINE = 276,                 /* ENDLINE  */
-    SEMICOLON = 277,               /* SEMICOLON  */
-    GREATER_THAN = 278,            /* GREATER_THAN  */
-    GREATER_EQUAL = 279,           /* GREATER_EQUAL  */
-    LESS_THAN = 280,               /* LESS_THAN  */
-    LESS_EQUAL = 281,              /* LESS_EQUAL  */
-    EQUAL = 282,                   /* EQUAL  */
-    NOT_EQUAL = 283                /* NOT_EQUAL  */
+    SIN = 264,                     /* SIN  */
+    COS = 265,                     /* COS  */
+    TAN = 266,                     /* TAN  */
+    AND = 267,                     /* AND  */
+    OR = 268,                      /* OR  */
+    NOT = 269,                     /* NOT  */
+    PLUS = 270,                    /* PLUS  */
+    MINUS = 271,                   /* MINUS  */
+    MULTIPLY = 272,                /* MULTIPLY  */
+    DIVIDE = 273,                  /* DIVIDE  */
+    MOD = 274,                     /* MOD  */
+    POWER = 275,                   /* POWER  */
+    CLOSED_PARENTHESIS = 276,      /* CLOSED_PARENTHESIS  */
+    OPEN_PARENTHESIS = 277,        /* OPEN_PARENTHESIS  */
+    ASSIGN = 278,                  /* ASSIGN  */
+    ENDLINE = 279,                 /* ENDLINE  */
+    SEMICOLON = 280,               /* SEMICOLON  */
+    GREATER_THAN = 281,            /* GREATER_THAN  */
+    GREATER_EQUAL = 282,           /* GREATER_EQUAL  */
+    LESS_THAN = 283,               /* LESS_THAN  */
+    LESS_EQUAL = 284,              /* LESS_EQUAL  */
+    EQUAL = 285,                   /* EQUAL  */
+    NOT_EQUAL = 286                /* NOT_EQUAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -110,7 +113,7 @@ union YYSTYPE
     char *cadena;
     bool boolean;
 
-#line 114 "exemple.tab.h"
+#line 117 "exemple.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

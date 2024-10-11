@@ -37,7 +37,7 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID
 %token <cadena> STRING
-%token <sense_valor> AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val> expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 
@@ -212,26 +212,60 @@ OPERATION3:
     | OPERATION4
        ;
 OPERATION4:
-    INTEGER {
-        $$.val_type = INT_TYPE;
-        $$.val_int = $1;
-    }
-    | FLOAT {
-        $$.val_type = FLOAT_TYPE;
-        $$.val_float = $1;
-    }
-    | STRING {
-            $$.val_type = STRING_TYPE;
-            $$.val_string = $1;
-    }
-    | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
-        $$.val_type = $2.val_type;
-        if ($2.val_type == INT_TYPE) {
-            $$.val_int = $2.val_int;
-        } else {
-            $$.val_float = $2.val_float;
+        SIN OPERATION3 {
+            if( $2.val_type == FLOAT_TYPE  ) {
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = sin($2.val_float);  // Casting the result of sin($2) to an integer
+            }
+            else if($2.val_type == INT_TYPE) {
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = sin($2.val_int);  // Casting the result of sin($2) to an integer
+            }
+
         }
-    }
+        | COS OPERATION3 {
+            if( $2.val_type == FLOAT_TYPE  ) {
+                printf("Evaluating COS(%d)\n", $2.val_float);
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
+            }
+            else if($2.val_type == INT_TYPE) {
+                printf("Evaluating COS(%d)\n", $2.val_int);
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
+            }
+
+        }
+        | TAN OPERATION3 {
+            if( $2.val_type == FLOAT_TYPE  ) {
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
+            }
+            else if($2.val_type == INT_TYPE) {
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
+            }
+        }
+        | INTEGER {
+            $$.val_type = INT_TYPE;
+            $$.val_int = $1;
+        }
+        | FLOAT {
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = $1;
+        }
+        | STRING {
+                $$.val_type = STRING_TYPE;
+                $$.val_string = $1;
+        }
+        | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
+            $$.val_type = $2.val_type;
+            if ($2.val_type == INT_TYPE) {
+                $$.val_int = $2.val_int;
+            } else {
+                $$.val_float = $2.val_float;
+            }
+        }
 ;
 
 OPERATION_BOOLEAN:
