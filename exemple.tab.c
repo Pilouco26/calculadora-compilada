@@ -479,7 +479,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   78
+#define YYLAST   73
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  32
@@ -577,7 +577,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-17)
+#define YYPACT_NINF (-11)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -591,13 +591,13 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -6,   -16,    25,   -17,     7,    39,   -17,    -6,   -17,   -17,
-     -17,   -17,   -17,    48,    48,    48,    39,    39,    47,    11,
-      26,   -17,    42,    40,   -17,   -17,   -17,    48,    26,    26,
-      26,    47,   -17,   -13,     6,    48,    48,    48,    48,    48,
-      48,    48,    48,    48,    48,    48,    48,    39,    39,     5,
-     -17,   -17,    11,    11,   -11,   -11,   -11,   -11,   -11,   -11,
-      26,    26,    26,   -17,    40,   -17
+      -6,    -3,    56,   -11,     0,    -1,   -11,    -6,   -11,   -11,
+     -11,   -11,   -11,     8,     8,     8,    -1,    -1,    31,    46,
+     -11,    49,    53,    58,   -11,   -11,   -11,     8,   -11,   -11,
+     -11,    31,   -11,    24,     2,     8,     8,     8,     8,     8,
+       8,     8,     8,     8,     8,     8,     8,    -1,    -1,    10,
+     -11,   -11,    46,    46,    33,    33,    33,    33,    33,    33,
+     -11,   -11,   -11,   -11,    58,   -11
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -617,8 +617,8 @@ static const yytype_int8 yydefact[] =
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -17,   -17,    53,   -17,    -5,   -12,    -4,    18,    49,    20,
-     -10,   -17
+     -11,   -11,    64,   -11,    -5,    32,    -2,    14,    55,    26,
+     -10,   -11
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -633,26 +633,26 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      18,     1,    35,    36,    35,    36,    32,     5,    50,    28,
-      29,    30,    33,    37,    38,    39,    40,    41,    42,    47,
-      35,    36,    49,    52,    53,     6,    50,    51,    43,    44,
-      45,     7,    54,    55,    56,    57,    58,    59,    65,    60,
-      61,    62,     8,     9,    10,    11,    46,    12,    13,    14,
-      15,     8,    48,    16,    11,    47,    12,    13,    14,    15,
-      26,    17,    35,    36,    63,     0,    34,    64,     0,     0,
-      27,     0,     0,    37,    38,    39,    40,    41,    42
+      18,     1,     8,     9,    10,    11,    32,    12,    13,    14,
+      15,     8,    33,    16,    11,    47,    12,    13,    14,    15,
+       5,    17,    49,    51,     7,    35,    36,    28,    29,    30,
+      27,    50,    54,    55,    56,    57,    58,    59,    65,    35,
+      36,    60,    61,    62,    63,    50,    35,    36,    35,    36,
+      37,    38,    39,    40,    41,    42,     6,    37,    38,    39,
+      40,    41,    42,    43,    44,    45,    47,    52,    53,    46,
+      48,    26,    34,    64
 };
 
 static const yytype_int8 yycheck[] =
 {
-       5,     7,    15,    16,    15,    16,    16,    23,    21,    13,
-      14,    15,    17,    26,    27,    28,    29,    30,    31,    13,
-      15,    16,    27,    35,    36,     0,    21,    21,    17,    18,
-      19,    24,    37,    38,    39,    40,    41,    42,    48,    43,
-      44,    45,     3,     4,     5,     6,    20,     8,     9,    10,
-      11,     3,    12,    14,     6,    13,     8,     9,    10,    11,
-       7,    22,    15,    16,    46,    -1,    17,    47,    -1,    -1,
-      22,    -1,    -1,    26,    27,    28,    29,    30,    31
+       5,     7,     3,     4,     5,     6,    16,     8,     9,    10,
+      11,     3,    17,    14,     6,    13,     8,     9,    10,    11,
+      23,    22,    27,    21,    24,    15,    16,    13,    14,    15,
+      22,    21,    37,    38,    39,    40,    41,    42,    48,    15,
+      16,    43,    44,    45,    46,    21,    15,    16,    15,    16,
+      26,    27,    28,    29,    30,    31,     0,    26,    27,    28,
+      29,    30,    31,    17,    18,    19,    13,    35,    36,    20,
+      12,     7,    17,    47
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -661,11 +661,11 @@ static const yytype_int8 yystos[] =
 {
        0,     7,    33,    34,    35,    23,     0,    24,     3,     4,
        5,     6,     8,     9,    10,    11,    14,    22,    36,    37,
-      38,    39,    40,    41,    42,    43,    34,    22,    38,    38,
-      38,    36,    42,    36,    40,    15,    16,    26,    27,    28,
+      38,    39,    40,    41,    42,    43,    34,    22,    39,    39,
+      39,    36,    42,    36,    40,    15,    16,    26,    27,    28,
       29,    30,    31,    17,    18,    19,    20,    13,    12,    36,
       21,    21,    37,    37,    36,    36,    36,    36,    36,    36,
-      38,    38,    38,    39,    41,    42
+      38,    38,    38,    38,    41,    42
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -1325,7 +1325,7 @@ yyreduce:
 #line 1326 "exemple.tab.c"
     break;
 
-  case 14: /* OPERATION3: OPERATION3 POWER OPERATION4  */
+  case 14: /* OPERATION3: OPERATION4 POWER OPERATION3  */
 #line 195 "exemple.y"
                                 {
             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
@@ -1347,7 +1347,7 @@ yyreduce:
 #line 1348 "exemple.tab.c"
     break;
 
-  case 16: /* OPERATION4: SIN OPERATION3  */
+  case 16: /* OPERATION4: SIN OPERATION4  */
 #line 215 "exemple.y"
                        {
             if( (yyvsp[0].expr_val).val_type == FLOAT_TYPE  ) {
@@ -1363,7 +1363,7 @@ yyreduce:
 #line 1364 "exemple.tab.c"
     break;
 
-  case 17: /* OPERATION4: COS OPERATION3  */
+  case 17: /* OPERATION4: COS OPERATION4  */
 #line 226 "exemple.y"
                          {
             if( (yyvsp[0].expr_val).val_type == FLOAT_TYPE  ) {
@@ -1381,7 +1381,7 @@ yyreduce:
 #line 1382 "exemple.tab.c"
     break;
 
-  case 18: /* OPERATION4: TAN OPERATION3  */
+  case 18: /* OPERATION4: TAN OPERATION4  */
 #line 239 "exemple.y"
                          {
             if( (yyvsp[0].expr_val).val_type == FLOAT_TYPE  ) {

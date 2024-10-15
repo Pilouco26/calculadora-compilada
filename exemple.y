@@ -192,7 +192,7 @@ OPERATION2:
     ;
 
 OPERATION3:
-    OPERATION3 POWER OPERATION4 {
+    OPERATION4 POWER  OPERATION3{
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                         if ($1.val_type == INT_TYPE) {
                             $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
@@ -212,7 +212,7 @@ OPERATION3:
     | OPERATION4
        ;
 OPERATION4:
-        SIN OPERATION3 {
+        SIN OPERATION4 {
             if( $2.val_type == FLOAT_TYPE  ) {
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = sin($2.val_float);  // Casting the result of sin($2) to an integer
@@ -223,7 +223,7 @@ OPERATION4:
             }
 
         }
-        | COS OPERATION3 {
+        | COS OPERATION4 {
             if( $2.val_type == FLOAT_TYPE  ) {
                 printf("Evaluating COS(%d)\n", $2.val_float);
                 $$.val_type = FLOAT_TYPE;
@@ -236,7 +236,7 @@ OPERATION4:
             }
 
         }
-        | TAN OPERATION3 {
+        | TAN OPERATION4 {
             if( $2.val_type == FLOAT_TYPE  ) {
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
