@@ -605,10 +605,10 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[41] =
     {   0,
-       22,   23,   27,   29,   32,   35,   38,   41,   44,   47,
-       50,   53,   56,   61,   66,   71,   77,   84,   95,   96,
-       97,   98,   99,  100,  101,  102,  103,  104,  106,  107,
-      108,  109,  110,  111,  113,  114,  115,  117,  119,  121
+       23,   24,   28,   30,   33,   36,   39,   42,   45,   48,
+       51,   54,   57,   62,   67,   72,   78,   89,  100,  101,
+      102,  103,  104,  105,  106,  107,  108,  109,  111,  112,
+      113,  114,  115,  116,  118,  119,  120,  122,  124,  126
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -625,11 +625,12 @@ char *yytext;
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "symtab.h"
 #include "exemple.tab.h"
 #include "exemple_funcions.h"
-#line 631 "lex.yy.c"
+#line 632 "lex.yy.c"
 #define YY_NO_INPUT 1
-#line 633 "lex.yy.c"
+#line 634 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -910,10 +911,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 20 "exemple.l"
+#line 21 "exemple.l"
 
 
-#line 917 "lex.yy.c"
+#line 918 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1006,12 +1007,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 22 "exemple.l"
+#line 23 "exemple.l"
 { yylval.enter = atoi(yytext); return INTEGER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "exemple.l"
+#line 24 "exemple.l"
 {
                               yylval.real = atof(yytext);
                               return FLOAT;
@@ -1019,75 +1020,75 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "exemple.l"
+#line 28 "exemple.l"
 { yylval.real = atof(yytext); return FLOAT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "exemple.l"
+#line 30 "exemple.l"
 {
                               return FALSE;
                             }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 32 "exemple.l"
+#line 33 "exemple.l"
 {
                               return TRUE;
                             }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "exemple.l"
+#line 36 "exemple.l"
 {
                               return AND;
                             }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 38 "exemple.l"
+#line 39 "exemple.l"
 {
                               return OR;
                             }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 41 "exemple.l"
+#line 42 "exemple.l"
 {
                               return NOT;
                             }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "exemple.l"
+#line 45 "exemple.l"
 {
                               return SIN;
                             }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 47 "exemple.l"
+#line 48 "exemple.l"
 {
                               return COS;
                             }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 50 "exemple.l"
+#line 51 "exemple.l"
 {
                               return TAN;
                             }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 53 "exemple.l"
+#line 54 "exemple.l"
 {
                               return LEN;
                             }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 56 "exemple.l"
+#line 57 "exemple.l"
 {
                                 yylval.mode.representacio = "oct";
                                 yylval.mode.set = true;
@@ -1096,7 +1097,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 61 "exemple.l"
+#line 62 "exemple.l"
 {
                                 yylval.mode.representacio = "hex";
                                 yylval.mode.set = true;
@@ -1105,7 +1106,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 66 "exemple.l"
+#line 67 "exemple.l"
 {
                                 yylval.mode.representacio = "dec";
                                 yylval.mode.set = true;
@@ -1114,7 +1115,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 71 "exemple.l"
+#line 72 "exemple.l"
 {
                                 yylval.mode.representacio = "bin";
                                 yylval.mode.set = true;
@@ -1123,9 +1124,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 77 "exemple.l"
+#line 78 "exemple.l"
 {
                               yylval.ident.lexema = strdup(yytext);
+                              void *value = NULL; // Placeholder for the actual value type
+                              if(sym_lookup(yylval.ident.lexema, &value) == SYMTAB_NOT_FOUND){
+                                    sym_add(yylval.ident.lexema, 0);
+                              }
                               yylval.ident.length = yyleng;
                               yylval.ident.line = yylineno;
                               yylval.ident.id_val.val_type = UNKNOWN_TYPE;
@@ -1134,7 +1139,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 84 "exemple.l"
+#line 89 "exemple.l"
 {
     yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
     yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
@@ -1146,129 +1151,129 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 95 "exemple.l"
+#line 100 "exemple.l"
 { return ASSIGN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 96 "exemple.l"
+#line 101 "exemple.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 97 "exemple.l"
+#line 102 "exemple.l"
 { return PLUS; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 98 "exemple.l"
+#line 103 "exemple.l"
 { return MINUS; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 99 "exemple.l"
+#line 104 "exemple.l"
 { return MULTIPLY; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 100 "exemple.l"
+#line 105 "exemple.l"
 { return DIVIDE; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 101 "exemple.l"
+#line 106 "exemple.l"
 { return MOD; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 102 "exemple.l"
+#line 107 "exemple.l"
 { return POWER; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 103 "exemple.l"
+#line 108 "exemple.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 104 "exemple.l"
+#line 109 "exemple.l"
 { return CLOSED_PARENTHESIS; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 106 "exemple.l"
+#line 111 "exemple.l"
 { return GREATER_THAN; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 107 "exemple.l"
+#line 112 "exemple.l"
 { return GREATER_EQUAL; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 108 "exemple.l"
+#line 113 "exemple.l"
 { return LESS_THAN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 109 "exemple.l"
+#line 114 "exemple.l"
 { return LESS_EQUAL; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 110 "exemple.l"
+#line 115 "exemple.l"
 { return EQUAL; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 111 "exemple.l"
+#line 116 "exemple.l"
 { return NOT_EQUAL; }
 	YY_BREAK
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 113 "exemple.l"
+#line 118 "exemple.l"
 { /* Ignore comment and newline */ }
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 114 "exemple.l"
+#line 119 "exemple.l"
 { /* Ignore comment and newline */ }
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 115 "exemple.l"
+#line 120 "exemple.l"
 { /* Ignore multi-line comments */ }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 117 "exemple.l"
+#line 122 "exemple.l"
 { /* Ignore empty lines */ }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 119 "exemple.l"
+#line 124 "exemple.l"
 { return ENDLINE; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 121 "exemple.l"
+#line 126 "exemple.l"
 {}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 123 "exemple.l"
+#line 128 "exemple.l"
 { return  0; }   /* Signal end of input to Bison */
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 125 "exemple.l"
+#line 130 "exemple.l"
 ECHO;
 	YY_BREAK
-#line 1272 "lex.yy.c"
+#line 1277 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2381,6 +2386,6 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 125 "exemple.l"
+#line 130 "exemple.l"
 
 

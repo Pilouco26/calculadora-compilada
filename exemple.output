@@ -1,5 +1,0 @@
-(int)(oct) pren per valor: 13
-(float)(dec) pren per valor: 10.200000
-expressio_list -> expressio ENDLINE
-expressio_list -> expressio ENDLINE expressio_list
-End of input reached.

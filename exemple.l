@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "symtab.h"
 #include "exemple.tab.h"
 #include "exemple_funcions.h"
 %}
@@ -76,6 +77,10 @@ sign    [+-]?
 
 {lletra}({lletra}|{digit})* {
                               yylval.ident.lexema = strdup(yytext);
+                              void *value = NULL; // Placeholder for the actual value type
+                              if(sym_lookup(yylval.ident.lexema, &value) == SYMTAB_NOT_FOUND){
+                                    sym_add(yylval.ident.lexema, 0);
+                              }
                               yylval.ident.length = yyleng;
                               yylval.ident.line = yylineno;
                               yylval.ident.id_val.val_type = UNKNOWN_TYPE;

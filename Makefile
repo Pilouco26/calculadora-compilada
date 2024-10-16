@@ -12,7 +12,7 @@ LIB = -lfl -lm
 SRC_LEX = exemple.l
 SRC_YACC = exemple.y
 
-LEX_OUT = lex.yy.c
+LEX_OUT = lex.yy.c symtab.c
 YACC_OUT_C = exemple.tab.c
 YACC_OUT_H = exemple.tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
