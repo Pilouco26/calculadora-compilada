@@ -24,6 +24,8 @@ sign    [+-]?
                               yylval.real = atof(yytext);
                               return FLOAT;
                             }
+{sign}?{digit}"."{digit}+"-"({exponent})? { yylval.real = atof(yytext); return FLOAT; }
+
 "false"                     {
                               return FALSE;
                             }
@@ -47,6 +49,29 @@ sign    [+-]?
                             }
 "tan"                       {
                               return TAN;
+                            }
+"len"                       {
+                              return LEN;
+                            }
+"oct"                       {
+                                yylval.mode.representacio = "oct";
+                                yylval.mode.set = true;
+                                return MODE;
+                            }
+"hex"                       {
+                                yylval.mode.representacio = "hex";
+                                yylval.mode.set = true;
+                                return MODE;
+                            }
+"dec"                       {
+                                yylval.mode.representacio = "dec";
+                                yylval.mode.set = true;
+                                return MODE;
+                            }
+"bin"                       {
+                                yylval.mode.representacio = "bin";
+                                yylval.mode.set = true;
+                                return MODE;
                             }
 
 {lletra}({lletra}|{digit})* {

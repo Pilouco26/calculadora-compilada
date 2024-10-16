@@ -9,6 +9,8 @@ int init_analisi_sintactica(char *);
 int end_analisi_sintactica(void);
 
 int analisi_semantica(void);
+void int_to_binary(int, char *);
+void float_to_binary(float, char *);
 
 void yyerror(char *explanation);
 

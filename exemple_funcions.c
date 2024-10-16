@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+
 
 extern int yyparse();
 extern FILE *yyin;
@@ -19,6 +22,33 @@ int init_analisi_lexica(char *filename)
   return error;
 }
 
+void float_to_binary(float val, char *binary) {
+  union {
+    float f;
+    uint32_t u;
+  } float_union;
+
+  float_union.f = val;
+  for (int i = 31; i >= 0; i--) {
+    binary[31 - i] = (float_union.u & (1U << i)) ? '1' : '0';
+  }
+  binary[32] = '\0'; // Null terminator for the string
+}
+
+// Function to convert an integer to a binary string
+void int_to_binary(int n, char *binary) {
+  binary[0] = '\0'; // Initialize the string
+  int i;
+  for (i = 31; i >= 0; i--) {
+    strcat(binary, (n & (1 << i)) ? "1" : "0");
+  }
+  // Trim leading zeros for a more compact binary representation
+  char *trimmed = binary;
+  while(*trimmed == '0' && *(trimmed + 1) != '\0') {
+    trimmed++;
+  }
+  strcpy(binary, trimmed);
+}
 
 int end_analisi_lexica()
 {

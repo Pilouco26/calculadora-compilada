@@ -24,6 +24,10 @@ extern int yylex();
         int line;
         value_info id_val;
     } ident;
+    struct {
+            char *representacio;
+            bool set;
+    } mode;
     int enter;
     float real;
     value_info expr_val;
@@ -34,12 +38,13 @@ extern int yylex();
 
 %token <enter> INTEGER
 %token <boolean> FALSE TRUE
+%token <mode> MODE
 %token <real> FLOAT
 %token <ident> ID
 %token <cadena> STRING
-%token <sense_valor> SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> LEN SUBSTR SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
-%type <expr_val> expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
+%type <expr_val> expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
 
 
 %start programa
@@ -75,11 +80,129 @@ expressio :   ID ASSIGN OPERATION  {
                        $$.val_string = $3.val_string;
                   }
                 }
+
+                | ID ASSIGN OPERATION MODE {
+                    fprintf(yyout, "checkpoint");
+                                if ($3.val_type == INT_TYPE) {
+                                    if (!$4.set || strcmp($4.representacio, "dec") == 0) {
+                                        // Default case: print the integer value
+                                        fprintf(yyout, "(int)(hex) pren per valor: %d\n", (int)$3.val_int);
+                                        $3.val_type = INT_TYPE;
+                                        $3.val_int = (int)$3.val_int;
+                                    } else if (strcmp($4.representacio, "oct") == 0) {
+                                        fprintf(yyout, "checkpoint oct\n");
+                                        fprintf(yyout, "(int)(oct) pren per valor: %o\n", (int)$3.val_int);
+                                    } else if (strcmp($4.representacio, "hex") == 0) {
+                                        // Hexadecimal representation (lowercase)
+                                        fprintf(yyout, "(int)(hex) pren per valor: %x\n", (int)$3.val_int);
+                                    } else if (strcmp($4.representacio, "bin") == 0) {
+                                        // Binary representation (using custom function)
+                                        char binary[65]; // 32 bits + null terminator
+                                        int_to_binary((int)$3.val_int, binary);
+                                        fprintf(yyout, "(int)(bin) pren per valor: %s\n", binary);
+                                    }
+                              } else if($3.val_type == FLOAT_TYPE){
+                                      if (!$4.set || strcmp($4.representacio, "dec") == 0) {
+                                              // Default case: print the float value in decimal format
+                                              fprintf(yyout, "(float)(dec) pren per valor: %f\n", $3.val_float);
+                                              $3.val_type = FLOAT_TYPE;
+                                              $3.val_float = $3.val_float;
+                                          } else if (strcmp($4.representacio, "hex") == 0) {
+                                              // Hexadecimal representation for floats
+                                              fprintf(yyout, "(float)(hex) pren per valor: %a\n", $3.val_float);
+                                          } else if (strcmp($4.representacio, "bin") == 0) {
+                                              // Binary representation (using custom function)
+                                              char binary[65]; // 32 bits for the float's bit pattern + null terminator
+                                              float_to_binary($3.val_float, binary);
+                                              fprintf(yyout, "(float)(bin) pren per valor: %s\n", binary);
+                                          }
+                                  }
+                                  else{
+                                       fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
+                                       $$.val_type = STRING_TYPE;
+                                       $$.val_string = $3.val_string;
+                                  }
+                }
                 | ID ASSIGN OPERATION_BOOLEAN {
                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
 
                             $$.val_type = BOOL_TYPE;
                             $$.val_bool = $3.val_bool;
+                }
+                | ID ASSIGN OPERATION_STRING {
+                    if( $3.val_type == INT_TYPE ) {
+                        fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
+                        $3.val_type = INT_TYPE;
+                        $3.val_int = (int)$3.val_int;
+                    }
+                }
+                | OPERATION MODE {
+                            if ($1.val_type == INT_TYPE) {
+                                if (strcmp($2.representacio, "dec") == 0) {
+                                    // Default case: print the integer value
+                                    fprintf(yyout, "(int)(hex) pren per valor: %d\n", (int)$1.val_int);
+                                    $1.val_type = INT_TYPE;
+                                    $1.val_int = (int)$1.val_int;
+                                } else if (strcmp($2.representacio, "oct") == 0) {
+                                    fprintf(yyout, "(int)(oct) pren per valor: %o\n", (int)$1.val_int);
+                                } else if (strcmp($2.representacio, "hex") == 0) {
+                                    // Hexadecimal representation (lowercase)
+                                    fprintf(yyout, "(int)(hex) pren per valor: %x\n", (int)$1.val_int);
+                                } else if (strcmp($2.representacio, "bin") == 0) {
+                                    // Binary representation (using custom function)
+                                   char binary[65]; // 32 bits + null terminator
+                                    int_to_binary((int)$1.val_int, binary);
+                                    fprintf(yyout, "(int)(bin) pren per valor: %s\n", binary);
+                                }
+                              } else if($1.val_type == FLOAT_TYPE){
+                                          if (!$2.set || strcmp($2.representacio, "dec") == 0) {
+                                              // Default case: print the float value in decimal format
+                                              fprintf(yyout, "(float)(dec) pren per valor: %f\n", $1.val_float);
+                                          } else if (strcmp($2.representacio, "hex") == 0) {
+                                              // Hexadecimal representation for floats
+                                              fprintf(yyout, "(float)(hex) pren per valor: %a\n", $1.val_float);
+                                          } else if (strcmp($2.representacio, "bin") == 0) {
+                                              // Binary representation (using custom function)
+                                              char binary[65]; // 32 bits for the float's bit pattern + null terminator
+                                              float_to_binary($1.val_float, binary);
+                                              fprintf(yyout, "(float)(bin) pren per valor: %s\n", binary);
+                                          }
+                                      }
+                               else {
+                                       fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
+                                       $$.val_type = STRING_TYPE;
+                                       $$.val_string = $1.val_string;
+                                       }
+                }
+                | OPERATION
+                {
+                  if ($1.val_type == INT_TYPE) {
+                      fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
+                      $1.val_type = INT_TYPE;
+                      $1.val_int = (int)$1.val_int;
+                  } else if($1.val_type == FLOAT_TYPE){
+                      fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
+                      $1.val_type = FLOAT_TYPE;
+                      $1.val_float = $1.val_int;
+                  }
+                  else{
+                       fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
+                       $$.val_type = STRING_TYPE;
+                       $$.val_string = $1.val_string;
+                  }
+                }
+                | OPERATION_BOOLEAN {
+                            fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
+
+                            $$.val_type = BOOL_TYPE;
+                            $$.val_bool = $1.val_bool;
+                }
+                | OPERATION_STRING {
+                    if( $1.val_type == INT_TYPE ) {
+                        fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
+                        $1.val_type = INT_TYPE;
+                        $1.val_int = (int)$1.val_int;
+                    }
                 }
 
 
@@ -180,7 +303,6 @@ OPERATION2:
         }
     }
     | OPERATION2 MOD OPERATION3 {
-
     //NOMES PER INT
             if ($1.val_type == INT_TYPE || $3.val_type == INT_TYPE) {
                 // Both operands are integers
@@ -212,7 +334,7 @@ OPERATION3:
     | OPERATION4
        ;
 OPERATION4:
-        SIN OPERATION4 {
+     SIN OPERATION4 {
             if( $2.val_type == FLOAT_TYPE  ) {
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = sin($2.val_float);  // Casting the result of sin($2) to an integer
@@ -221,22 +343,19 @@ OPERATION4:
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = sin($2.val_int);  // Casting the result of sin($2) to an integer
             }
-
-        }
-        | COS OPERATION4 {
+     }
+    | COS OPERATION4 {
             if( $2.val_type == FLOAT_TYPE  ) {
-                printf("Evaluating COS(%d)\n", $2.val_float);
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
             }
             else if($2.val_type == INT_TYPE) {
-                printf("Evaluating COS(%d)\n", $2.val_int);
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
             }
 
         }
-        | TAN OPERATION4 {
+    | TAN OPERATION4 {
             if( $2.val_type == FLOAT_TYPE  ) {
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
@@ -246,19 +365,19 @@ OPERATION4:
                 $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
             }
         }
-        | INTEGER {
+    | INTEGER {
             $$.val_type = INT_TYPE;
             $$.val_int = $1;
         }
-        | FLOAT {
+    | FLOAT {
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1;
         }
-        | STRING {
+    | STRING {
                 $$.val_type = STRING_TYPE;
                 $$.val_string = $1;
         }
-        | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
+    | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
             $$.val_type = $2.val_type;
             if ($2.val_type == INT_TYPE) {
                 $$.val_int = $2.val_int;
@@ -268,6 +387,12 @@ OPERATION4:
         }
 ;
 
+OPERATION_STRING:
+    LEN OPERATION {
+        $$.val_type = INT_TYPE;          // Set the return type as integer.
+        $$.val_int = strlen($2.val_string);  // Calculate the length of $2.val_string.
+    }
+;
 OPERATION_BOOLEAN:
     OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
                                 $$.val_type = BOOL_TYPE;
@@ -315,7 +440,7 @@ OPERATION_BOOLEAN3:
             // Debug print
             fprintf(stderr, "Debug: FALSE encountered, val_bool set to false\n");
      }
-     | OPERATION EQUAL OPERATION {
+    | OPERATION EQUAL OPERATION {
                      $$.val_type = BOOL_TYPE;
                      if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                          if ($1.val_type == INT_TYPE) {
@@ -329,7 +454,7 @@ OPERATION_BOOLEAN3:
                          $$.val_bool = $1.val_int == $3.val_int;
                      }
          }
-         | OPERATION NOT_EQUAL OPERATION {
+    | OPERATION NOT_EQUAL OPERATION {
                          $$.val_type = BOOL_TYPE;
                          if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                              if ($1.val_type == INT_TYPE) {
@@ -343,7 +468,7 @@ OPERATION_BOOLEAN3:
                              $$.val_bool = $1.val_int != $3.val_int;
                          }
          }
-         | OPERATION GREATER_EQUAL OPERATION {
+    | OPERATION GREATER_EQUAL OPERATION {
                                              $$.val_type = BOOL_TYPE;
                                              if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                                                  if ($1.val_type == INT_TYPE) {
@@ -357,7 +482,7 @@ OPERATION_BOOLEAN3:
                                                  $$.val_bool = $1.val_int >= $3.val_int;
                                              }
          }
-         | OPERATION GREATER_THAN OPERATION {
+    | OPERATION GREATER_THAN OPERATION {
                              $$.val_type = BOOL_TYPE;
                              if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                                  if ($1.val_type == INT_TYPE) {
@@ -371,7 +496,7 @@ OPERATION_BOOLEAN3:
                                  $$.val_bool = $1.val_int > $3.val_int;
                              }
          }
-         | OPERATION LESS_THAN OPERATION {
+    | OPERATION LESS_THAN OPERATION {
                                  $$.val_type = BOOL_TYPE;
                                  if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                                      if ($1.val_type == INT_TYPE) {
@@ -385,7 +510,7 @@ OPERATION_BOOLEAN3:
                                      $$.val_bool = $1.val_int < $3.val_int;
                                  }
          }
-         | OPERATION LESS_EQUAL OPERATION {
+    | OPERATION LESS_EQUAL OPERATION {
                                      $$.val_type = BOOL_TYPE;
                                      if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                                          if ($1.val_type == INT_TYPE) {
