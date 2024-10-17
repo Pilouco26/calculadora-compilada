@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdbool.h>
+#include "symtab.h"
 
 extern FILE *yyout;
 extern int yylineno;
@@ -56,12 +57,8 @@ programa : expressio_list {
              fprintf(yyout, "End of input reached.\n");
            }
 
-expressio_list : expressio ENDLINE {
-                  fprintf(yyout, "expressio_list -> expressio ENDLINE\n");
-                }
-                | expressio ENDLINE expressio_list {
-                  fprintf(yyout, "expressio_list -> expressio ENDLINE expressio_list\n");
-                }
+expressio_list : expressio ENDLINE
+                | expressio ENDLINE expressio_list
                 ;
 
 expressio :   ID ASSIGN OPERATION  {
@@ -72,17 +69,16 @@ expressio :   ID ASSIGN OPERATION  {
                   } else if($3.val_type == FLOAT_TYPE){
                       fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
                       $3.val_type = FLOAT_TYPE;
-                      $3.val_float = $3.val_int;
+                      $3.val_float = $3.val_float;
                   }
                   else{
                        fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
                        $$.val_type = STRING_TYPE;
                        $$.val_string = $3.val_string;
                   }
+                  sym_enter($1.lexema, &$3);
                 }
-
                 | ID ASSIGN OPERATION MODE {
-                    fprintf(yyout, "checkpoint");
                                 if ($3.val_type == INT_TYPE) {
                                     if (!$4.set || strcmp($4.representacio, "dec") == 0) {
                                         // Default case: print the integer value
@@ -122,6 +118,7 @@ expressio :   ID ASSIGN OPERATION  {
                                        $$.val_type = STRING_TYPE;
                                        $$.val_string = $3.val_string;
                                   }
+                                  sym_enter($1.lexema, &$3);
                 }
                 | ID ASSIGN OPERATION_BOOLEAN {
                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
@@ -135,8 +132,10 @@ expressio :   ID ASSIGN OPERATION  {
                         $3.val_type = INT_TYPE;
                         $3.val_int = (int)$3.val_int;
                     }
+                    sym_enter($1.lexema, &$3);
                 }
                 | OPERATION MODE {
+                // AFEGIR ID AL NOM
                             if ($1.val_type == INT_TYPE) {
                                 if (strcmp($2.representacio, "dec") == 0) {
                                     // Default case: print the integer value
@@ -207,41 +206,69 @@ expressio :   ID ASSIGN OPERATION  {
 
 
 
+
 OPERATION:
     OPERATION PLUS OPERATION2 {
-        if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
-            // One or both operands are strings, we need to concatenate them
-            char* result;
+        char* result;
 
-            // Allocate enough space for the concatenated string
-            // +1 for the null terminator
+        // Check if either operand is a string
+        if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
+
+            // Convert the first operand to string if it's an integer or float
+            if ($1.val_type == INT_TYPE) {
+                char int_str[12]; // Buffer to hold the string representation of the integer
+                sprintf(int_str, "%d", $1.val_int); // Convert int to string
+                $1.val_string = strdup(int_str); // Allocate memory for the string
+                $1.val_type = STRING_TYPE; // Treat it as a string from now on
+            } else if ($1.val_type == FLOAT_TYPE) {
+                char float_str[20]; // Buffer to hold the string representation of the float
+                sprintf(float_str, "%.6f", $1.val_float); // Convert float to string
+                $1.val_string = strdup(float_str); // Allocate memory for the string
+                $1.val_type = STRING_TYPE; // Treat it as a string from now on
+            }
+
+            // Convert the second operand to string if it's an integer or float
+            if ($3.val_type == INT_TYPE) {
+                char int_str[12]; // Buffer to hold the string representation of the integer
+                sprintf(int_str, "%d", $3.val_int); // Convert int to string
+                $3.val_string = strdup(int_str); // Allocate memory for the string
+                $3.val_type = STRING_TYPE; // Treat it as a string from now on
+            } else if ($3.val_type == FLOAT_TYPE) {
+                char float_str[20]; // Buffer to hold the string representation of the float
+                sprintf(float_str, "%.6f", $3.val_float); // Convert float to string
+                $3.val_string = strdup(float_str); // Allocate memory for the string
+                $3.val_type = STRING_TYPE; // Treat it as a string from now on
+            }
+
+            // Now, concatenate the two string operands
             result = (char*) malloc(strlen($1.val_string) + strlen($3.val_string) + 1);
             if (!result) {
                 fprintf(stderr, "Error: Memory allocation failed\n");
                 exit(1);
             }
 
-            // Copy the first string and concatenate the second one
+            // Perform the concatenation
             strcpy(result, $1.val_string);
             strcat(result, $3.val_string);
 
+            // Set the result
             $$.val_type = STRING_TYPE;
             $$.val_string = result;
 
         } else if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-            // Ensure both operands are treated as floats
+            // Handle float addition
             if ($1.val_type == INT_TYPE) {
-                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                $1.val_float = (float) $1.val_int; // Convert int to float
             }
             if ($3.val_type == INT_TYPE) {
-                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                $3.val_float = (float) $3.val_int; // Convert int to float
             }
 
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1.val_float + $3.val_float;
 
         } else {
-            // Both operands are integers
+            // Both operands are integers, add them
             $$.val_type = INT_TYPE;
             $$.val_int = $1.val_int + $3.val_int;
         }
@@ -377,14 +404,50 @@ OPERATION4:
                 $$.val_type = STRING_TYPE;
                 $$.val_string = $1;
         }
-    | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
-            $$.val_type = $2.val_type;
-            if ($2.val_type == INT_TYPE) {
-                $$.val_int = $2.val_int;
-            } else {
-                $$.val_float = $2.val_float;
+    | ID {
+        sym_value_type value;
+        int lookup_result;
+
+        /* Call sym_lookup to find the identifier in the symbol table */
+        lookup_result = sym_lookup($1.lexema, &value);
+
+        if (lookup_result == SYMTAB_OK) {
+            $$.val_type = value.val_type;  // Store the value for later use
+            if($$.val_type == STRING_TYPE){
+                 $$.val_string = value.val_string;  // Store the value for later use
+                 printf("ID '%s' found with type %s\n", $1.lexema, value.val_string);
             }
+            else if($$.val_type == INT_TYPE){
+                 $$.val_int = value.val_int;  // Store the value for later use
+                 printf("ID '%s' found with type %d\n", $1.lexema, value.val_int);
+            }
+            else if($$.val_type == FLOAT_TYPE){
+                 $$.val_float = value.val_float;  // Store the value for later use
+                 printf("ID '%s' found with type %f\n", $1.lexema, value.val_float);
+            }
+
+        } else {
+            fprintf(yyout, "ID '%s' not found, inserted with initial unknown type\n", $1.lexema);
         }
+
+    }
+    | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
+        $$.val_type = $2.val_type;
+
+        if ($2.val_type == INT_TYPE) {
+            // Handle integer type
+            $$.val_int = $2.val_int;
+
+        } else if ($2.val_type == FLOAT_TYPE) {
+            // Handle float type
+            $$.val_float = $2.val_float;
+
+        } else if ($2.val_type == STRING_TYPE) {
+            // Handle string type
+            $$.val_string = strdup($2.val_string);  // Duplicate the string to avoid pointer issues
+        }
+    }
+
 ;
 
 OPERATION_STRING:

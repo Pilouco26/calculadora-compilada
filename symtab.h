@@ -1,3 +1,5 @@
+#include "exemple_dades.h"
+
 /* Copyright 1988 by GeoMaker Software                                      */
 /* Written by Mark Grand                                                    */
 
@@ -11,7 +13,7 @@
 
 
 /* The type of the value field of symbol table entries                      */
-typedef void * sym_value_type;          /* you will need to replace this    */
+typedef value_info sym_value_type;          /* you will need to replace this    */
                                         /* with a declaration appropriate   */
                                         /* for your application.            */
 					/*Ho subtituim per un unio o struct */
@@ -142,7 +144,7 @@ typedef const char * sym_name_type;     /* If you are using something other */
 
 /****************************************************************************/
 /*                                                                          */
-/*                   end of #defines to configure symtab                    /
+/*                   end of #defines to configure symtab                    */
 /*    Most configuration can be accomplished by editing lines above this.   */
 /*                                                                          */
 /****************************************************************************/

@@ -76,15 +76,19 @@ sign    [+-]?
                             }
 
 {lletra}({lletra}|{digit})* {
-                              yylval.ident.lexema = strdup(yytext);
-                              void *value = NULL; // Placeholder for the actual value type
-                              if(sym_lookup(yylval.ident.lexema, &value) == SYMTAB_NOT_FOUND){
-                                    sym_add(yylval.ident.lexema, 0);
-                              }
-                              yylval.ident.length = yyleng;
-                              yylval.ident.line = yylineno;
-                              yylval.ident.id_val.val_type = UNKNOWN_TYPE;
-                              return ID;
+        yylval.ident.lexema = strdup(yytext);
+        if (yylval.ident.lexema == NULL) {
+            fprintf(stderr, "Memory allocation failed for lexema\n");
+            exit(EXIT_FAILURE);
+        }
+        value_info value;
+        if (sym_lookup(yylval.ident.lexema, &value) == SYMTAB_NOT_FOUND) {
+                    yylval.ident.length = yyleng;
+                    yylval.ident.line = yylineno;
+                    yylval.ident.id_val.val_type = UNKNOWN_TYPE;
+        }
+        return ID;
+
                             }
 \"([^\\"\n\r]*)\" {
     yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)

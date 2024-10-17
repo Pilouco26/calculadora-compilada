@@ -1,3 +1,15 @@
-ad :=  5 + 6
-
+// assignacions
+// assignacions
+x := 1.5
+i := 5
+z := i * (x + i) - i / 4.0
+s := "Hola"
+// expressions bàsiques
+x
+i
+z
+s
+i + i * 2
+i + x
+s + ( s + i ) + "--" + x
 
