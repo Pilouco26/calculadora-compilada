@@ -12,7 +12,8 @@ LIB = -lfl -lm
 SRC_LEX = exemple.l
 SRC_YACC = exemple.y
 
-LEX_OUT = lex.yy.c symtab.c
+LEX_OUT = lex.yy.c
+SYMTAB = symtab.c
 YACC_OUT_C = exemple.tab.c
 YACC_OUT_H = exemple.tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
@@ -27,7 +28,7 @@ SRC_EXTRA = exemple_dades.c exemple_funcions.c
 
 LFLAGS = -d
 # Add the -Wcounterexamples option to YFLAGS
-YFLAGS = -d -v --debug -Wcounterexamples
+YFLAGS = -d -v --debug
 CFLAGS = -Wall -g
 
 EG_IN = ex_entrada.txt
@@ -36,7 +37,9 @@ EG_OUT = ex_sortida.txt
 ######################################################################
 
 all : yacc lex
-	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(LIB)
+	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(SYMTAB) $(LIB)
+
+
 
 yacc : $(SRC_YACC)
 	$(YACC) $(YFLAGS) $(SRC_YACC)

@@ -86,10 +86,16 @@ sign    [+-]?
                     yylval.ident.length = yyleng;
                     yylval.ident.line = yylineno;
                     yylval.ident.id_val.val_type = UNKNOWN_TYPE;
-        }
-        return ID;
+                    return ID;
 
-                            }
+        }
+        else {
+                if(value.val_type == BOOL_TYPE){
+                 return ID_BOOL;
+                }
+                else return ID;
+        }
+}
 \"([^\\"\n\r]*)\" {
     yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
     yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator

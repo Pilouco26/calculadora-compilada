@@ -606,9 +606,9 @@ int yy_flex_debug = 1;
 static const flex_int16_t yy_rule_linenum[41] =
     {   0,
        23,   24,   28,   30,   33,   36,   39,   42,   45,   48,
-       51,   54,   57,   62,   67,   72,   78,   93,  104,  105,
-      106,  107,  108,  109,  110,  111,  112,  113,  115,  116,
-      117,  118,  119,  120,  122,  123,  124,  126,  128,  130
+       51,   54,   57,   62,   67,   72,   78,   99,  110,  111,
+      112,  113,  114,  115,  116,  117,  118,  119,  121,  122,
+      123,  124,  125,  126,  128,  129,  130,  132,  134,  136
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -1136,14 +1136,20 @@ YY_RULE_SETUP
                     yylval.ident.length = yyleng;
                     yylval.ident.line = yylineno;
                     yylval.ident.id_val.val_type = UNKNOWN_TYPE;
-        }
-        return ID;
+                    return ID;
 
-                            }
+        }
+        else {
+                if(value.val_type == BOOL_TYPE){
+                 return ID_BOOL;
+                }
+                else return ID;
+        }
+}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 93 "exemple.l"
+#line 99 "exemple.l"
 {
     yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
     yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
@@ -1155,129 +1161,129 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 104 "exemple.l"
+#line 110 "exemple.l"
 { return ASSIGN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 105 "exemple.l"
+#line 111 "exemple.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 106 "exemple.l"
+#line 112 "exemple.l"
 { return PLUS; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 107 "exemple.l"
+#line 113 "exemple.l"
 { return MINUS; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 108 "exemple.l"
+#line 114 "exemple.l"
 { return MULTIPLY; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 109 "exemple.l"
+#line 115 "exemple.l"
 { return DIVIDE; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 110 "exemple.l"
+#line 116 "exemple.l"
 { return MOD; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 111 "exemple.l"
+#line 117 "exemple.l"
 { return POWER; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 112 "exemple.l"
+#line 118 "exemple.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 113 "exemple.l"
+#line 119 "exemple.l"
 { return CLOSED_PARENTHESIS; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 115 "exemple.l"
+#line 121 "exemple.l"
 { return GREATER_THAN; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 116 "exemple.l"
+#line 122 "exemple.l"
 { return GREATER_EQUAL; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 117 "exemple.l"
+#line 123 "exemple.l"
 { return LESS_THAN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 118 "exemple.l"
+#line 124 "exemple.l"
 { return LESS_EQUAL; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 119 "exemple.l"
+#line 125 "exemple.l"
 { return EQUAL; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 120 "exemple.l"
+#line 126 "exemple.l"
 { return NOT_EQUAL; }
 	YY_BREAK
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 122 "exemple.l"
+#line 128 "exemple.l"
 { /* Ignore comment and newline */ }
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 123 "exemple.l"
+#line 129 "exemple.l"
 { /* Ignore comment and newline */ }
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 124 "exemple.l"
+#line 130 "exemple.l"
 { /* Ignore multi-line comments */ }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 126 "exemple.l"
+#line 132 "exemple.l"
 { /* Ignore empty lines */ }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 128 "exemple.l"
+#line 134 "exemple.l"
 { return ENDLINE; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 130 "exemple.l"
+#line 136 "exemple.l"
 {}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 132 "exemple.l"
+#line 138 "exemple.l"
 { return  0; }   /* Signal end of input to Bison */
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 134 "exemple.l"
+#line 140 "exemple.l"
 ECHO;
 	YY_BREAK
-#line 1281 "lex.yy.c"
+#line 1287 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2390,6 +2396,6 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 134 "exemple.l"
+#line 140 "exemple.l"
 
 

@@ -2,11 +2,13 @@ ID: x (real) pren per valor: 1.500000
 ID: i (int) pren per valor: 5
 ID: z (real) pren per valor: 31.250000
 ID: s (string) pren per valor: Hola
+ID: b (bool) pren per valor: true
 (real) pren per valor: 1.500000
 (int) pren per valor: 5
 (real) pren per valor: 31.250000
  (string) pren per valor: Hola
+ (bool) pren per valor: true
 (int) pren per valor: 15
-(real) pren per valor: 6.500000
- (string) pren per valor: HolaHola5--1.500000
+(real) pren per valor: -3.500000
+ (bool) pren per valor: true
 End of input reached.

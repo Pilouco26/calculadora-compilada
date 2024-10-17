@@ -41,11 +41,11 @@ extern int yylex();
 %token <boolean> FALSE TRUE
 %token <mode> MODE
 %token <real> FLOAT
-%token <ident> ID
+%token <ident> ID ID_BOOL
 %token <cadena> STRING
 %token <sense_valor> LEN SUBSTR SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
-%type <expr_val> expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
+%type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
 
 
 %start programa
@@ -61,7 +61,7 @@ expressio_list : expressio ENDLINE
                 | expressio ENDLINE expressio_list
                 ;
 
-expressio :   ID ASSIGN OPERATION  {
+expressio :       ID ASSIGN OPERATION  {
                   if ($3.val_type == INT_TYPE) {
                       fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
                       $3.val_type = INT_TYPE;
@@ -122,9 +122,17 @@ expressio :   ID ASSIGN OPERATION  {
                 }
                 | ID ASSIGN OPERATION_BOOLEAN {
                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
-
                             $$.val_type = BOOL_TYPE;
                             $$.val_bool = $3.val_bool;
+                            sym_enter($1.lexema, &$3);
+
+                }
+                | ID_BOOL ASSIGN OPERATION_BOOLEAN {
+                                            fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
+                                            $$.val_type = BOOL_TYPE;
+                                            $$.val_bool = $3.val_bool;
+                                            sym_enter($1.lexema, &$3);
+
                 }
                 | ID ASSIGN OPERATION_STRING {
                     if( $3.val_type == INT_TYPE ) {
@@ -191,10 +199,12 @@ expressio :   ID ASSIGN OPERATION  {
                   }
                 }
                 | OPERATION_BOOLEAN {
+                            printf("oepracio booleana\n");
                             fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
-
                             $$.val_type = BOOL_TYPE;
                             $$.val_bool = $1.val_bool;
+                            printf("resultat final %d\n",  $1.val_bool);
+
                 }
                 | OPERATION_STRING {
                     if( $1.val_type == INT_TYPE ) {
@@ -203,8 +213,6 @@ expressio :   ID ASSIGN OPERATION  {
                         $1.val_int = (int)$1.val_int;
                     }
                 }
-
-
 
 
 OPERATION:
@@ -290,7 +298,6 @@ OPERATION:
             $$.val_int = $1.val_int - $3.val_int;
         }
     }
-
     | OPERATION2
     ;
 
@@ -396,9 +403,17 @@ OPERATION4:
             $$.val_type = INT_TYPE;
             $$.val_int = $1;
         }
+    | MINUS INTEGER {
+                $$.val_type = INT_TYPE;
+                $$.val_int = -$2;
+            }
     | FLOAT {
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1;
+        }
+    | MINUS FLOAT {
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = -$2;
         }
     | STRING {
                 $$.val_type = STRING_TYPE;
@@ -431,6 +446,34 @@ OPERATION4:
         }
 
     }
+    | MINUS ID {
+        sym_value_type value;
+        int lookup_result;
+
+        /* Call sym_lookup to find the identifier in the symbol table */
+        lookup_result = sym_lookup($2.lexema, &value);
+
+        if (lookup_result == SYMTAB_OK) {
+            $$.val_type = value.val_type;  // Store the value for later use
+            if($$.val_type == STRING_TYPE){
+                //TODO: PRINTAR ERROR
+                 $$.val_string = value.val_string;  // Store the value for later use
+                 printf("ID '%s' found with type %s\n", $2.lexema, value.val_string);
+            }
+            else if($$.val_type == INT_TYPE){
+                 $$.val_int = -value.val_int;  // Store the value for later use
+                 printf("ID '%s' found with type %d\n", $2.lexema, value.val_int);
+            }
+            else if($$.val_type == FLOAT_TYPE){
+                 $$.val_float = -value.val_float;  // Store the value for later use
+                 printf("ID '%s' found with type %f\n", $2.lexema, value.val_float);
+            }
+
+        } else {
+            fprintf(yyout, "ID '%s' not found, inserted with initial unknown type\n", $2.lexema);
+        }
+
+    }
     | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
         $$.val_type = $2.val_type;
 
@@ -448,6 +491,7 @@ OPERATION4:
         }
     }
 
+
 ;
 
 OPERATION_STRING:
@@ -458,9 +502,12 @@ OPERATION_STRING:
 ;
 OPERATION_BOOLEAN:
     OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
+                                printf("hola or\n");
                                 $$.val_type = BOOL_TYPE;
                                 if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
-                                    $$.val_bool = $1.val_bool || $3.val_bool; }
+                                $$.val_bool = $1.val_bool || $3.val_bool;
+                                printf("resultats %d %d", $1.val_bool , $3.val_bool) ;
+                                }
     }
     | OPERATION_BOOLEAN1
 ;
@@ -475,6 +522,7 @@ OPERATION_BOOLEAN1:
 OPERATION_BOOLEAN2:
     OPERATION_BOOLEAN3
     | NOT OPERATION_BOOLEAN2{
+            printf("hola op\n");
             $$.val_type = BOOL_TYPE;
             if ($2.val_type == BOOL_TYPE) {
                 $$.val_bool = !$2.val_bool;
@@ -496,6 +544,20 @@ OPERATION_BOOLEAN3:
             // Debug print
             fprintf(stderr, "Debug: TRUE encountered, val_bool set to true\n");
         }
+    | ID_BOOL {
+                printf("hola id\n");
+        sym_value_type value;
+        int lookup_result;
+        /* Call sym_lookup to find the identifier in the symbol table */
+        lookup_result = sym_lookup($1.lexema, &value);
+        if (lookup_result == SYMTAB_OK) {
+            $$.val_type = value.val_type;  // Store the value for later use
+            $$.val_bool = value.val_bool;
+        }
+        else {
+                 printf("BOOL not ok\n");
+        }
+    }
     | FALSE {
             $$.val_type = BOOL_TYPE;
             $$.val_bool = false;  // Use bool `false` instead of string "false"
@@ -587,5 +649,6 @@ OPERATION_BOOLEAN3:
                                          $$.val_bool = $1.val_int <= $3.val_int;
                                      }
          }
+
 %%
 
