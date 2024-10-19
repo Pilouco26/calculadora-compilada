@@ -4,8 +4,8 @@
 #include <string.h>
 #include <math.h>
 #include "symtab.h"
-#include "exemple.tab.h"
-#include "exemple_funcions.h"
+#include "tab.h"
+#include "funcions.h"
 %}
 
 %option yylineno
@@ -21,6 +21,21 @@ sign    [+-]?
 %%
 
 {sign}?{digit}+ { yylval.enter = atoi(yytext); return INTEGER; }
+"pi"                        {
+                              yylval.real = M_PI;  // Set yylval to the value of pi
+                              return FLOAT;        // Return the FLOAT token
+                            }
+
+"e"                         {
+                              yylval.real = M_E;   // Set yylval to the value of e
+                              return FLOAT;        // Return the FLOAT token
+                            }
+
+"substr"                     {
+                              return SUBSTR;
+                            }
+
+
 {sign}?{digit}"."{digit}+({exponent})? {
                               yylval.real = atof(yytext);
                               return FLOAT;
@@ -109,12 +124,13 @@ sign    [+-]?
 
 ":="                        { return ASSIGN; }
 ";"                         { return SEMICOLON; }
+","                         { return COMMA; }
 "+"                         { return PLUS; }
 "-"                         { return MINUS; }
 "*"                         { return MULTIPLY; }
 "/"                         { return DIVIDE; }
 "%"                         { return MOD; }
-"**"                         { return POWER; }
+"**"                        { return POWER; }
 "("                         { return OPEN_PARENTHESIS; }
 ")"                         { return CLOSED_PARENTHESIS; }
 

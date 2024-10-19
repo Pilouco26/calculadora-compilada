@@ -14,8 +14,8 @@ extern int yylex();
 %}
 
 %code requires {
-  #include "exemple_dades.h"
-  #include "exemple_funcions.h"
+  #include "dades.h"
+  #include "funcions.h"
 }
 
 %union {
@@ -45,7 +45,7 @@ extern int yylex();
 %token <cadena> STRING
 %token <sense_valor> LEN SUBSTR SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
-%type <expr_val> expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
+%type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
 
 
 %start programa
@@ -199,9 +199,12 @@ expressio :       ID ASSIGN OPERATION  {
                   }
                 }
                 | OPERATION_BOOLEAN {
+                            printf("oepracio booleana\n");
                             fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
                             $$.val_type = BOOL_TYPE;
                             $$.val_bool = $1.val_bool;
+                            printf("resultat final %d\n",  $1.val_bool);
+
                 }
                 | OPERATION_STRING {
                     if( $1.val_type == INT_TYPE ) {
@@ -210,8 +213,6 @@ expressio :       ID ASSIGN OPERATION  {
                         $1.val_int = (int)$1.val_int;
                     }
                 }
-
-
 
 
 OPERATION:
@@ -498,12 +499,57 @@ OPERATION_STRING:
         $$.val_type = INT_TYPE;          // Set the return type as integer.
         $$.val_int = strlen($2.val_string);  // Calculate the length of $2.val_string.
     }
+
+    | SUBSTR {
+        // Here we are assuming that we have already extracted
+        // the string, start, and length in the previous rule
+        // Now we need to handle $1 which is the whole substr call
+
+        // Split the arguments for substr
+        char *args = strdup($1); // $1 contains "\"hola\", 1, 2)"
+
+        // Example args: "\"hola\", 1, 2)"
+        // First, remove the closing parenthesis
+        args[strlen(args) - 1] = '\0'; // Remove the last character ')'
+
+        // Now, args should be "\"hola\", 1, 2"
+        // Find the first comma
+        char *first_comma = strchr(args, ','); // Find the first comma
+        if (first_comma) {
+            *first_comma = '\0'; // Split at the first comma
+            // args now contains "\"hola\""
+            char *string_arg = args + 1; // Skip the opening quote
+            string_arg[strlen(string_arg) - 1] = '\0'; // Remove the closing quote
+
+            // Move to the second part for start index
+            char *second_part = first_comma + 1; // Move past the comma
+            char *second_comma = strchr(second_part, ','); // Find the second comma
+            if (second_comma) {
+                *second_comma = '\0'; // Split at the second comma
+                int start_index = atoi(second_part); // Convert start index to int
+                int length = atoi(second_comma + 1); // Convert length to int
+
+                // Now you can call your substr function
+                $$.val_string = SUBSTR(string_arg, start_index, length); // Call the substr function
+                $$.val_type = STRING_TYPE; // Set the return type as STRING_TYPE
+            }
+        }
+
+        free(args); // Clean up allocated memory
+    }
+
+
+
+
 ;
 OPERATION_BOOLEAN:
     OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
+                                printf("hola or\n");
                                 $$.val_type = BOOL_TYPE;
                                 if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
-                                    $$.val_bool = $1.val_bool || $3.val_bool; }
+                                $$.val_bool = $1.val_bool || $3.val_bool;
+                                printf("resultats %d %d", $1.val_bool , $3.val_bool) ;
+                                }
     }
     | OPERATION_BOOLEAN1
 ;
@@ -518,6 +564,7 @@ OPERATION_BOOLEAN1:
 OPERATION_BOOLEAN2:
     OPERATION_BOOLEAN3
     | NOT OPERATION_BOOLEAN2{
+            printf("hola op\n");
             $$.val_type = BOOL_TYPE;
             if ($2.val_type == BOOL_TYPE) {
                 $$.val_bool = !$2.val_bool;
@@ -540,6 +587,7 @@ OPERATION_BOOLEAN3:
             fprintf(stderr, "Debug: TRUE encountered, val_bool set to true\n");
         }
     | ID_BOOL {
+                printf("hola id\n");
         sym_value_type value;
         int lookup_result;
         /* Call sym_lookup to find the identifier in the symbol table */

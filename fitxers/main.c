@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "exemple_funcions.h"
+#include "funcions.h"
 
 
 int main(int argc, char *argv[])

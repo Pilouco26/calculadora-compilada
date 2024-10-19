@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "exemple_dades.h"
+#include "dades.h"
 
 
 char *type_to_str(data_type val_type)

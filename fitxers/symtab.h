@@ -1,4 +1,4 @@
-#include "exemple_dades.h"
+#include "dades.h"
 
 /* Copyright 1988 by GeoMaker Software                                      */
 /* Written by Mark Grand                                                    */

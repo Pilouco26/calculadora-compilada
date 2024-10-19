@@ -14,8 +14,8 @@ extern int yylex();
 %}
 
 %code requires {
-  #include "exemple_dades.h"
-  #include "exemple_funcions.h"
+  #include "dades.h"
+  #include "funcions.h"
 }
 
 %union {
@@ -43,7 +43,7 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> LEN SUBSTR SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  COMMA LEN SUBSTR SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
 
@@ -498,6 +498,8 @@ OPERATION_STRING:
     LEN OPERATION {
         $$.val_type = INT_TYPE;          // Set the return type as integer.
         $$.val_int = strlen($2.val_string);  // Calculate the length of $2.val_string.
+    }
+    | SUBSTR OPEN_PARENTHESIS OPERATION  CLOSED_PARENTHESIS{
     }
 ;
 OPERATION_BOOLEAN:

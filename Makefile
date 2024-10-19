@@ -9,47 +9,49 @@ LEX = flex
 YACC = bison
 LIB = -lfl -lm
 
-SRC_LEX = exemple.l
-SRC_YACC = exemple.y
+SRC_LEX = ./fitxers/lexic.l
+SRC_YACC = ./fitxers/sintaxi.y
 
-LEX_OUT = lex.yy.c
-SYMTAB = symtab.c
-YACC_OUT_C = exemple.tab.c
-YACC_OUT_H = exemple.tab.h
+LEX_OUT = ./out/lex.yy.c
+SYMTAB = ./fitxers/symtab.c
+YACC_OUT_C = ./fitxers/tab.c
+YACC_OUT_H = ./fitxers/tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
 
-OTHERS = exemple.output
-OBJ = *.o
+OTHERS = ./out/exemple.output
+OBJ = ./out/*.o
 
-SRC = exemple_main.c
-BIN = exemple.exe
+SRC = ./fitxers/main.c
+BIN = calculador.exe
 
-SRC_EXTRA = exemple_dades.c exemple_funcions.c
+SRC_EXTRA = ./fitxers/dades.c ./fitxers/funcions.c
 
 LFLAGS = -d
-# Add the -Wcounterexamples option to YFLAGS
 YFLAGS = -d -v --debug
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -I./fitxers  # Include path for headers
 
 EG_IN = ex_entrada.txt
 EG_OUT = ex_sortida.txt
 
 ######################################################################
 
-all : yacc lex
+# Ensure the output directory exists
+$(shell mkdir -p ./out)
+
+all: $(BIN)
+
+$(BIN): $(YACC_OUT_C) $(YACC_OUT_H) $(LEX_OUT) $(SRC) $(SRC_EXTRA) $(SYMTAB)
 	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(SYMTAB) $(LIB)
 
+$(YACC_OUT_C) $(YACC_OUT_H): $(SRC_YACC)
+	$(YACC) $(YFLAGS) $(SRC_YACC) -o $(YACC_OUT_C)
 
-
-yacc : $(SRC_YACC)
-	$(YACC) $(YFLAGS) $(SRC_YACC)
-
-lex : $(SRC_LEX)
+$(LEX_OUT): $(SRC_LEX)
 	$(LEX) $(LFLAGS) $(SRC_LEX)
 
-clean :
-	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT)
+clean:
+	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(OTHERS) $(EG_OUT)
 
-eg : $(EG_IN)
+eg: $(EG_IN)
 	./$(BIN) $(EG_IN) $(EG_OUT)
 	cat $(EG_OUT)

@@ -34,6 +34,18 @@ void float_to_binary(float val, char *binary) {
   }
   binary[32] = '\0'; // Null terminator for the string
 }
+char* substr(const char* str, int start, int length) {
+  if (start < 0 || length < 0 || start + length > strlen(str)) {
+    return NULL; // Handle invalid input
+  }
+  char* substr = (char*)malloc(length + 1);
+  if (!substr) {
+    return NULL; // Handle memory allocation failure
+  }
+  strncpy(substr, str + start, length);
+  substr[length] = '\0'; // Null-terminate the string
+  return substr;
+}
 
 // Function to convert an integer to a binary string
 void int_to_binary(int n, char *binary) {
