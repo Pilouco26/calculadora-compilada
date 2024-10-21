@@ -43,7 +43,7 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 
@@ -389,6 +389,51 @@ OPERATION4:
         $$.val_int = strlen($2.val_string);
         $$.val_type = INT_TYPE;
       }
+| SUBSTR OPERATION4 OPERATION4 OPERATION4 {
+    // OPERATION4 $2 is the string input
+    // OPERATION4 $3 is the starting index
+    // OPERATION4 $4 is the length of the substring
+
+    if ($2.val_type == STRING_TYPE && $3.val_type == INT_TYPE && $4.val_type == INT_TYPE) {
+        // Ensure that the starting index and length are non-negative
+        if ($3.val_int < 0 || $4.val_int < 0) {
+            fprintf(stderr, "Error: Starting index and length must be non-negative\n");
+            exit(1);
+        }
+
+        // Get the length of the input string
+        int input_length = strlen($2.val_string);
+
+        // Validate the starting index
+        if ($3.val_int >= input_length) {
+            fprintf(stderr, "Error: Starting index exceeds string length\n");
+            exit(1);
+        }
+
+        // Calculate the effective length for the substring
+        int effective_length = ($3.val_int + $4.val_int > input_length) ?
+            input_length - $3.val_int : $4.val_int;
+
+        // Allocate memory for the substring
+        char *substring = (char *)malloc(effective_length + 1);
+        if (substring == NULL) {
+            fprintf(stderr, "Error: Memory allocation failed\n");
+            exit(1);
+        }
+
+        // Copy the substring
+        strncpy(substring, $2.val_string + $3.val_int, effective_length);
+        substring[effective_length] = '\0'; // Null-terminate the substring
+
+        // Set the result
+        $$.val_string = substring; // Assign the resulting substring
+        $$.val_type = STRING_TYPE;  // Set the type to STRING_TYPE
+    } else {
+        fprintf(stderr, "Error: Invalid types for SUBSTR\n");
+        exit(1);
+    }
+}
+
     | INTEGER {
             $$.val_type = INT_TYPE;
             $$.val_int = $1;

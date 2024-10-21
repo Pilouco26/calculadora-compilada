@@ -4,7 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include "symtab.h"
-#include "tab.h"
+#include "sintaxi.tab.h"
 #include "funcions.h"
 %}
 
@@ -70,6 +70,7 @@ sign    [+-]?
     return LEN;
 }
 
+"substr"                       {return SUBSTR;}
 
 "oct"                       {
                                 yylval.mode.representacio = "oct";

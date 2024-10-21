@@ -7,51 +7,47 @@
 CC = gcc
 LEX = flex
 YACC = bison
-LIB = -lfl -lm
+LIB = -lfl -lm  # Added -lm to link the math library
 
-SRC_LEX = ./fitxers/lexic.l
-SRC_YACC = ./fitxers/sintaxi.y
+SRC_LEX = lexic.l
+SRC_YACC = sintaxi.y
 
-LEX_OUT = ./out/lex.yy.c
-SYMTAB = ./fitxers/symtab.c
-YACC_OUT_C = ./fitxers/tab.c
-YACC_OUT_H = ./fitxers/tab.h
+LEX_OUT = lex.yy.c
+YACC_OUT_C = sintaxi.tab.c
+YACC_OUT_H = sintaxi.tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
 
-OTHERS = output
-OBJ = ./out/*.o
+OTHERS = sintaxi.output
+OBJ = *.o
 
-SRC = ./fitxers/main.c
-BIN = calculador.exe
+SRC = main.c
+BIN = calculadora.exe
 
-SRC_EXTRA = ./fitxers/dades.c ./fitxers/funcions.c
+SRC_EXTRA = dades.c funcions.c symtab.c
 
-LFLAGS = -d
-YFLAGS = -d -v --debug
-CFLAGS = -Wall -g -I./fitxers  # Include path for headers
+LFLAGS =
+YFLAGS = -d -v
+CFLAGS = -Wall -g
 
 EG_IN = ex_entrada.txt
-EG_OUT = output
+EG_OUT = ex_sortida.txt
+
+
 
 ######################################################################
 
-# Ensure the output directory exists
-$(shell mkdir -p ./out)
+all : yacc lex
+	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(LIB)
 
-all: $(BIN)
+yacc : $(SRC_YACC)
+	$(YACC) $(YFLAGS) $(SRC_YACC)
 
-$(BIN): $(YACC_OUT_C) $(YACC_OUT_H) $(LEX_OUT) $(SRC) $(SRC_EXTRA) $(SYMTAB)
-	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(SYMTAB) $(LIB)
-
-$(YACC_OUT_C) $(YACC_OUT_H): $(SRC_YACC)
-	$(YACC) $(YFLAGS) $(SRC_YACC) -o $(YACC_OUT_C)
-
-$(LEX_OUT): $(SRC_LEX)
+lex : $(SRC_LEX)
 	$(LEX) $(LFLAGS) $(SRC_LEX)
 
-clean:
-	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(EG_OUT)
+clean :
+	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT)
 
-eg: $(EG_IN)
+eg : $(EG_IN)
 	./$(BIN) $(EG_IN) $(EG_OUT)
 	cat $(EG_OUT)

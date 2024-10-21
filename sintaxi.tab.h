@@ -35,22 +35,22 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_FITXERS_TAB_H_INCLUDED
-# define YY_YY_FITXERS_TAB_H_INCLUDED
+#ifndef YY_YY_SINTAXI_TAB_H_INCLUDED
+# define YY_YY_SINTAXI_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 16 "./fitxers/sintaxi.y"
+#line 16 "sintaxi.y"
 
   #include "dades.h"
   #include "funcions.h"
 
-#line 54 "./fitxers/tab.h"
+#line 54 "sintaxi.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -69,31 +69,32 @@ extern int yydebug;
     ID = 263,                      /* ID  */
     ID_BOOL = 264,                 /* ID_BOOL  */
     STRING = 265,                  /* STRING  */
-    COMMA = 266,                   /* COMMA  */
-    LEN = 267,                     /* LEN  */
-    SIN = 268,                     /* SIN  */
-    COS = 269,                     /* COS  */
-    TAN = 270,                     /* TAN  */
-    AND = 271,                     /* AND  */
-    OR = 272,                      /* OR  */
-    NOT = 273,                     /* NOT  */
-    PLUS = 274,                    /* PLUS  */
-    MINUS = 275,                   /* MINUS  */
-    MULTIPLY = 276,                /* MULTIPLY  */
-    DIVIDE = 277,                  /* DIVIDE  */
-    MOD = 278,                     /* MOD  */
-    POWER = 279,                   /* POWER  */
-    CLOSED_PARENTHESIS = 280,      /* CLOSED_PARENTHESIS  */
-    OPEN_PARENTHESIS = 281,        /* OPEN_PARENTHESIS  */
-    ASSIGN = 282,                  /* ASSIGN  */
-    ENDLINE = 283,                 /* ENDLINE  */
-    SEMICOLON = 284,               /* SEMICOLON  */
-    GREATER_THAN = 285,            /* GREATER_THAN  */
-    GREATER_EQUAL = 286,           /* GREATER_EQUAL  */
-    LESS_THAN = 287,               /* LESS_THAN  */
-    LESS_EQUAL = 288,              /* LESS_EQUAL  */
-    EQUAL = 289,                   /* EQUAL  */
-    NOT_EQUAL = 290                /* NOT_EQUAL  */
+    SUBSTR = 266,                  /* SUBSTR  */
+    COMMA = 267,                   /* COMMA  */
+    LEN = 268,                     /* LEN  */
+    SIN = 269,                     /* SIN  */
+    COS = 270,                     /* COS  */
+    TAN = 271,                     /* TAN  */
+    AND = 272,                     /* AND  */
+    OR = 273,                      /* OR  */
+    NOT = 274,                     /* NOT  */
+    PLUS = 275,                    /* PLUS  */
+    MINUS = 276,                   /* MINUS  */
+    MULTIPLY = 277,                /* MULTIPLY  */
+    DIVIDE = 278,                  /* DIVIDE  */
+    MOD = 279,                     /* MOD  */
+    POWER = 280,                   /* POWER  */
+    CLOSED_PARENTHESIS = 281,      /* CLOSED_PARENTHESIS  */
+    OPEN_PARENTHESIS = 282,        /* OPEN_PARENTHESIS  */
+    ASSIGN = 283,                  /* ASSIGN  */
+    ENDLINE = 284,                 /* ENDLINE  */
+    SEMICOLON = 285,               /* SEMICOLON  */
+    GREATER_THAN = 286,            /* GREATER_THAN  */
+    GREATER_EQUAL = 287,           /* GREATER_EQUAL  */
+    LESS_THAN = 288,               /* LESS_THAN  */
+    LESS_EQUAL = 289,              /* LESS_EQUAL  */
+    EQUAL = 290,                   /* EQUAL  */
+    NOT_EQUAL = 291                /* NOT_EQUAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -102,7 +103,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "./fitxers/sintaxi.y"
+#line 21 "sintaxi.y"
 
     struct {
         char *lexema;
@@ -121,7 +122,7 @@ union YYSTYPE
     char *cadena;
     bool boolean;
 
-#line 125 "./fitxers/tab.h"
+#line 126 "sintaxi.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -136,4 +137,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_FITXERS_TAB_H_INCLUDED  */
+#endif /* !YY_YY_SINTAXI_TAB_H_INCLUDED  */

@@ -1,1 +1,2 @@
-b := len "nigga" + 7
+b := "nigga"
+as := substr b 1 4
