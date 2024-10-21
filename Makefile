@@ -18,7 +18,7 @@ YACC_OUT_C = ./fitxers/tab.c
 YACC_OUT_H = ./fitxers/tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
 
-OTHERS = ./out/exemple.output
+OTHERS = output
 OBJ = ./out/*.o
 
 SRC = ./fitxers/main.c
@@ -31,7 +31,7 @@ YFLAGS = -d -v --debug
 CFLAGS = -Wall -g -I./fitxers  # Include path for headers
 
 EG_IN = ex_entrada.txt
-EG_OUT = ex_sortida.txt
+EG_OUT = output
 
 ######################################################################
 
@@ -50,7 +50,7 @@ $(LEX_OUT): $(SRC_LEX)
 	$(LEX) $(LFLAGS) $(SRC_LEX)
 
 clean:
-	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(OTHERS) $(EG_OUT)
+	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(EG_OUT)
 
 eg: $(EG_IN)
 	./$(BIN) $(EG_IN) $(EG_OUT)

@@ -69,8 +69,8 @@ extern int yydebug;
     ID = 263,                      /* ID  */
     ID_BOOL = 264,                 /* ID_BOOL  */
     STRING = 265,                  /* STRING  */
-    LEN = 266,                     /* LEN  */
-    SUBSTR = 267,                  /* SUBSTR  */
+    COMMA = 266,                   /* COMMA  */
+    LEN = 267,                     /* LEN  */
     SIN = 268,                     /* SIN  */
     COS = 269,                     /* COS  */
     TAN = 270,                     /* TAN  */

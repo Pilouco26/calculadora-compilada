@@ -1,1 +1,1 @@
-b := len "nigga45"
+b := len "nigga" + 7

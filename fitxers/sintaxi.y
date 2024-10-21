@@ -43,9 +43,9 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  COMMA LEN SUBSTR SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
-%type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
+%type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 
 
 %start programa
@@ -134,14 +134,6 @@ expressio :       ID ASSIGN OPERATION  {
                                             sym_enter($1.lexema, &$3);
 
                 }
-                | ID ASSIGN OPERATION_STRING {
-                    if( $3.val_type == INT_TYPE ) {
-                        fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
-                        $3.val_type = INT_TYPE;
-                        $3.val_int = (int)$3.val_int;
-                    }
-                    sym_enter($1.lexema, &$3);
-                }
                 | OPERATION MODE {
                 // AFEGIR ID AL NOM
                             if ($1.val_type == INT_TYPE) {
@@ -206,13 +198,7 @@ expressio :       ID ASSIGN OPERATION  {
                             printf("resultat final %d\n",  $1.val_bool);
 
                 }
-                | OPERATION_STRING {
-                    if( $1.val_type == INT_TYPE ) {
-                        fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
-                        $1.val_type = INT_TYPE;
-                        $1.val_int = (int)$1.val_int;
-                    }
-                }
+
 
 
 OPERATION:
@@ -399,6 +385,10 @@ OPERATION4:
                 $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
             }
         }
+    | LEN OPERATION4  {
+        $$.val_int = strlen($2.val_string);
+        $$.val_type = INT_TYPE;
+      }
     | INTEGER {
             $$.val_type = INT_TYPE;
             $$.val_int = $1;
@@ -494,14 +484,8 @@ OPERATION4:
 
 ;
 
-OPERATION_STRING:
-    LEN OPERATION {
-        $$.val_type = INT_TYPE;          // Set the return type as integer.
-        $$.val_int = strlen($2.val_string);  // Calculate the length of $2.val_string.
-    }
-    | SUBSTR OPEN_PARENTHESIS OPERATION  CLOSED_PARENTHESIS{
-    }
-;
+
+
 OPERATION_BOOLEAN:
     OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
                                 printf("hola or\n");

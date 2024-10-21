@@ -12,6 +12,8 @@
 %option noyywrap
 %option noinput
 %option nounput
+%option debug
+
 
 lletra  [a-zA-Z]
 digit   [0-9]
@@ -31,9 +33,7 @@ sign    [+-]?
                               return FLOAT;        // Return the FLOAT token
                             }
 
-"substr"                     {
-                              return SUBSTR;
-                            }
+
 
 
 {sign}?{digit}"."{digit}+({exponent})? {
@@ -66,9 +66,11 @@ sign    [+-]?
 "tan"                       {
                               return TAN;
                             }
-"len"                       {
-                              return LEN;
-                            }
+"len" {
+    return LEN;
+}
+
+
 "oct"                       {
                                 yylval.mode.representacio = "oct";
                                 yylval.mode.set = true;
