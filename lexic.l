@@ -146,7 +146,7 @@ sign    [+-]?
 
 "//".*[\n]                  { /* Ignore comment and newline */ }
 "#".*[\n]                   { /* Ignore comment and newline */ }
-"/*"([^*]|\*+[^*/]|(\*+\/))*"\*/"[\n] { /* Ignore multi-line comments */ }
+"/*"([^*]|\*+[^*/]|(\*+\/))*"\*/".*[\n] { /* Ignore multi-line comments */ }
 
 ^[ \t]*[\n]                 { /* Ignore empty lines */ }
 

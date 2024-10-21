@@ -43,9 +43,9 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  COMMA LEN  SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
-%type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN OPERATION_STRING
+%type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 
 
 %start programa
@@ -134,14 +134,6 @@ expressio :       ID ASSIGN OPERATION  {
                                             sym_enter($1.lexema, &$3);
 
                 }
-                | ID ASSIGN OPERATION_STRING {
-                    if( $3.val_type == INT_TYPE ) {
-                        fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
-                        $3.val_type = INT_TYPE;
-                        $3.val_int = (int)$3.val_int;
-                    }
-                    sym_enter($1.lexema, &$3);
-                }
                 | OPERATION MODE {
                 // AFEGIR ID AL NOM
                             if ($1.val_type == INT_TYPE) {
@@ -199,20 +191,11 @@ expressio :       ID ASSIGN OPERATION  {
                   }
                 }
                 | OPERATION_BOOLEAN {
-                            printf("oepracio booleana\n");
                             fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
                             $$.val_type = BOOL_TYPE;
                             $$.val_bool = $1.val_bool;
-                            printf("resultat final %d\n",  $1.val_bool);
+                }
 
-                }
-                | OPERATION_STRING {
-                    if( $1.val_type == INT_TYPE ) {
-                        fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
-                        $1.val_type = INT_TYPE;
-                        $1.val_int = (int)$1.val_int;
-                    }
-                }
 
 
 OPERATION:
@@ -399,6 +382,55 @@ OPERATION4:
                 $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
             }
         }
+    | LEN OPERATION4  {
+        $$.val_int = strlen($2.val_string);
+        $$.val_type = INT_TYPE;
+      }
+| SUBSTR OPERATION4 OPERATION4 OPERATION4 {
+    // OPERATION4 $2 is the string input
+    // OPERATION4 $3 is the starting index
+    // OPERATION4 $4 is the length of the substring
+
+    if ($2.val_type == STRING_TYPE && $3.val_type == INT_TYPE && $4.val_type == INT_TYPE) {
+        // Ensure that the starting index and length are non-negative
+        if ($3.val_int < 0 || $4.val_int < 0) {
+            fprintf(stderr, "Error: Starting index and length must be non-negative\n");
+            exit(1);
+        }
+
+        // Get the length of the input string
+        int input_length = strlen($2.val_string);
+
+        // Validate the starting index
+        if ($3.val_int >= input_length) {
+            fprintf(stderr, "Error: Starting index exceeds string length\n");
+            exit(1);
+        }
+
+        // Calculate the effective length for the substring
+        int effective_length = ($3.val_int + $4.val_int > input_length) ?
+            input_length - $3.val_int : $4.val_int;
+
+        // Allocate memory for the substring
+        char *substring = (char *)malloc(effective_length + 1);
+        if (substring == NULL) {
+            fprintf(stderr, "Error: Memory allocation failed\n");
+            exit(1);
+        }
+
+        // Copy the substring
+        strncpy(substring, $2.val_string + $3.val_int, effective_length);
+        substring[effective_length] = '\0'; // Null-terminate the substring
+
+        // Set the result
+        $$.val_string = substring; // Assign the resulting substring
+        $$.val_type = STRING_TYPE;  // Set the type to STRING_TYPE
+    } else {
+        fprintf(stderr, "Error: Invalid types for SUBSTR\n");
+        exit(1);
+    }
+}
+
     | INTEGER {
             $$.val_type = INT_TYPE;
             $$.val_int = $1;
@@ -430,15 +462,12 @@ OPERATION4:
             $$.val_type = value.val_type;  // Store the value for later use
             if($$.val_type == STRING_TYPE){
                  $$.val_string = value.val_string;  // Store the value for later use
-                 printf("ID '%s' found with type %s\n", $1.lexema, value.val_string);
             }
             else if($$.val_type == INT_TYPE){
                  $$.val_int = value.val_int;  // Store the value for later use
-                 printf("ID '%s' found with type %d\n", $1.lexema, value.val_int);
             }
             else if($$.val_type == FLOAT_TYPE){
                  $$.val_float = value.val_float;  // Store the value for later use
-                 printf("ID '%s' found with type %f\n", $1.lexema, value.val_float);
             }
 
         } else {
@@ -458,15 +487,12 @@ OPERATION4:
             if($$.val_type == STRING_TYPE){
                 //TODO: PRINTAR ERROR
                  $$.val_string = value.val_string;  // Store the value for later use
-                 printf("ID '%s' found with type %s\n", $2.lexema, value.val_string);
             }
             else if($$.val_type == INT_TYPE){
                  $$.val_int = -value.val_int;  // Store the value for later use
-                 printf("ID '%s' found with type %d\n", $2.lexema, value.val_int);
             }
             else if($$.val_type == FLOAT_TYPE){
                  $$.val_float = -value.val_float;  // Store the value for later use
-                 printf("ID '%s' found with type %f\n", $2.lexema, value.val_float);
             }
 
         } else {
@@ -494,19 +520,13 @@ OPERATION4:
 
 ;
 
-OPERATION_STRING:
-  LEN OPEN_PARENTHESIS STRING CLOSED_PARENTHESIS {
-    $$.val_int = strlen($3);
-    $$.val_type = INT_TYPE;
-  }
+
 
 OPERATION_BOOLEAN:
     OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
-                                printf("hola or\n");
                                 $$.val_type = BOOL_TYPE;
                                 if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
                                 $$.val_bool = $1.val_bool || $3.val_bool;
-                                printf("resultats %d %d", $1.val_bool , $3.val_bool) ;
                                 }
     }
     | OPERATION_BOOLEAN1
@@ -522,7 +542,6 @@ OPERATION_BOOLEAN1:
 OPERATION_BOOLEAN2:
     OPERATION_BOOLEAN3
     | NOT OPERATION_BOOLEAN2{
-            printf("hola op\n");
             $$.val_type = BOOL_TYPE;
             if ($2.val_type == BOOL_TYPE) {
                 $$.val_bool = !$2.val_bool;
@@ -545,7 +564,6 @@ OPERATION_BOOLEAN3:
             fprintf(stderr, "Debug: TRUE encountered, val_bool set to true\n");
         }
     | ID_BOOL {
-                printf("hola id\n");
         sym_value_type value;
         int lookup_result;
         /* Call sym_lookup to find the identifier in the symbol table */
@@ -555,7 +573,6 @@ OPERATION_BOOLEAN3:
             $$.val_bool = value.val_bool;
         }
         else {
-                 printf("BOOL not ok\n");
         }
     }
     | FALSE {
