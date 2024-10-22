@@ -51,6 +51,5 @@ eg : $(EG_IN)
 	cat $(EG_OUT)
 
 run : all
-	./$(BIN) $(EG_IN) $(EG_OUT) >> debug.log 2>> error.log
+	./$(BIN) $(EG_IN) $(EG_OUT) > debug.log 2>&1
 	cat $(EG_OUT)
-

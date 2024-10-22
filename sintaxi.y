@@ -10,6 +10,7 @@
 extern FILE *yyout;
 extern int yylineno;
 extern int yylex();
+
 /*extern void yyerror(char*);*/
 %}
 
@@ -61,24 +62,41 @@ expressio_list : expressio ENDLINE
                 | expressio ENDLINE expressio_list
                 ;
 
-expressio :       ID ASSIGN OPERATION  {
-                  if ($3.val_type == INT_TYPE) {
-                      fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
-                      $3.val_type = INT_TYPE;
-                      $3.val_int = (int)$3.val_int;
-                  } else if($3.val_type == FLOAT_TYPE){
-                      fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
-                      $3.val_type = FLOAT_TYPE;
-                      $3.val_float = $3.val_float;
+expressio :       ID ASSIGN OPERATION {
+                      sym_value_type existing_value;
+                      int lookup_result = sym_lookup($1.lexema, &existing_value);
+
+                      if (lookup_result == SYMTAB_OK) {
+                          // ID already exists, check if the new value matches the existing type
+                          if (existing_value.val_type != $3.val_type) {
+                              fprintf(stderr, "Error: Type mismatch for ID '%s' in line %d.\n", $1.lexema, yylineno);
+                              YYABORT;
+                          }
+                      }
+
+                      // Assign the new value
+                      if ($3.val_type == INT_TYPE) {
+                          fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
+                          $3.val_type = INT_TYPE;
+                          $3.val_int = (int)$3.val_int;
+                      } else if ($3.val_type == FLOAT_TYPE) {
+                          fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
+                          $3.val_type = FLOAT_TYPE;
+                          $3.val_float = $3.val_float;
+                      } else {
+                          fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
+                          $$.val_type = STRING_TYPE;
+                          $$.val_string = $3.val_string;
+                      }
+
+                      sym_enter($1.lexema, &$3);
                   }
-                  else{
-                       fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
-                       $$.val_type = STRING_TYPE;
-                       $$.val_string = $3.val_string;
-                  }
-                  sym_enter($1.lexema, &$3);
-                }
+
                 | ID ASSIGN OPERATION MODE {
+                if ($3.val_type == UNKNOWN_TYPE) {
+                        fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
+                        YYABORT;
+                    }
                                 if ($3.val_type == INT_TYPE) {
                                     if (!$4.set || strcmp($4.representacio, "dec") == 0) {
                                         // Default case: print the integer value
@@ -128,6 +146,10 @@ expressio :       ID ASSIGN OPERATION  {
 
                 }
                 | ID_BOOL ASSIGN OPERATION_BOOLEAN {
+                if ($3.val_type == UNKNOWN_TYPE) {
+                        fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
+                        YYABORT;
+                }
                                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
                                             $$.val_type = BOOL_TYPE;
                                             $$.val_bool = $3.val_bool;
@@ -135,7 +157,10 @@ expressio :       ID ASSIGN OPERATION  {
 
                 }
                 | OPERATION MODE {
-                // AFEGIR ID AL NOM
+                if ($1.val_type == UNKNOWN_TYPE) {
+                        fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
+                        YYABORT;
+                    }
                             if ($1.val_type == INT_TYPE) {
                                 if (strcmp($2.representacio, "dec") == 0) {
                                     // Default case: print the integer value
@@ -173,23 +198,27 @@ expressio :       ID ASSIGN OPERATION  {
                                        $$.val_string = $1.val_string;
                                        }
                 }
-                | OPERATION
-                {
-                  if ($1.val_type == INT_TYPE) {
-                      fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
-                      $1.val_type = INT_TYPE;
-                      $1.val_int = (int)$1.val_int;
-                  } else if($1.val_type == FLOAT_TYPE){
-                      fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
-                      $1.val_type = FLOAT_TYPE;
-                      $1.val_float = $1.val_int;
-                  }
-                  else{
-                       fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
-                       $$.val_type = STRING_TYPE;
-                       $$.val_string = $1.val_string;
-                  }
+                | OPERATION {
+                    if ($1.val_type == UNKNOWN_TYPE) {
+                        fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
+                        YYABORT;
+                    }
+
+                    if ($1.val_type == INT_TYPE) {
+                        fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
+                        $1.val_type = INT_TYPE;
+                        $1.val_int = (int)$1.val_int;
+                    } else if ($1.val_type == FLOAT_TYPE) {
+                        fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
+                        $1.val_type = FLOAT_TYPE;
+                        $1.val_float = $1.val_int;
+                    } else {
+                        fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
+                        $$.val_type = STRING_TYPE;
+                        $$.val_string = $1.val_string;
+                    }
                 }
+
                 | OPERATION_BOOLEAN {
                             fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
                             $$.val_type = BOOL_TYPE;
@@ -265,73 +294,104 @@ OPERATION:
         }
     }
     | OPERATION MINUS OPERATION2 {
-        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-            if ($1.val_type == INT_TYPE) {
-                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-            }
-            if ($3.val_type == INT_TYPE) {
-                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-            }
+        if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
+            ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
 
-            $$.val_type = FLOAT_TYPE;
-            $$.val_float = $1.val_float - $3.val_float;
+            if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                if ($1.val_type == INT_TYPE) {
+                    $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                }
+                if ($3.val_type == INT_TYPE) {
+                    $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                }
+
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = $1.val_float - $3.val_float;
+            } else {
+                // Both operands are integers
+                $$.val_type = INT_TYPE;
+                $$.val_int = $1.val_int - $3.val_int;
+            }
         } else {
-            // Both operands are integers
-            $$.val_type = INT_TYPE;
-            $$.val_int = $1.val_int - $3.val_int;
+            fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
+            YYABORT;
         }
     }
     | OPERATION2
     ;
 
 OPERATION2:
-    OPERATION2 MULTIPLY OPERATION3 {
-        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-            if ($1.val_type == INT_TYPE) {
-                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-            }
-            if ($3.val_type == INT_TYPE) {
-                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-            }
+    | OPERATION2 MULTIPLY OPERATION3 {
+        if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
+            ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
 
-            $$.val_type = FLOAT_TYPE;
-            $$.val_float = $1.val_float * $3.val_float;
+            if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                if ($1.val_type == INT_TYPE) {
+                    $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                }
+                if ($3.val_type == INT_TYPE) {
+                    $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                }
+
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = $1.val_float * $3.val_float;
+            } else {
+                // Both operands are integers
+                $$.val_type = INT_TYPE;
+                $$.val_int = $1.val_int * $3.val_int;
+            }
         } else {
-            // Both operands are integers
-            $$.val_type = INT_TYPE;
-            $$.val_int = $1.val_int * $3.val_int;
+            fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
+            YYABORT;
         }
     }
+
     | OPERATION2 DIVIDE OPERATION3 {
-        if ($3.val_type == INT_TYPE && $3.val_int == 0) {
-            fprintf(stderr, "Error: Division by zero\n");
-            exit(1);
-        } else if ($3.val_type == FLOAT_TYPE && $3.val_float == 0.0) {
-            fprintf(stderr, "Error: Division by zero\n");
-            exit(1);
-        }
-        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-            if ($1.val_type == INT_TYPE) {
-                $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-            }
-            if ($3.val_type == INT_TYPE) {
-                $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+        if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
+            ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
+
+            if ($3.val_type == INT_TYPE && $3.val_int == 0) {
+                fprintf(stderr, "Error: Division by zero in line %d\n", yylineno);
+                YYABORT;
+            } else if ($3.val_type == FLOAT_TYPE && $3.val_float == 0.0) {
+                fprintf(stderr, "Error: Division by zero in line %d\n", yylineno);
+                YYABORT;
             }
 
-            $$.val_type = FLOAT_TYPE;
-            $$.val_float = $1.val_float / $3.val_float;
+            if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                if ($1.val_type == INT_TYPE) {
+                    $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                }
+                if ($3.val_type == INT_TYPE) {
+                    $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                }
+
+                $$.val_type = FLOAT_TYPE;
+                $$.val_float = $1.val_float / $3.val_float;
+            } else {
+                // Both operands are integers
+                $$.val_type = INT_TYPE;
+                $$.val_int = $1.val_int / $3.val_int;
+            }
         } else {
-            // Both operands are integers
-            $$.val_type = INT_TYPE;
-            $$.val_int = $1.val_int / $3.val_int;
+            fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
+            YYABORT;
         }
     }
     | OPERATION2 MOD OPERATION3 {
     //NOMES PER INT
             if ($1.val_type == INT_TYPE || $3.val_type == INT_TYPE) {
-                // Both operands are integers
-                $$.val_type = INT_TYPE;
-                $$.val_int = $1.val_int % $3.val_int;
+                if ($3.val_int > 0) {
+                    // Both operands are integers and divisor is greater than 0
+                    $$.val_type = INT_TYPE;
+                    $$.val_int = $1.val_int % $3.val_int;
+                } else {
+                    fprintf(stderr, "Error: Modulus by zero or negative number in line %d\n", yylineno);
+                    YYABORT;
+                }
+            }
+            else {
+                fprintf(stderr, "Error: Modulus is not made by integers as expected in line %d\n", yylineno-1);
             }
         }
     | OPERATION3
@@ -356,43 +416,55 @@ OPERATION3:
                     }
         }
     | OPERATION4
-       ;
+;
 OPERATION4:
-     SIN OPERATION4 {
-            if( $2.val_type == FLOAT_TYPE  ) {
-                $$.val_type = FLOAT_TYPE;
-                $$.val_float = sin($2.val_float);  // Casting the result of sin($2) to an integer
-            }
-            else if($2.val_type == INT_TYPE) {
-                $$.val_type = FLOAT_TYPE;
-                $$.val_float = sin($2.val_int);  // Casting the result of sin($2) to an integer
-            }
-     }
-    | COS OPERATION4 {
-            if( $2.val_type == FLOAT_TYPE  ) {
-                $$.val_type = FLOAT_TYPE;
-                $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
-            }
-            else if($2.val_type == INT_TYPE) {
-                $$.val_type = FLOAT_TYPE;
-                $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
-            }
+    | SIN OPERATION4 {
+        if ($2.val_type == FLOAT_TYPE) {
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = sin($2.val_float);
+        } else if ($2.val_type == INT_TYPE) {
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = sin($2.val_int);
+        }
+    }
 
+    | COS OPERATION4 {
+        if ($2.val_type == FLOAT_TYPE) {
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = cos($2.val_float);
+        } else if ($2.val_type == INT_TYPE) {
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = cos($2.val_int);
         }
+    }
+
     | TAN OPERATION4 {
-            if( $2.val_type == FLOAT_TYPE  ) {
-                $$.val_type = FLOAT_TYPE;
-                $$.val_float = cos($2.val_float);  // Casting the result of sin($2) to an integer
+        if ($2.val_type == FLOAT_TYPE) {
+            if (fmod($2.val_float, M_PI) == M_PI / 2) {
+                fprintf(stderr, "Error: tan is undefined at %f in line %d\n", $2.val_float, yylineno);
+                YYABORT;
             }
-            else if($2.val_type == INT_TYPE) {
-                $$.val_type = FLOAT_TYPE;
-                $$.val_float = cos($2.val_int);  // Casting the result of sin($2) to an integer
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = tan($2.val_float);
+        } else if ($2.val_type == INT_TYPE) {
+            if ($2.val_int % (int)M_PI == M_PI / 2) {
+                fprintf(stderr, "Error: tan is undefined at %d in line %d\n", $2.val_int, yylineno);
+                YYABORT;
             }
+            $$.val_type = FLOAT_TYPE;
+            $$.val_float = tan($2.val_int);
         }
-    | LEN OPERATION4  {
-        $$.val_int = strlen($2.val_string);
-        $$.val_type = INT_TYPE;
-      }
+    }
+    | LEN OPERATION4 {
+        if ($2.val_type == STRING_TYPE) {
+            $$.val_int = strlen($2.val_string);
+            $$.val_type = INT_TYPE;
+        } else {
+            fprintf(stderr, "Error: LEN operation requires a string type in line %d\n", yylineno);
+            YYABORT;
+        }
+    }
+
 | SUBSTR OPERATION4 OPERATION4 OPERATION4 {
     // OPERATION4 $2 is the string input
     // OPERATION4 $3 is the starting index
@@ -459,29 +531,29 @@ OPERATION4:
                 $$.val_string = $1;
         }
     | ID {
-        sym_value_type value;
-        int lookup_result;
+            sym_value_type value;
+            int lookup_result;
 
-        /* Call sym_lookup to find the identifier in the symbol table */
-        lookup_result = sym_lookup($1.lexema, &value);
+            /* Call sym_lookup to find the identifier in the symbol table */
+            lookup_result = sym_lookup($1.lexema, &value);
 
-        if (lookup_result == SYMTAB_OK) {
-            $$.val_type = value.val_type;  // Store the value for later use
-            if($$.val_type == STRING_TYPE){
-                 $$.val_string = value.val_string;  // Store the value for later use
-            }
-            else if($$.val_type == INT_TYPE){
-                 $$.val_int = value.val_int;  // Store the value for later use
-            }
-            else if($$.val_type == FLOAT_TYPE){
-                 $$.val_float = value.val_float;  // Store the value for later use
-            }
+            if (lookup_result == SYMTAB_OK) {
+                $$.val_type = value.val_type;  // Store the value for later use
+                if($$.val_type == STRING_TYPE){
+                     $$.val_string = value.val_string;  // Store the value for later use
+                }
+                else if($$.val_type == INT_TYPE){
+                     $$.val_int = value.val_int;  // Store the value for later use
+                }
+                else if($$.val_type == FLOAT_TYPE){
+                     $$.val_float = value.val_float;  // Store the value for later use
+                }
 
-        } else {
-            fprintf(yyout, "ID '%s' not found, inserted with initial unknown type\n", $1.lexema);
+            } else {
+                fprintf(stderr, "Error: ID '%s' not declared\n", $1.lexema);
+                exit(EXIT_FAILURE);  // Exit the program
+            }
         }
-
-    }
     | MINUS ID {
         sym_value_type value;
         int lookup_result;
@@ -672,7 +744,7 @@ OPERATION_BOOLEAN3:
                                      } else {
                                          $$.val_bool = $1.val_int <= $3.val_int;
                                      }
-         }
+    }
 
 %%
 
