@@ -1,4 +1,4 @@
-ID: x (real) pren per valor: 1.500000
-ID: i (int) pren per valor: 5
-ID: z (real) pren per valor: 31.500000
-ID: s (string) pren per valor: Hola
+ (string) pren per valor: (null)
+ID: x (real) pren per valor: -5.500000
+(real) pren per valor: -5.500000
+End of input reached.

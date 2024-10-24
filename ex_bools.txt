@@ -1,0 +1,16 @@
+// Basic boolean operations
+true
+false
+true and false                         // AND operation
+true or false                          // OR operation
+not true                               // NOT operation
+PI < 3.5                               // Comparison with PI
+(2 * 3) = 6                            // Arithmetic and comparison
+(10 % 3 + 4 * 2 - 3 / 3) >= 7          // Mixed arithmetic and comparison
+(cos(PI)) < 0                          // Trigonometric function comparison
+2.01 <= 2.1                            // Comparison with decimals
+true and not false or true             // Combination of AND, NOT, OR
+
+// Mixed boolean operations
+(5 > 2.5) and false or true             // Mixed comparison and boolean logic
+(not (PI = 3.14159) or true) and (false or not (3 <= 2))   // Combination of comparisons and boolean logic

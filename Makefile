@@ -38,10 +38,10 @@ all : yacc lex
 	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(LIB)
 
 yacc : $(SRC_YACC)
-	$(YACC) $(YFLAGS) $(SRC_YACC) 2>> debug.log
+	$(YACC) $(YFLAGS) $(SRC_YACC) 2> debug.log
 
 lex : $(SRC_LEX)
-	$(LEX) $(LFLAGS) $(SRC_LEX) 2>> debug.log
+	$(LEX) $(LFLAGS) $(SRC_LEX) 2> debug.log
 
 clean :
 	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT) debug.log

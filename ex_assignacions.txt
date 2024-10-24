@@ -1,0 +1,20 @@
+// Assignments
+x := 5.5
+y := 12
+z := x * 3 + y / 2 - 2
+w := "Programming"
+m := z > 6 and y <= 12 or not x < 4.0
+n := "Challenge"
+z + y - x
+x * y / z
+w + " " + n + " is fun"
+substr(w 3 2) + substr(n 2 1)
+z + (x * 3) / y - x
+m or not (y > 10 and x < 6)
+w + y + "--" + substr(n 2 3)
+substr((w + n) 2 4) + "--" + x
+x + y * (z - 3) / x
+x > y or m and not (z < 12)
+justa := m and y > z or not (x = 5.5)
+w + " - " + n + ": " + z + x
+substr((w + n) 1 5) + (z - y)

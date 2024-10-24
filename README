@@ -1,0 +1,13 @@
+Executar:
+
+1. copiar i pegar el exemple a ex_entrada.txt
+2. make run
+
+decisions de disseny:
+oct, bin  i hex nomes en int
+
+limitacions:
+- problemes de memoria
+- problemes amb les linies (doble salt, etc. És inestable)
+- problems amb els comentaris(funcionen, pero poden donar problemes de memoria)
+

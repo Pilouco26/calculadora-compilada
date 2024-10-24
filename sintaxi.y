@@ -44,7 +44,7 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 
@@ -114,35 +114,22 @@ expressio :       ID ASSIGN OPERATION {
                                         char binary[65]; // 32 bits + null terminator
                                         int_to_binary((int)$3.val_int, binary);
                                         fprintf(yyout, "(int)(bin) pren per valor: %s\n", binary);
+                                        sym_enter($1.lexema, &$3);
+
                                     }
-                              } else if($3.val_type == FLOAT_TYPE){
-                                      if (!$4.set || strcmp($4.representacio, "dec") == 0) {
-                                              // Default case: print the float value in decimal format
-                                              fprintf(yyout, "(float)(dec) pren per valor: %f\n", $3.val_float);
-                                              $3.val_type = FLOAT_TYPE;
-                                              $3.val_float = $3.val_float;
-                                          } else if (strcmp($4.representacio, "hex") == 0) {
-                                              // Hexadecimal representation for floats
-                                              fprintf(yyout, "(float)(hex) pren per valor: %a\n", $3.val_float);
-                                          } else if (strcmp($4.representacio, "bin") == 0) {
-                                              // Binary representation (using custom function)
-                                              char binary[65]; // 32 bits for the float's bit pattern + null terminator
-                                              float_to_binary($3.val_float, binary);
-                                              fprintf(yyout, "(float)(bin) pren per valor: %s\n", binary);
-                                          }
-                                  }
-                                  else{
-                                       fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
-                                       $$.val_type = STRING_TYPE;
-                                       $$.val_string = $3.val_string;
-                                  }
-                                  sym_enter($1.lexema, &$3);
+                              } else {
+                                 fprintf(stderr, "Mode only supported in INTEGER, error declared in line %d\n", yylineno);
+                              }
                 }
                 | ID ASSIGN OPERATION_BOOLEAN {
                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
-                            $$.val_type = BOOL_TYPE;
-                            $$.val_bool = $3.val_bool;
-                            sym_enter($1.lexema, &$3);
+                            fprintf(stderr, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
+                            sym_value_type value_to_store;
+                            value_to_store.val_type = $3.val_type;
+                            value_to_store.val_bool = $3.val_bool; // Assuming $3 is a boolean
+                            // Check if the symbol already exists, if not, initialize a new entry
+
+                            sym_enter($1.lexema, &value_to_store);
 
                 }
                 | ID_BOOL ASSIGN OPERATION_BOOLEAN {
@@ -153,7 +140,11 @@ expressio :       ID ASSIGN OPERATION {
                                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
                                             $$.val_type = BOOL_TYPE;
                                             $$.val_bool = $3.val_bool;
-                                            sym_enter($1.lexema, &$3);
+                                            sym_value_type value_to_store;
+                                            value_to_store.val_type = $3.val_type;
+                                            value_to_store.val_bool = $3.val_bool; // Assuming $3 is a boolean
+                                            sym_enter($1.lexema, &value_to_store);
+
 
                 }
                 | OPERATION MODE {
@@ -294,10 +285,13 @@ OPERATION:
         }
     }
     | OPERATION MINUS OPERATION2 {
+                printf("operacio menos\n");
+                printf("%d, %d, \n", $1.val_type,$3.val_type);
+
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
-
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                printf("operacio float menos\n");
                 if ($1.val_type == INT_TYPE) {
                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
                 }
@@ -345,7 +339,6 @@ OPERATION2:
             YYABORT;
         }
     }
-
     | OPERATION2 DIVIDE OPERATION3 {
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
@@ -465,30 +458,31 @@ OPERATION4:
         }
     }
 
-| SUBSTR OPERATION4 OPERATION4 OPERATION4 {
+| SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS {
     // OPERATION4 $2 is the string input
     // OPERATION4 $3 is the starting index
     // OPERATION4 $4 is the length of the substring
+    // ARREGLAR AIXO
 
-    if ($2.val_type == STRING_TYPE && $3.val_type == INT_TYPE && $4.val_type == INT_TYPE) {
+    if ($3.val_type == STRING_TYPE && $4.val_type == INT_TYPE && $5.val_type == INT_TYPE) {
         // Ensure that the starting index and length are non-negative
-        if ($3.val_int < 0 || $4.val_int < 0) {
+        if ($4.val_int < 0 || $5.val_int < 0) {
             fprintf(stderr, "Error: Starting index and length must be non-negative\n");
             exit(1);
         }
 
         // Get the length of the input string
-        int input_length = strlen($2.val_string);
+        int input_length = strlen($3.val_string);
 
         // Validate the starting index
-        if ($3.val_int >= input_length) {
+        if ($4.val_int >= input_length) {
             fprintf(stderr, "Error: Starting index exceeds string length\n");
             exit(1);
         }
 
         // Calculate the effective length for the substring
-        int effective_length = ($3.val_int + $4.val_int > input_length) ?
-            input_length - $3.val_int : $4.val_int;
+        int effective_length = ($4.val_int + $5.val_int > input_length) ?
+            input_length - $4.val_int : $5.val_int;
 
         // Allocate memory for the substring
         char *substring = (char *)malloc(effective_length + 1);
@@ -498,7 +492,7 @@ OPERATION4:
         }
 
         // Copy the substring
-        strncpy(substring, $2.val_string + $3.val_int, effective_length);
+        strncpy(substring, $3.val_string + $4.val_int, effective_length);
         substring[effective_length] = '\0'; // Null-terminate the substring
 
         // Set the result
@@ -511,20 +505,16 @@ OPERATION4:
 }
 
     | INTEGER {
+
+
             $$.val_type = INT_TYPE;
             $$.val_int = $1;
         }
-    | MINUS INTEGER {
-                $$.val_type = INT_TYPE;
-                $$.val_int = -$2;
-            }
     | FLOAT {
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1;
-        }
-    | MINUS FLOAT {
-            $$.val_type = FLOAT_TYPE;
-            $$.val_float = -$2;
+            printf("%f \n", $1);
+
         }
     | STRING {
                 $$.val_type = STRING_TYPE;
@@ -617,6 +607,7 @@ OPERATION_BOOLEAN1:
             if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
                 $$.val_bool = $1.val_bool && $3.val_bool;
             }
+
     }
 OPERATION_BOOLEAN2:
     OPERATION_BOOLEAN3
@@ -638,9 +629,6 @@ OPERATION_BOOLEAN3:
     | TRUE {
             $$.val_type = BOOL_TYPE;
             $$.val_bool = true;  // Use bool `true` instead of string "true"
-
-            // Debug print
-            fprintf(stderr, "Debug: TRUE encountered, val_bool set to true\n");
         }
     | ID_BOOL {
         sym_value_type value;
@@ -657,9 +645,6 @@ OPERATION_BOOLEAN3:
     | FALSE {
             $$.val_type = BOOL_TYPE;
             $$.val_bool = false;  // Use bool `false` instead of string "false"
-
-            // Debug print
-            fprintf(stderr, "Debug: FALSE encountered, val_bool set to false\n");
      }
     | OPERATION EQUAL OPERATION {
                      $$.val_type = BOOL_TYPE;
@@ -704,6 +689,9 @@ OPERATION_BOOLEAN3:
                                              }
          }
     | OPERATION GREATER_THAN OPERATION {
+    printf("hola");
+    printf("%d, %d less_equal \n", $1.val_type, $1.val_type);
+
                              $$.val_type = BOOL_TYPE;
                              if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                                  if ($1.val_type == INT_TYPE) {
@@ -732,6 +720,8 @@ OPERATION_BOOLEAN3:
                                  }
          }
     | OPERATION LESS_EQUAL OPERATION {
+    printf("%d, %d less_equal \n", $1.val_type, $1.val_type);
+
                                      $$.val_type = BOOL_TYPE;
                                      if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                                          if ($1.val_type == INT_TYPE) {

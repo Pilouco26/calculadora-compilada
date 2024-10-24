@@ -23,12 +23,12 @@ sign    [+-]?
 %%
 
 {sign}?{digit}+ { yylval.enter = atoi(yytext); return INTEGER; }
-"pi"                        {
+"PI"                        {
                               yylval.real = M_PI;  // Set yylval to the value of pi
                               return FLOAT;        // Return the FLOAT token
                             }
 
-"e"                         {
+"E"                         {
                               yylval.real = M_E;   // Set yylval to the value of e
                               return FLOAT;        // Return the FLOAT token
                             }
@@ -36,11 +36,15 @@ sign    [+-]?
 
 
 
-{sign}?{digit}"."{digit}+({exponent})? {
-                              yylval.real = atof(yytext);
-                              return FLOAT;
-                            }
-{sign}?{digit}"."{digit}+"-"({exponent})? { yylval.real = atof(yytext); return FLOAT; }
+{sign}?{digit}+"."{digit}+({exponent})? {
+    yylval.real = atof(yytext);
+    return FLOAT;
+}
+
+{sign}?{digit}+"."{digit}+"-"({exponent})? {
+    yylval.real = atof(yytext);
+    return FLOAT;
+}
 
 "false"                     {
                               return FALSE;
@@ -144,9 +148,9 @@ sign    [+-]?
 "="                         { return EQUAL; }
 "<>"                        { return NOT_EQUAL; }
 
-"//".*[\n]                  { /* Ignore comment and newline */ }
-"#".*[\n]                   { /* Ignore comment and newline */ }
-"/*"([^*]|\*+[^*/]|(\*+\/))*"\*/".*[\n] { /* Ignore multi-line comments */ }
+"//".*               { /* Ignore everything after '//' until the end of the line */ }
+"#".*[\n]                   { /* Ignore comment and newline */  yylineno++;}
+"/*"([^*]|\*+[^*/]|(\*+\/))*"\*/".*[\n] { /* Ignore multi-line comments */}
 
 ^[ \t]*[\n]                 { /* Ignore empty lines */ }
 
