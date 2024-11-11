@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 17 "sintaxi.y"
+#line 19 "sintaxi.y"
 
   #include "dades.h"
   #include "funcions.h"
@@ -69,33 +69,36 @@ extern int yydebug;
     ID = 263,                      /* ID  */
     ID_BOOL = 264,                 /* ID_BOOL  */
     STRING = 265,                  /* STRING  */
-    COMMENT = 266,                 /* COMMENT  */
-    SUBSTR = 267,                  /* SUBSTR  */
-    COMMA = 268,                   /* COMMA  */
-    LEN = 269,                     /* LEN  */
-    SIN = 270,                     /* SIN  */
-    COS = 271,                     /* COS  */
-    TAN = 272,                     /* TAN  */
-    AND = 273,                     /* AND  */
-    OR = 274,                      /* OR  */
-    NOT = 275,                     /* NOT  */
-    PLUS = 276,                    /* PLUS  */
-    MINUS = 277,                   /* MINUS  */
-    MULTIPLY = 278,                /* MULTIPLY  */
-    DIVIDE = 279,                  /* DIVIDE  */
-    MOD = 280,                     /* MOD  */
-    POWER = 281,                   /* POWER  */
-    CLOSED_PARENTHESIS = 282,      /* CLOSED_PARENTHESIS  */
-    OPEN_PARENTHESIS = 283,        /* OPEN_PARENTHESIS  */
-    ASSIGN = 284,                  /* ASSIGN  */
-    ENDLINE = 285,                 /* ENDLINE  */
-    SEMICOLON = 286,               /* SEMICOLON  */
-    GREATER_THAN = 287,            /* GREATER_THAN  */
-    GREATER_EQUAL = 288,           /* GREATER_EQUAL  */
-    LESS_THAN = 289,               /* LESS_THAN  */
-    LESS_EQUAL = 290,              /* LESS_EQUAL  */
-    EQUAL = 291,                   /* EQUAL  */
-    NOT_EQUAL = 292                /* NOT_EQUAL  */
+    REPEAT = 266,                  /* REPEAT  */
+    DO = 267,                      /* DO  */
+    DONE = 268,                    /* DONE  */
+    COMMENT = 269,                 /* COMMENT  */
+    SUBSTR = 270,                  /* SUBSTR  */
+    COMMA = 271,                   /* COMMA  */
+    LEN = 272,                     /* LEN  */
+    SIN = 273,                     /* SIN  */
+    COS = 274,                     /* COS  */
+    TAN = 275,                     /* TAN  */
+    AND = 276,                     /* AND  */
+    OR = 277,                      /* OR  */
+    NOT = 278,                     /* NOT  */
+    PLUS = 279,                    /* PLUS  */
+    MINUS = 280,                   /* MINUS  */
+    MULTIPLY = 281,                /* MULTIPLY  */
+    DIVIDE = 282,                  /* DIVIDE  */
+    MOD = 283,                     /* MOD  */
+    POWER = 284,                   /* POWER  */
+    CLOSED_PARENTHESIS = 285,      /* CLOSED_PARENTHESIS  */
+    OPEN_PARENTHESIS = 286,        /* OPEN_PARENTHESIS  */
+    ASSIGN = 287,                  /* ASSIGN  */
+    ENDLINE = 288,                 /* ENDLINE  */
+    SEMICOLON = 289,               /* SEMICOLON  */
+    GREATER_THAN = 290,            /* GREATER_THAN  */
+    GREATER_EQUAL = 291,           /* GREATER_EQUAL  */
+    LESS_THAN = 292,               /* LESS_THAN  */
+    LESS_EQUAL = 293,              /* LESS_EQUAL  */
+    EQUAL = 294,                   /* EQUAL  */
+    NOT_EQUAL = 295                /* NOT_EQUAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -104,7 +107,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "sintaxi.y"
+#line 24 "sintaxi.y"
 
     struct {
         char *lexema;
@@ -122,8 +125,11 @@ union YYSTYPE
     void *sense_valor;
     char *cadena;
     bool boolean;
+    expression_list expr_list;
+    heading header;
 
-#line 127 "sintaxi.tab.h"
+
+#line 133 "sintaxi.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

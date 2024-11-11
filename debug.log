@@ -1,19 +1,42 @@
 --(end of buffer or a NUL)
---accepting rule at line 151 ("// Assignments")
---accepting rule at line 157 ("
+--accepting rule at line 104 ("fact")
+--accepting rule at line 163 (" ")
+--accepting rule at line 136 (":=")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("0")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
 ")
---accepting rule at line 100 ("x")
---accepting rule at line 159 (" ")
---accepting rule at line 132 (":=")
---accepting rule at line 159 (" ")
---accepting rule at line 39 ("-5.5")
---accepting rule at line 159 ("")
---accepting rule at line 157 ("
+--accepting rule at line 36 ("repeat")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("6")
+--accepting rule at line 163 (" ")
+--accepting rule at line 37 ("do")
+--(end of buffer or a NUL)
+--accepting rule at line 36 ("repeat")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("6")
+--accepting rule at line 163 (" ")
+--accepting rule at line 37 ("do")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
 ")
---accepting rule at line 159 ("")
---accepting rule at line 157 ("
+--accepting rule at line 104 ("fact")
+--accepting rule at line 163 (" ")
+--accepting rule at line 136 (":=")
+--accepting rule at line 163 (" ")
+--accepting rule at line 104 ("fact")
+--accepting rule at line 163 (" ")
+--accepting rule at line 139 ("+")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("1")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
 ")
 --(end of buffer or a NUL)
+--accepting rule at line 38 ("done")
+--(end of buffer or a NUL)
 --EOF (start condition 0)
--5.500000 
-The compilation has been successful
+Error: syntax error , in line 4
+Error: Line 22032 not found
+ERROR

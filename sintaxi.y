@@ -6,12 +6,14 @@
 #include <string.h>
 #include <stdbool.h>
 #include "symtab.h"
-
+extern FILE *yyin;
 extern FILE *yyout;
 extern int yylineno;
 extern int yylex();
-
+void yyrestart(FILE *input_file);
 /*extern void yyerror(char*);*/
+int contador_initialized = 0;
+int comptador = 0;
 %}
 
 %code requires {
@@ -36,6 +38,9 @@ extern int yylex();
     void *sense_valor;
     char *cadena;
     bool boolean;
+    expression_list expr_list;
+    heading header;
+
 }
 
 %token <enter> INTEGER
@@ -44,10 +49,11 @@ extern int yylex();
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  REPEAT DO DONE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
-
+%type <expr_list> expressio_list
+%type <header> header
 
 %start programa
 
@@ -58,14 +64,62 @@ programa : expressio_list {
              fprintf(yyout, "End of input reached.\n");
            }
 
-expressio_list : expressio ENDLINE
-                | expressio ENDLINE expressio_list
-                ;
+expressio_list : expressio ENDLINE {
+    $$ = (expression_list){ .index = 0 };
+    $$.expr_val[$$.index++] = $1;
+}
+| expressio ENDLINE expressio_list {
+    $$ = $3;
+    $$.expr_val[$$.index++] = $1;
+}
+| /* empty */ {
+    $$ = (expression_list){ .index = 0 };
+}
 
-expressio :       ID ASSIGN OPERATION {
+
+header:
+    REPEAT OPERATION {
+        if (!contador_initialized) {
+            contador_initialized = 1;
+            fprintf(yyout, "linia %d\n", $$.linea);
+
+            $$.linea = yylineno;  // Save the current line number
+            comptador = 0;
+        }
+        if ($2.val_type == INT_TYPE) {
+            if (comptador < $2.val_int) {
+                comptador++;
+
+                fprintf(yyout, "passo per segon if comptador: %d, operacio: %d\n", comptador, $2.val_int);
+                // Restart lexer at saved line number
+                rewind(yyin);  // Reset file pointer to the beginning
+                // Reset file pointer to the beginning
+                long offset = find_line_offset(yyin, $$.linea);
+                fprintf(yyout, "linia loop %d\n", $$.linea);
+                   if (offset != -1) {
+                       fseek(yyin, offset, SEEK_SET);  // Go back to the saved line
+                       yyrestart(yyin);  // Restart the scanner with the new input file
+                    } else {
+                         printf("Error: Line %d not found\n", $$.linea);
+                    }
+
+            }
+        } else {
+            // Handle error for invalid type
+        }
+    }
+
+;
+
+expressio:
+    REPEAT OPERATION DO expressio_list DONE{
+           contador_initialized = 0;
+            comptador = 0;
+    }
+
+|ID ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
-
                       if (lookup_result == SYMTAB_OK) {
                           // ID already exists, check if the new value matches the existing type
                           if (existing_value.val_type != $3.val_type) {
@@ -73,25 +127,29 @@ expressio :       ID ASSIGN OPERATION {
                               YYABORT;
                           }
                       }
-
                       // Assign the new value
                       if ($3.val_type == INT_TYPE) {
                           fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
-                          $3.val_type = INT_TYPE;
-                          $3.val_int = (int)$3.val_int;
+                          $$.val_type = INT_TYPE;
+                          $$.val_int = (int)$3.val_int;
+                          $1.id_val.val_type = INT_TYPE;
+                          $1.id_val.val_int = $3.val_int;
                       } else if ($3.val_type == FLOAT_TYPE) {
                           fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
-                          $3.val_type = FLOAT_TYPE;
-                          $3.val_float = $3.val_float;
+                          $$.val_type = FLOAT_TYPE;
+                          $$.val_float = $3.val_float;
+                          $1.id_val.val_type = FLOAT_TYPE;
+                          $1.id_val.val_float = $3.val_float;
                       } else {
                           fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
                           $$.val_type = STRING_TYPE;
                           $$.val_string = $3.val_string;
+                          $1.id_val.val_type = STRING_TYPE;
+                          $1.id_val.val_string = $3.val_string;
                       }
 
                       sym_enter($1.lexema, &$3);
                   }
-
                 | ID ASSIGN OPERATION MODE {
                 if ($3.val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -209,7 +267,6 @@ expressio :       ID ASSIGN OPERATION {
                         $$.val_string = $1.val_string;
                     }
                 }
-
                 | OPERATION_BOOLEAN {
                             fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
                             $$.val_type = BOOL_TYPE;
@@ -218,10 +275,17 @@ expressio :       ID ASSIGN OPERATION {
 
 
 
+
+
+
+
+
+
+
 OPERATION:
     OPERATION PLUS OPERATION2 {
         char* result;
-
+        fprintf(yyout, " op %d %d \n", $1.val_int, $3.val_int);
         // Check if either operand is a string
         if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
 
@@ -420,7 +484,6 @@ OPERATION4:
             $$.val_float = sin($2.val_int);
         }
     }
-
     | COS OPERATION4 {
         if ($2.val_type == FLOAT_TYPE) {
             $$.val_type = FLOAT_TYPE;
@@ -430,7 +493,6 @@ OPERATION4:
             $$.val_float = cos($2.val_int);
         }
     }
-
     | TAN OPERATION4 {
         if ($2.val_type == FLOAT_TYPE) {
             if (fmod($2.val_float, M_PI) == M_PI / 2) {
@@ -528,6 +590,7 @@ OPERATION4:
             lookup_result = sym_lookup($1.lexema, &value);
 
             if (lookup_result == SYMTAB_OK) {
+                fprintf(yyout, "symtab trobat\n");
                 $$.val_type = value.val_type;  // Store the value for later use
                 if($$.val_type == STRING_TYPE){
                      $$.val_string = value.val_string;  // Store the value for later use

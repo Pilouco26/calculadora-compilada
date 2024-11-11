@@ -6,6 +6,7 @@
 #include "symtab.h"
 #include "sintaxi.tab.h"
 #include "funcions.h"
+
 %}
 
 %option yylineno
@@ -32,6 +33,9 @@ sign    [+-]?
                               yylval.real = M_E;   // Set yylval to the value of e
                               return FLOAT;        // Return the FLOAT token
                             }
+"repeat"                  { return REPEAT; }
+"do"                      { return DO; }
+"done"                    { return DONE; }
 
 
 

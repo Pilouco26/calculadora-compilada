@@ -1,4 +1,10 @@
+ID: fact (int) pren per valor: 0
+linia 22032
+passo per segon if comptador: 1, operacio: 6
+linia loop 2
+passo per segon if comptador: 2, operacio: 6
+linia loop 22032
  (string) pren per valor: (null)
-ID: x (real) pren per valor: -5.500000
-(real) pren per valor: -5.500000
-End of input reached.
+symtab trobat
+ op 0 1 
+ID: fact (int) pren per valor: 1
