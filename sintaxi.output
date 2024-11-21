@@ -6,19 +6,19 @@ Terminals unused in grammar
 
 
 State 0 conflicts: 1 shift/reduce, 13 reduce/reduce
-State 8 conflicts: 1 shift/reduce, 6 reduce/reduce
+State 9 conflicts: 11 shift/reduce
 State 10 conflicts: 11 shift/reduce
 State 11 conflicts: 11 shift/reduce
 State 12 conflicts: 11 shift/reduce
-State 13 conflicts: 11 shift/reduce
-State 14 conflicts: 1 shift/reduce, 11 reduce/reduce
-State 16 conflicts: 1 shift/reduce, 12 reduce/reduce
+State 13 conflicts: 1 shift/reduce, 11 reduce/reduce
+State 15 conflicts: 1 shift/reduce, 12 reduce/reduce
+State 16 conflicts: 1 shift/reduce, 6 reduce/reduce
 State 29 conflicts: 1 shift/reduce, 13 reduce/reduce
 State 30 conflicts: 1 shift/reduce, 11 reduce/reduce
-State 32 conflicts: 1 shift/reduce, 6 reduce/reduce
-State 34 conflicts: 11 shift/reduce
+State 31 conflicts: 11 shift/reduce
+State 33 conflicts: 1 shift/reduce, 6 reduce/reduce
 State 46 conflicts: 1 shift/reduce, 13 reduce/reduce
-State 47 conflicts: 1 shift/reduce, 15 reduce/reduce
+State 47 conflicts: 1 shift/reduce, 13 reduce/reduce
 State 49 conflicts: 1 shift/reduce, 17 reduce/reduce
 State 50 conflicts: 1 shift/reduce, 17 reduce/reduce
 State 51 conflicts: 1 shift/reduce, 9 reduce/reduce
@@ -33,7 +33,7 @@ State 59 conflicts: 1 shift/reduce
 State 60 conflicts: 1 shift/reduce
 State 61 conflicts: 1 shift/reduce, 11 reduce/reduce
 State 62 conflicts: 1 shift/reduce, 11 reduce/reduce
-State 67 conflicts: 11 shift/reduce
+State 66 conflicts: 11 shift/reduce
 
 
 Grammar
@@ -44,108 +44,107 @@ Grammar
 
     2 expressio_list: expressio ENDLINE
     3               | expressio ENDLINE expressio_list
-    4               | ε
 
-    5 header: REPEAT OPERATION
+    4 header: REPEAT OPERATION
 
-    6 expressio: header DO expressio_list DONE
-    7          | ID ASSIGN OPERATION
-    8          | ID ASSIGN OPERATION MODE
-    9          | ID ASSIGN OPERATION_BOOLEAN
-   10          | ID_BOOL ASSIGN OPERATION_BOOLEAN
-   11          | OPERATION MODE
-   12          | OPERATION
-   13          | OPERATION_BOOLEAN
+    5 expressio: header DO expressio_list DONE
+    6          | ID ASSIGN OPERATION
+    7          | ID ASSIGN OPERATION MODE
+    8          | ID ASSIGN OPERATION_BOOLEAN
+    9          | ID_BOOL ASSIGN OPERATION_BOOLEAN
+   10          | OPERATION MODE
+   11          | OPERATION
+   12          | OPERATION_BOOLEAN
 
-   14 OPERATION: OPERATION PLUS OPERATION2
-   15          | OPERATION MINUS OPERATION2
-   16          | OPERATION2
+   13 OPERATION: OPERATION PLUS OPERATION2
+   14          | OPERATION MINUS OPERATION2
+   15          | OPERATION2
 
-   17 OPERATION2: ε
-   18           | OPERATION2 MULTIPLY OPERATION3
-   19           | OPERATION2 DIVIDE OPERATION3
-   20           | OPERATION2 MOD OPERATION3
-   21           | OPERATION3
+   16 OPERATION2: ε
+   17           | OPERATION2 MULTIPLY OPERATION3
+   18           | OPERATION2 DIVIDE OPERATION3
+   19           | OPERATION2 MOD OPERATION3
+   20           | OPERATION3
 
-   22 OPERATION3: OPERATION4 POWER OPERATION3
-   23           | OPERATION4
+   21 OPERATION3: OPERATION4 POWER OPERATION3
+   22           | OPERATION4
 
-   24 OPERATION4: ε
-   25           | SIN OPERATION4
-   26           | COS OPERATION4
-   27           | TAN OPERATION4
-   28           | LEN OPERATION4
-   29           | SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
-   30           | INTEGER
-   31           | FLOAT
-   32           | STRING
-   33           | ID
-   34           | MINUS ID
-   35           | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS
+   23 OPERATION4: ε
+   24           | SIN OPERATION4
+   25           | COS OPERATION4
+   26           | TAN OPERATION4
+   27           | LEN OPERATION4
+   28           | SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+   29           | INTEGER
+   30           | FLOAT
+   31           | STRING
+   32           | ID
+   33           | MINUS ID
+   34           | OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS
 
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1
-   37                  | OPERATION_BOOLEAN1
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1
+   36                  | OPERATION_BOOLEAN1
 
-   38 OPERATION_BOOLEAN1: OPERATION_BOOLEAN2
-   39                   | OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2
+   37 OPERATION_BOOLEAN1: OPERATION_BOOLEAN2
+   38                   | OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2
 
-   40 OPERATION_BOOLEAN2: OPERATION_BOOLEAN3
-   41                   | NOT OPERATION_BOOLEAN2
+   39 OPERATION_BOOLEAN2: OPERATION_BOOLEAN3
+   40                   | NOT OPERATION_BOOLEAN2
 
-   42 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS
-   43                   | TRUE
-   44                   | ID_BOOL
-   45                   | FALSE
-   46                   | OPERATION EQUAL OPERATION
-   47                   | OPERATION NOT_EQUAL OPERATION
-   48                   | OPERATION GREATER_EQUAL OPERATION
-   49                   | OPERATION GREATER_THAN OPERATION
-   50                   | OPERATION LESS_THAN OPERATION
-   51                   | OPERATION LESS_EQUAL OPERATION
+   41 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS
+   42                   | TRUE
+   43                   | ID_BOOL
+   44                   | FALSE
+   45                   | OPERATION EQUAL OPERATION
+   46                   | OPERATION NOT_EQUAL OPERATION
+   47                   | OPERATION GREATER_EQUAL OPERATION
+   48                   | OPERATION GREATER_THAN OPERATION
+   49                   | OPERATION LESS_THAN OPERATION
+   50                   | OPERATION LESS_EQUAL OPERATION
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    INTEGER <enter> (258) 30
-    FALSE <boolean> (259) 45
-    TRUE <boolean> (260) 43
-    MODE <mode> (261) 8 11
-    FLOAT <real> (262) 31
-    ID <ident> (263) 7 8 9 33 34
-    ID_BOOL <ident> (264) 10 44
-    STRING <cadena> (265) 32
-    REPEAT <sense_valor> (266) 5
-    DO <sense_valor> (267) 6
-    DONE <sense_valor> (268) 6
-    COMMENT <sense_valor> (269)
-    SUBSTR <sense_valor> (270) 29
-    COMMA <sense_valor> (271)
-    LEN <sense_valor> (272) 28
-    SIN <sense_valor> (273) 25
-    COS <sense_valor> (274) 26
-    TAN <sense_valor> (275) 27
-    AND <sense_valor> (276) 39
-    OR <sense_valor> (277) 36
-    NOT <sense_valor> (278) 41
-    PLUS <sense_valor> (279) 14
-    MINUS <sense_valor> (280) 15 34
-    MULTIPLY <sense_valor> (281) 18
-    DIVIDE <sense_valor> (282) 19
-    MOD <sense_valor> (283) 20
-    POWER <sense_valor> (284) 22
-    CLOSED_PARENTHESIS <sense_valor> (285) 29 35 42
-    OPEN_PARENTHESIS <sense_valor> (286) 29 35 42
-    ASSIGN <sense_valor> (287) 7 8 9 10
-    ENDLINE <sense_valor> (288) 2 3
-    SEMICOLON <sense_valor> (289)
-    GREATER_THAN <sense_valor> (290) 49
-    GREATER_EQUAL <sense_valor> (291) 48
-    LESS_THAN <sense_valor> (292) 50
-    LESS_EQUAL <sense_valor> (293) 51
-    EQUAL <sense_valor> (294) 46
-    NOT_EQUAL <sense_valor> (295) 47
+    INTEGER <enter> (258) 29
+    FALSE <boolean> (259) 44
+    TRUE <boolean> (260) 42
+    MODE <mode> (261) 7 10
+    FLOAT <real> (262) 30
+    ID <ident> (263) 6 7 8 32 33
+    ID_BOOL <ident> (264) 9 43
+    STRING <cadena> (265) 31
+    DO <sense_valor> (266) 5
+    DONE <sense_valor> (267) 5
+    COMMENT <sense_valor> (268)
+    SUBSTR <sense_valor> (269) 28
+    COMMA <sense_valor> (270)
+    LEN <sense_valor> (271) 27
+    SIN <sense_valor> (272) 24
+    COS <sense_valor> (273) 25
+    TAN <sense_valor> (274) 26
+    AND <sense_valor> (275) 38
+    OR <sense_valor> (276) 35
+    NOT <sense_valor> (277) 40
+    PLUS <sense_valor> (278) 13
+    MINUS <sense_valor> (279) 14 33
+    MULTIPLY <sense_valor> (280) 17
+    DIVIDE <sense_valor> (281) 18
+    MOD <sense_valor> (282) 19
+    POWER <sense_valor> (283) 21
+    CLOSED_PARENTHESIS <sense_valor> (284) 28 34 41
+    OPEN_PARENTHESIS <sense_valor> (285) 28 34 41
+    ASSIGN <sense_valor> (286) 6 7 8 9
+    ENDLINE <sense_valor> (287) 2 3
+    SEMICOLON <sense_valor> (288)
+    GREATER_THAN <sense_valor> (289) 48
+    GREATER_EQUAL <sense_valor> (290) 47
+    LESS_THAN <sense_valor> (291) 49
+    LESS_EQUAL <sense_valor> (292) 50
+    EQUAL <sense_valor> (293) 45
+    NOT_EQUAL <sense_valor> (294) 46
+    REPEAT <header> (295) 4
 
 
 Nonterminals, with rules where they appear
@@ -156,38 +155,38 @@ Nonterminals, with rules where they appear
         on left: 1
         on right: 0
     expressio_list <expr_list> (43)
-        on left: 2 3 4
-        on right: 1 3 6
+        on left: 2 3
+        on right: 1 3 5
     header <header> (44)
-        on left: 5
-        on right: 6
+        on left: 4
+        on right: 5
     expressio <expr_val> (45)
-        on left: 6 7 8 9 10 11 12 13
+        on left: 5 6 7 8 9 10 11 12
         on right: 2 3
     OPERATION <expr_val> (46)
-        on left: 14 15 16
-        on right: 5 7 8 11 12 14 15 35 46 47 48 49 50 51
+        on left: 13 14 15
+        on right: 4 6 7 10 11 13 14 34 45 46 47 48 49 50
     OPERATION2 <expr_val> (47)
-        on left: 17 18 19 20 21
-        on right: 14 15 16 18 19 20
+        on left: 16 17 18 19 20
+        on right: 13 14 15 17 18 19
     OPERATION3 <expr_val> (48)
-        on left: 22 23
-        on right: 18 19 20 21 22
+        on left: 21 22
+        on right: 17 18 19 20 21
     OPERATION4 <expr_val> (49)
-        on left: 24 25 26 27 28 29 30 31 32 33 34 35
-        on right: 22 23 25 26 27 28 29
+        on left: 23 24 25 26 27 28 29 30 31 32 33 34
+        on right: 21 22 24 25 26 27 28
     OPERATION_BOOLEAN <expr_val> (50)
-        on left: 36 37
-        on right: 9 10 13 36 42
+        on left: 35 36
+        on right: 8 9 12 35 41
     OPERATION_BOOLEAN1 <expr_val> (51)
-        on left: 38 39
-        on right: 36 37 39
+        on left: 37 38
+        on right: 35 36 38
     OPERATION_BOOLEAN2 <expr_val> (52)
-        on left: 40 41
-        on right: 38 39 41
+        on left: 39 40
+        on right: 37 38 40
     OPERATION_BOOLEAN3 <expr_val> (53)
-        on left: 42 43 44 45 46 47 48 49 50 51
-        on right: 40
+        on left: 41 42 43 44 45 46 47 48 49 50
+        on right: 39
 
 
 State 0
@@ -201,45 +200,44 @@ State 0
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    REPEAT            shift, and go to state 8
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
+    REPEAT            shift, and go to state 16
 
-    $end           reduce using rule 4 (expressio_list)
-    MODE           reduce using rule 17 (OPERATION2)
-    MODE           [reduce using rule 24 (OPERATION4)]
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    ENDLINE        reduce using rule 17 (OPERATION2)
-    ENDLINE        [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    MODE           reduce using rule 16 (OPERATION2)
+    MODE           [reduce using rule 23 (OPERATION4)]
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    ENDLINE        reduce using rule 16 (OPERATION2)
+    ENDLINE        [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
     programa            go to state 17
     expressio_list      go to state 18
@@ -257,349 +255,349 @@ State 0
 
 State 1
 
-   30 OPERATION4: INTEGER •
+   29 OPERATION4: INTEGER •
 
-    $default  reduce using rule 30 (OPERATION4)
+    $default  reduce using rule 29 (OPERATION4)
 
 
 State 2
 
-   45 OPERATION_BOOLEAN3: FALSE •
-
-    $default  reduce using rule 45 (OPERATION_BOOLEAN3)
-
-
-State 3
-
-   43 OPERATION_BOOLEAN3: TRUE •
-
-    $default  reduce using rule 43 (OPERATION_BOOLEAN3)
-
-
-State 4
-
-   31 OPERATION4: FLOAT •
-
-    $default  reduce using rule 31 (OPERATION4)
-
-
-State 5
-
-    7 expressio: ID • ASSIGN OPERATION
-    8          | ID • ASSIGN OPERATION MODE
-    9          | ID • ASSIGN OPERATION_BOOLEAN
-   33 OPERATION4: ID •
-
-    ASSIGN  shift, and go to state 29
-
-    $default  reduce using rule 33 (OPERATION4)
-
-
-State 6
-
-   10 expressio: ID_BOOL • ASSIGN OPERATION_BOOLEAN
-   44 OPERATION_BOOLEAN3: ID_BOOL •
-
-    ASSIGN  shift, and go to state 30
+   44 OPERATION_BOOLEAN3: FALSE •
 
     $default  reduce using rule 44 (OPERATION_BOOLEAN3)
 
 
-State 7
+State 3
 
-   32 OPERATION4: STRING •
+   42 OPERATION_BOOLEAN3: TRUE •
+
+    $default  reduce using rule 42 (OPERATION_BOOLEAN3)
+
+
+State 4
+
+   30 OPERATION4: FLOAT •
+
+    $default  reduce using rule 30 (OPERATION4)
+
+
+State 5
+
+    6 expressio: ID • ASSIGN OPERATION
+    7          | ID • ASSIGN OPERATION MODE
+    8          | ID • ASSIGN OPERATION_BOOLEAN
+   32 OPERATION4: ID •
+
+    ASSIGN  shift, and go to state 29
 
     $default  reduce using rule 32 (OPERATION4)
 
 
+State 6
+
+    9 expressio: ID_BOOL • ASSIGN OPERATION_BOOLEAN
+   43 OPERATION_BOOLEAN3: ID_BOOL •
+
+    ASSIGN  shift, and go to state 30
+
+    $default  reduce using rule 43 (OPERATION_BOOLEAN3)
+
+
+State 7
+
+   31 OPERATION4: STRING •
+
+    $default  reduce using rule 31 (OPERATION4)
+
+
 State 8
 
-    5 header: REPEAT • OPERATION
+   28 OPERATION4: SUBSTR • OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
 
-    INTEGER           shift, and go to state 1
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
-
-    DO        reduce using rule 17 (OPERATION2)
-    DO        [reduce using rule 24 (OPERATION4)]
-    PLUS      reduce using rule 17 (OPERATION2)
-    PLUS      [reduce using rule 24 (OPERATION4)]
-    MINUS     [reduce using rule 17 (OPERATION2)]
-    MINUS     [reduce using rule 24 (OPERATION4)]
-    MULTIPLY  reduce using rule 17 (OPERATION2)
-    MULTIPLY  [reduce using rule 24 (OPERATION4)]
-    DIVIDE    reduce using rule 17 (OPERATION2)
-    DIVIDE    [reduce using rule 24 (OPERATION4)]
-    MOD       reduce using rule 17 (OPERATION2)
-    MOD       [reduce using rule 24 (OPERATION4)]
-    POWER     reduce using rule 24 (OPERATION4)
-    $default  reduce using rule 17 (OPERATION2)
-
-    OPERATION   go to state 33
-    OPERATION2  go to state 22
-    OPERATION3  go to state 23
-    OPERATION4  go to state 24
+    OPEN_PARENTHESIS  shift, and go to state 31
 
 
 State 9
 
-   29 OPERATION4: SUBSTR • OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+   27 OPERATION4: LEN • OPERATION4
 
-    OPEN_PARENTHESIS  shift, and go to state 34
+    INTEGER           shift, and go to state 1
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 32
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
+
+    INTEGER           [reduce using rule 23 (OPERATION4)]
+    FLOAT             [reduce using rule 23 (OPERATION4)]
+    ID                [reduce using rule 23 (OPERATION4)]
+    STRING            [reduce using rule 23 (OPERATION4)]
+    SUBSTR            [reduce using rule 23 (OPERATION4)]
+    LEN               [reduce using rule 23 (OPERATION4)]
+    SIN               [reduce using rule 23 (OPERATION4)]
+    COS               [reduce using rule 23 (OPERATION4)]
+    TAN               [reduce using rule 23 (OPERATION4)]
+    MINUS             [reduce using rule 23 (OPERATION4)]
+    OPEN_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default          reduce using rule 23 (OPERATION4)
+
+    OPERATION4  go to state 34
 
 
 State 10
 
-   28 OPERATION4: LEN • OPERATION4
+   24 OPERATION4: SIN • OPERATION4
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    INTEGER           [reduce using rule 24 (OPERATION4)]
-    FLOAT             [reduce using rule 24 (OPERATION4)]
-    ID                [reduce using rule 24 (OPERATION4)]
-    STRING            [reduce using rule 24 (OPERATION4)]
-    SUBSTR            [reduce using rule 24 (OPERATION4)]
-    LEN               [reduce using rule 24 (OPERATION4)]
-    SIN               [reduce using rule 24 (OPERATION4)]
-    COS               [reduce using rule 24 (OPERATION4)]
-    TAN               [reduce using rule 24 (OPERATION4)]
-    MINUS             [reduce using rule 24 (OPERATION4)]
-    OPEN_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default          reduce using rule 24 (OPERATION4)
+    INTEGER           [reduce using rule 23 (OPERATION4)]
+    FLOAT             [reduce using rule 23 (OPERATION4)]
+    ID                [reduce using rule 23 (OPERATION4)]
+    STRING            [reduce using rule 23 (OPERATION4)]
+    SUBSTR            [reduce using rule 23 (OPERATION4)]
+    LEN               [reduce using rule 23 (OPERATION4)]
+    SIN               [reduce using rule 23 (OPERATION4)]
+    COS               [reduce using rule 23 (OPERATION4)]
+    TAN               [reduce using rule 23 (OPERATION4)]
+    MINUS             [reduce using rule 23 (OPERATION4)]
+    OPEN_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default          reduce using rule 23 (OPERATION4)
 
     OPERATION4  go to state 35
 
 
 State 11
 
-   25 OPERATION4: SIN • OPERATION4
+   25 OPERATION4: COS • OPERATION4
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    INTEGER           [reduce using rule 24 (OPERATION4)]
-    FLOAT             [reduce using rule 24 (OPERATION4)]
-    ID                [reduce using rule 24 (OPERATION4)]
-    STRING            [reduce using rule 24 (OPERATION4)]
-    SUBSTR            [reduce using rule 24 (OPERATION4)]
-    LEN               [reduce using rule 24 (OPERATION4)]
-    SIN               [reduce using rule 24 (OPERATION4)]
-    COS               [reduce using rule 24 (OPERATION4)]
-    TAN               [reduce using rule 24 (OPERATION4)]
-    MINUS             [reduce using rule 24 (OPERATION4)]
-    OPEN_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default          reduce using rule 24 (OPERATION4)
+    INTEGER           [reduce using rule 23 (OPERATION4)]
+    FLOAT             [reduce using rule 23 (OPERATION4)]
+    ID                [reduce using rule 23 (OPERATION4)]
+    STRING            [reduce using rule 23 (OPERATION4)]
+    SUBSTR            [reduce using rule 23 (OPERATION4)]
+    LEN               [reduce using rule 23 (OPERATION4)]
+    SIN               [reduce using rule 23 (OPERATION4)]
+    COS               [reduce using rule 23 (OPERATION4)]
+    TAN               [reduce using rule 23 (OPERATION4)]
+    MINUS             [reduce using rule 23 (OPERATION4)]
+    OPEN_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default          reduce using rule 23 (OPERATION4)
 
     OPERATION4  go to state 36
 
 
 State 12
 
-   26 OPERATION4: COS • OPERATION4
+   26 OPERATION4: TAN • OPERATION4
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    INTEGER           [reduce using rule 24 (OPERATION4)]
-    FLOAT             [reduce using rule 24 (OPERATION4)]
-    ID                [reduce using rule 24 (OPERATION4)]
-    STRING            [reduce using rule 24 (OPERATION4)]
-    SUBSTR            [reduce using rule 24 (OPERATION4)]
-    LEN               [reduce using rule 24 (OPERATION4)]
-    SIN               [reduce using rule 24 (OPERATION4)]
-    COS               [reduce using rule 24 (OPERATION4)]
-    TAN               [reduce using rule 24 (OPERATION4)]
-    MINUS             [reduce using rule 24 (OPERATION4)]
-    OPEN_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default          reduce using rule 24 (OPERATION4)
+    INTEGER           [reduce using rule 23 (OPERATION4)]
+    FLOAT             [reduce using rule 23 (OPERATION4)]
+    ID                [reduce using rule 23 (OPERATION4)]
+    STRING            [reduce using rule 23 (OPERATION4)]
+    SUBSTR            [reduce using rule 23 (OPERATION4)]
+    LEN               [reduce using rule 23 (OPERATION4)]
+    SIN               [reduce using rule 23 (OPERATION4)]
+    COS               [reduce using rule 23 (OPERATION4)]
+    TAN               [reduce using rule 23 (OPERATION4)]
+    MINUS             [reduce using rule 23 (OPERATION4)]
+    OPEN_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default          reduce using rule 23 (OPERATION4)
 
     OPERATION4  go to state 37
 
 
 State 13
 
-   27 OPERATION4: TAN • OPERATION4
+   40 OPERATION_BOOLEAN2: NOT • OPERATION_BOOLEAN2
 
     INTEGER           shift, and go to state 1
+    FALSE             shift, and go to state 2
+    TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
+    ID_BOOL           shift, and go to state 38
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
 
-    INTEGER           [reduce using rule 24 (OPERATION4)]
-    FLOAT             [reduce using rule 24 (OPERATION4)]
-    ID                [reduce using rule 24 (OPERATION4)]
-    STRING            [reduce using rule 24 (OPERATION4)]
-    SUBSTR            [reduce using rule 24 (OPERATION4)]
-    LEN               [reduce using rule 24 (OPERATION4)]
-    SIN               [reduce using rule 24 (OPERATION4)]
-    COS               [reduce using rule 24 (OPERATION4)]
-    TAN               [reduce using rule 24 (OPERATION4)]
-    MINUS             [reduce using rule 24 (OPERATION4)]
-    OPEN_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default          reduce using rule 24 (OPERATION4)
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
-    OPERATION4  go to state 38
+    OPERATION           go to state 39
+    OPERATION2          go to state 22
+    OPERATION3          go to state 23
+    OPERATION4          go to state 24
+    OPERATION_BOOLEAN2  go to state 40
+    OPERATION_BOOLEAN3  go to state 28
 
 
 State 14
 
-   41 OPERATION_BOOLEAN2: NOT • OPERATION_BOOLEAN2
+   33 OPERATION4: MINUS • ID
 
-    INTEGER           shift, and go to state 1
-    FALSE             shift, and go to state 2
-    TRUE              shift, and go to state 3
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    ID_BOOL           shift, and go to state 39
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
-
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
-
-    OPERATION           go to state 40
-    OPERATION2          go to state 22
-    OPERATION3          go to state 23
-    OPERATION4          go to state 24
-    OPERATION_BOOLEAN2  go to state 41
-    OPERATION_BOOLEAN3  go to state 28
+    ID  shift, and go to state 41
 
 
 State 15
 
-   34 OPERATION4: MINUS • ID
-
-    ID  shift, and go to state 42
-
-
-State 16
-
-   35 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
-   42 OPERATION_BOOLEAN3: OPEN_PARENTHESIS • OPERATION_BOOLEAN CLOSED_PARENTHESIS
+   34 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
+   41 OPERATION_BOOLEAN3: OPEN_PARENTHESIS • OPERATION_BOOLEAN CLOSED_PARENTHESIS
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    ID_BOOL           shift, and go to state 39
+    ID                shift, and go to state 32
+    ID_BOOL           shift, and go to state 38
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
 
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN        reduce using rule 17 (OPERATION2)
-    GREATER_THAN        [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL       reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL       [reduce using rule 24 (OPERATION4)]
-    LESS_THAN           reduce using rule 17 (OPERATION2)
-    LESS_THAN           [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL          reduce using rule 17 (OPERATION2)
-    LESS_EQUAL          [reduce using rule 24 (OPERATION4)]
-    EQUAL               reduce using rule 17 (OPERATION2)
-    EQUAL               [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL           reduce using rule 17 (OPERATION2)
-    NOT_EQUAL           [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN        reduce using rule 16 (OPERATION2)
+    GREATER_THAN        [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL       reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL       [reduce using rule 23 (OPERATION4)]
+    LESS_THAN           reduce using rule 16 (OPERATION2)
+    LESS_THAN           [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL          reduce using rule 16 (OPERATION2)
+    LESS_EQUAL          [reduce using rule 23 (OPERATION4)]
+    EQUAL               reduce using rule 16 (OPERATION2)
+    EQUAL               [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL           reduce using rule 16 (OPERATION2)
+    NOT_EQUAL           [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
-    OPERATION           go to state 43
+    OPERATION           go to state 42
     OPERATION2          go to state 22
     OPERATION3          go to state 23
     OPERATION4          go to state 24
-    OPERATION_BOOLEAN   go to state 44
+    OPERATION_BOOLEAN   go to state 43
     OPERATION_BOOLEAN1  go to state 26
     OPERATION_BOOLEAN2  go to state 27
     OPERATION_BOOLEAN3  go to state 28
+
+
+State 16
+
+    4 header: REPEAT • OPERATION
+
+    INTEGER           shift, and go to state 1
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 32
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
+
+    DO        reduce using rule 16 (OPERATION2)
+    DO        [reduce using rule 23 (OPERATION4)]
+    PLUS      reduce using rule 16 (OPERATION2)
+    PLUS      [reduce using rule 23 (OPERATION4)]
+    MINUS     [reduce using rule 16 (OPERATION2)]
+    MINUS     [reduce using rule 23 (OPERATION4)]
+    MULTIPLY  reduce using rule 16 (OPERATION2)
+    MULTIPLY  [reduce using rule 23 (OPERATION4)]
+    DIVIDE    reduce using rule 16 (OPERATION2)
+    DIVIDE    [reduce using rule 23 (OPERATION4)]
+    MOD       reduce using rule 16 (OPERATION2)
+    MOD       [reduce using rule 23 (OPERATION4)]
+    POWER     reduce using rule 23 (OPERATION4)
+    $default  reduce using rule 16 (OPERATION2)
+
+    OPERATION   go to state 44
+    OPERATION2  go to state 22
+    OPERATION3  go to state 23
+    OPERATION4  go to state 24
 
 
 State 17
@@ -618,7 +616,7 @@ State 18
 
 State 19
 
-    6 expressio: header • DO expressio_list DONE
+    5 expressio: header • DO expressio_list DONE
 
     DO  shift, and go to state 46
 
@@ -633,16 +631,16 @@ State 20
 
 State 21
 
-   11 expressio: OPERATION • MODE
-   12          | OPERATION •
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   46 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
-   47                   | OPERATION • NOT_EQUAL OPERATION
-   48                   | OPERATION • GREATER_EQUAL OPERATION
-   49                   | OPERATION • GREATER_THAN OPERATION
-   50                   | OPERATION • LESS_THAN OPERATION
-   51                   | OPERATION • LESS_EQUAL OPERATION
+   10 expressio: OPERATION • MODE
+   11          | OPERATION •
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   45 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
+   46                   | OPERATION • NOT_EQUAL OPERATION
+   47                   | OPERATION • GREATER_EQUAL OPERATION
+   48                   | OPERATION • GREATER_THAN OPERATION
+   49                   | OPERATION • LESS_THAN OPERATION
+   50                   | OPERATION • LESS_EQUAL OPERATION
 
     MODE           shift, and go to state 48
     PLUS           shift, and go to state 49
@@ -654,124 +652,124 @@ State 21
     EQUAL          shift, and go to state 55
     NOT_EQUAL      shift, and go to state 56
 
-    $default  reduce using rule 12 (expressio)
+    $default  reduce using rule 11 (expressio)
 
 
 State 22
 
-   16 OPERATION: OPERATION2 •
-   18 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
-   19           | OPERATION2 • DIVIDE OPERATION3
-   20           | OPERATION2 • MOD OPERATION3
+   15 OPERATION: OPERATION2 •
+   17 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
+   18           | OPERATION2 • DIVIDE OPERATION3
+   19           | OPERATION2 • MOD OPERATION3
 
     MULTIPLY  shift, and go to state 57
     DIVIDE    shift, and go to state 58
     MOD       shift, and go to state 59
 
-    $default  reduce using rule 16 (OPERATION)
+    $default  reduce using rule 15 (OPERATION)
 
 
 State 23
 
-   21 OPERATION2: OPERATION3 •
+   20 OPERATION2: OPERATION3 •
 
-    $default  reduce using rule 21 (OPERATION2)
+    $default  reduce using rule 20 (OPERATION2)
 
 
 State 24
 
-   22 OPERATION3: OPERATION4 • POWER OPERATION3
-   23           | OPERATION4 •
+   21 OPERATION3: OPERATION4 • POWER OPERATION3
+   22           | OPERATION4 •
 
     POWER  shift, and go to state 60
 
-    $default  reduce using rule 23 (OPERATION3)
+    $default  reduce using rule 22 (OPERATION3)
 
 
 State 25
 
-   13 expressio: OPERATION_BOOLEAN •
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
+   12 expressio: OPERATION_BOOLEAN •
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
 
     OR  shift, and go to state 61
 
-    $default  reduce using rule 13 (expressio)
+    $default  reduce using rule 12 (expressio)
 
 
 State 26
 
-   37 OPERATION_BOOLEAN: OPERATION_BOOLEAN1 •
-   39 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 • AND OPERATION_BOOLEAN2
+   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN1 •
+   38 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 • AND OPERATION_BOOLEAN2
 
     AND  shift, and go to state 62
 
-    $default  reduce using rule 37 (OPERATION_BOOLEAN)
+    $default  reduce using rule 36 (OPERATION_BOOLEAN)
 
 
 State 27
 
-   38 OPERATION_BOOLEAN1: OPERATION_BOOLEAN2 •
+   37 OPERATION_BOOLEAN1: OPERATION_BOOLEAN2 •
 
-    $default  reduce using rule 38 (OPERATION_BOOLEAN1)
+    $default  reduce using rule 37 (OPERATION_BOOLEAN1)
 
 
 State 28
 
-   40 OPERATION_BOOLEAN2: OPERATION_BOOLEAN3 •
+   39 OPERATION_BOOLEAN2: OPERATION_BOOLEAN3 •
 
-    $default  reduce using rule 40 (OPERATION_BOOLEAN2)
+    $default  reduce using rule 39 (OPERATION_BOOLEAN2)
 
 
 State 29
 
-    7 expressio: ID ASSIGN • OPERATION
-    8          | ID ASSIGN • OPERATION MODE
-    9          | ID ASSIGN • OPERATION_BOOLEAN
+    6 expressio: ID ASSIGN • OPERATION
+    7          | ID ASSIGN • OPERATION MODE
+    8          | ID ASSIGN • OPERATION_BOOLEAN
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    ID_BOOL           shift, and go to state 39
+    ID                shift, and go to state 32
+    ID_BOOL           shift, and go to state 38
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
 
-    MODE           reduce using rule 17 (OPERATION2)
-    MODE           [reduce using rule 24 (OPERATION4)]
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    ENDLINE        reduce using rule 17 (OPERATION2)
-    ENDLINE        [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    MODE           reduce using rule 16 (OPERATION2)
+    MODE           [reduce using rule 23 (OPERATION4)]
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    ENDLINE        reduce using rule 16 (OPERATION2)
+    ENDLINE        [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
     OPERATION           go to state 63
     OPERATION2          go to state 22
@@ -785,50 +783,50 @@ State 29
 
 State 30
 
-   10 expressio: ID_BOOL ASSIGN • OPERATION_BOOLEAN
+    9 expressio: ID_BOOL ASSIGN • OPERATION_BOOLEAN
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    ID_BOOL           shift, and go to state 39
+    ID                shift, and go to state 32
+    ID_BOOL           shift, and go to state 38
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
 
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
-    OPERATION           go to state 40
+    OPERATION           go to state 39
     OPERATION2          go to state 22
     OPERATION3          go to state 23
     OPERATION4          go to state 24
@@ -840,137 +838,125 @@ State 30
 
 State 31
 
-   33 OPERATION4: ID •
+   28 OPERATION4: SUBSTR OPEN_PARENTHESIS • OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
 
-    $default  reduce using rule 33 (OPERATION4)
+    INTEGER           shift, and go to state 1
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 32
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
+
+    INTEGER           [reduce using rule 23 (OPERATION4)]
+    FLOAT             [reduce using rule 23 (OPERATION4)]
+    ID                [reduce using rule 23 (OPERATION4)]
+    STRING            [reduce using rule 23 (OPERATION4)]
+    SUBSTR            [reduce using rule 23 (OPERATION4)]
+    LEN               [reduce using rule 23 (OPERATION4)]
+    SIN               [reduce using rule 23 (OPERATION4)]
+    COS               [reduce using rule 23 (OPERATION4)]
+    TAN               [reduce using rule 23 (OPERATION4)]
+    MINUS             [reduce using rule 23 (OPERATION4)]
+    OPEN_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default          reduce using rule 23 (OPERATION4)
+
+    OPERATION4  go to state 66
 
 
 State 32
 
-   35 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
+   32 OPERATION4: ID •
+
+    $default  reduce using rule 32 (OPERATION4)
+
+
+State 33
+
+   34 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
-    OPERATION   go to state 66
+    OPERATION   go to state 67
     OPERATION2  go to state 22
     OPERATION3  go to state 23
     OPERATION4  go to state 24
 
 
-State 33
-
-    5 header: REPEAT OPERATION •
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-
-    PLUS   shift, and go to state 49
-    MINUS  shift, and go to state 50
-
-    $default  reduce using rule 5 (header)
-
-
 State 34
 
-   29 OPERATION4: SUBSTR OPEN_PARENTHESIS • OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+   27 OPERATION4: LEN OPERATION4 •
 
-    INTEGER           shift, and go to state 1
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
-
-    INTEGER           [reduce using rule 24 (OPERATION4)]
-    FLOAT             [reduce using rule 24 (OPERATION4)]
-    ID                [reduce using rule 24 (OPERATION4)]
-    STRING            [reduce using rule 24 (OPERATION4)]
-    SUBSTR            [reduce using rule 24 (OPERATION4)]
-    LEN               [reduce using rule 24 (OPERATION4)]
-    SIN               [reduce using rule 24 (OPERATION4)]
-    COS               [reduce using rule 24 (OPERATION4)]
-    TAN               [reduce using rule 24 (OPERATION4)]
-    MINUS             [reduce using rule 24 (OPERATION4)]
-    OPEN_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default          reduce using rule 24 (OPERATION4)
-
-    OPERATION4  go to state 67
+    $default  reduce using rule 27 (OPERATION4)
 
 
 State 35
 
-   28 OPERATION4: LEN OPERATION4 •
+   24 OPERATION4: SIN OPERATION4 •
 
-    $default  reduce using rule 28 (OPERATION4)
+    $default  reduce using rule 24 (OPERATION4)
 
 
 State 36
 
-   25 OPERATION4: SIN OPERATION4 •
+   25 OPERATION4: COS OPERATION4 •
 
     $default  reduce using rule 25 (OPERATION4)
 
 
 State 37
 
-   26 OPERATION4: COS OPERATION4 •
+   26 OPERATION4: TAN OPERATION4 •
 
     $default  reduce using rule 26 (OPERATION4)
 
 
 State 38
 
-   27 OPERATION4: TAN OPERATION4 •
+   43 OPERATION_BOOLEAN3: ID_BOOL •
 
-    $default  reduce using rule 27 (OPERATION4)
+    $default  reduce using rule 43 (OPERATION_BOOLEAN3)
 
 
 State 39
 
-   44 OPERATION_BOOLEAN3: ID_BOOL •
-
-    $default  reduce using rule 44 (OPERATION_BOOLEAN3)
-
-
-State 40
-
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   46 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
-   47                   | OPERATION • NOT_EQUAL OPERATION
-   48                   | OPERATION • GREATER_EQUAL OPERATION
-   49                   | OPERATION • GREATER_THAN OPERATION
-   50                   | OPERATION • LESS_THAN OPERATION
-   51                   | OPERATION • LESS_EQUAL OPERATION
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   45 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
+   46                   | OPERATION • NOT_EQUAL OPERATION
+   47                   | OPERATION • GREATER_EQUAL OPERATION
+   48                   | OPERATION • GREATER_THAN OPERATION
+   49                   | OPERATION • LESS_THAN OPERATION
+   50                   | OPERATION • LESS_EQUAL OPERATION
 
     PLUS           shift, and go to state 49
     MINUS          shift, and go to state 50
@@ -982,31 +968,31 @@ State 40
     NOT_EQUAL      shift, and go to state 56
 
 
+State 40
+
+   40 OPERATION_BOOLEAN2: NOT OPERATION_BOOLEAN2 •
+
+    $default  reduce using rule 40 (OPERATION_BOOLEAN2)
+
+
 State 41
 
-   41 OPERATION_BOOLEAN2: NOT OPERATION_BOOLEAN2 •
+   33 OPERATION4: MINUS ID •
 
-    $default  reduce using rule 41 (OPERATION_BOOLEAN2)
+    $default  reduce using rule 33 (OPERATION4)
 
 
 State 42
 
-   34 OPERATION4: MINUS ID •
-
-    $default  reduce using rule 34 (OPERATION4)
-
-
-State 43
-
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   35 OPERATION4: OPEN_PARENTHESIS OPERATION • CLOSED_PARENTHESIS
-   46 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
-   47                   | OPERATION • NOT_EQUAL OPERATION
-   48                   | OPERATION • GREATER_EQUAL OPERATION
-   49                   | OPERATION • GREATER_THAN OPERATION
-   50                   | OPERATION • LESS_THAN OPERATION
-   51                   | OPERATION • LESS_EQUAL OPERATION
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   34 OPERATION4: OPEN_PARENTHESIS OPERATION • CLOSED_PARENTHESIS
+   45 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
+   46                   | OPERATION • NOT_EQUAL OPERATION
+   47                   | OPERATION • GREATER_EQUAL OPERATION
+   48                   | OPERATION • GREATER_THAN OPERATION
+   49                   | OPERATION • LESS_THAN OPERATION
+   50                   | OPERATION • LESS_EQUAL OPERATION
 
     PLUS                shift, and go to state 49
     MINUS               shift, and go to state 50
@@ -1019,13 +1005,25 @@ State 43
     NOT_EQUAL           shift, and go to state 56
 
 
-State 44
+State 43
 
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
-   42 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN • CLOSED_PARENTHESIS
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
+   41 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN • CLOSED_PARENTHESIS
 
     OR                  shift, and go to state 61
     CLOSED_PARENTHESIS  shift, and go to state 69
+
+
+State 44
+
+    4 header: REPEAT OPERATION •
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+
+    PLUS   shift, and go to state 49
+    MINUS  shift, and go to state 50
+
+    $default  reduce using rule 4 (header)
 
 
 State 45
@@ -1037,7 +1035,7 @@ State 45
 
 State 46
 
-    6 expressio: header DO • expressio_list DONE
+    5 expressio: header DO • expressio_list DONE
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
@@ -1046,45 +1044,44 @@ State 46
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    REPEAT            shift, and go to state 8
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
+    REPEAT            shift, and go to state 16
 
-    MODE           reduce using rule 17 (OPERATION2)
-    MODE           [reduce using rule 24 (OPERATION4)]
-    DONE           reduce using rule 4 (expressio_list)
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    ENDLINE        reduce using rule 17 (OPERATION2)
-    ENDLINE        [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    MODE           reduce using rule 16 (OPERATION2)
+    MODE           [reduce using rule 23 (OPERATION4)]
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    ENDLINE        reduce using rule 16 (OPERATION2)
+    ENDLINE        [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
     expressio_list      go to state 70
     header              go to state 19
@@ -1111,48 +1108,46 @@ State 47
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    REPEAT            shift, and go to state 8
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
+    REPEAT            shift, and go to state 16
 
     $end           reduce using rule 2 (expressio_list)
-    $end           [reduce using rule 4 (expressio_list)]
-    MODE           reduce using rule 17 (OPERATION2)
-    MODE           [reduce using rule 24 (OPERATION4)]
+    MODE           reduce using rule 16 (OPERATION2)
+    MODE           [reduce using rule 23 (OPERATION4)]
     DONE           reduce using rule 2 (expressio_list)
-    DONE           [reduce using rule 4 (expressio_list)]
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    ENDLINE        reduce using rule 17 (OPERATION2)
-    ENDLINE        [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    ENDLINE        reduce using rule 16 (OPERATION2)
+    ENDLINE        [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
     expressio_list      go to state 71
     header              go to state 19
@@ -1169,63 +1164,63 @@ State 47
 
 State 48
 
-   11 expressio: OPERATION MODE •
+   10 expressio: OPERATION MODE •
 
-    $default  reduce using rule 11 (expressio)
+    $default  reduce using rule 10 (expressio)
 
 
 State 49
 
-   14 OPERATION: OPERATION PLUS • OPERATION2
+   13 OPERATION: OPERATION PLUS • OPERATION2
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    MODE                reduce using rule 17 (OPERATION2)
-    MODE                [reduce using rule 24 (OPERATION4)]
-    DO                  reduce using rule 17 (OPERATION2)
-    DO                  [reduce using rule 24 (OPERATION4)]
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN        reduce using rule 17 (OPERATION2)
-    GREATER_THAN        [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL       reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL       [reduce using rule 24 (OPERATION4)]
-    LESS_THAN           reduce using rule 17 (OPERATION2)
-    LESS_THAN           [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL          reduce using rule 17 (OPERATION2)
-    LESS_EQUAL          [reduce using rule 24 (OPERATION4)]
-    EQUAL               reduce using rule 17 (OPERATION2)
-    EQUAL               [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL           reduce using rule 17 (OPERATION2)
-    NOT_EQUAL           [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    MODE                reduce using rule 16 (OPERATION2)
+    MODE                [reduce using rule 23 (OPERATION4)]
+    DO                  reduce using rule 16 (OPERATION2)
+    DO                  [reduce using rule 23 (OPERATION4)]
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN        reduce using rule 16 (OPERATION2)
+    GREATER_THAN        [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL       reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL       [reduce using rule 23 (OPERATION4)]
+    LESS_THAN           reduce using rule 16 (OPERATION2)
+    LESS_THAN           [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL          reduce using rule 16 (OPERATION2)
+    LESS_EQUAL          [reduce using rule 23 (OPERATION4)]
+    EQUAL               reduce using rule 16 (OPERATION2)
+    EQUAL               [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL           reduce using rule 16 (OPERATION2)
+    NOT_EQUAL           [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION2  go to state 72
     OPERATION3  go to state 23
@@ -1234,56 +1229,56 @@ State 49
 
 State 50
 
-   15 OPERATION: OPERATION MINUS • OPERATION2
+   14 OPERATION: OPERATION MINUS • OPERATION2
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    MODE                reduce using rule 17 (OPERATION2)
-    MODE                [reduce using rule 24 (OPERATION4)]
-    DO                  reduce using rule 17 (OPERATION2)
-    DO                  [reduce using rule 24 (OPERATION4)]
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    GREATER_THAN        reduce using rule 17 (OPERATION2)
-    GREATER_THAN        [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL       reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL       [reduce using rule 24 (OPERATION4)]
-    LESS_THAN           reduce using rule 17 (OPERATION2)
-    LESS_THAN           [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL          reduce using rule 17 (OPERATION2)
-    LESS_EQUAL          [reduce using rule 24 (OPERATION4)]
-    EQUAL               reduce using rule 17 (OPERATION2)
-    EQUAL               [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL           reduce using rule 17 (OPERATION2)
-    NOT_EQUAL           [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    MODE                reduce using rule 16 (OPERATION2)
+    MODE                [reduce using rule 23 (OPERATION4)]
+    DO                  reduce using rule 16 (OPERATION2)
+    DO                  [reduce using rule 23 (OPERATION4)]
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    GREATER_THAN        reduce using rule 16 (OPERATION2)
+    GREATER_THAN        [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL       reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL       [reduce using rule 23 (OPERATION4)]
+    LESS_THAN           reduce using rule 16 (OPERATION2)
+    LESS_THAN           [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL          reduce using rule 16 (OPERATION2)
+    LESS_EQUAL          [reduce using rule 23 (OPERATION4)]
+    EQUAL               reduce using rule 16 (OPERATION2)
+    EQUAL               [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL           reduce using rule 16 (OPERATION2)
+    NOT_EQUAL           [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION2  go to state 73
     OPERATION3  go to state 23
@@ -1292,40 +1287,40 @@ State 50
 
 State 51
 
-   49 OPERATION_BOOLEAN3: OPERATION GREATER_THAN • OPERATION
+   48 OPERATION_BOOLEAN3: OPERATION GREATER_THAN • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION   go to state 74
     OPERATION2  go to state 22
@@ -1335,40 +1330,40 @@ State 51
 
 State 52
 
-   48 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL • OPERATION
+   47 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION   go to state 75
     OPERATION2  go to state 22
@@ -1378,40 +1373,40 @@ State 52
 
 State 53
 
-   50 OPERATION_BOOLEAN3: OPERATION LESS_THAN • OPERATION
+   49 OPERATION_BOOLEAN3: OPERATION LESS_THAN • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION   go to state 76
     OPERATION2  go to state 22
@@ -1421,40 +1416,40 @@ State 53
 
 State 54
 
-   51 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL • OPERATION
+   50 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION   go to state 77
     OPERATION2  go to state 22
@@ -1464,40 +1459,40 @@ State 54
 
 State 55
 
-   46 OPERATION_BOOLEAN3: OPERATION EQUAL • OPERATION
+   45 OPERATION_BOOLEAN3: OPERATION EQUAL • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION   go to state 78
     OPERATION2  go to state 22
@@ -1507,40 +1502,40 @@ State 55
 
 State 56
 
-   47 OPERATION_BOOLEAN3: OPERATION NOT_EQUAL • OPERATION
+   46 OPERATION_BOOLEAN3: OPERATION NOT_EQUAL • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    AND                 reduce using rule 17 (OPERATION2)
-    AND                 [reduce using rule 24 (OPERATION4)]
-    OR                  reduce using rule 17 (OPERATION2)
-    OR                  [reduce using rule 24 (OPERATION4)]
-    PLUS                reduce using rule 17 (OPERATION2)
-    PLUS                [reduce using rule 24 (OPERATION4)]
-    MINUS               [reduce using rule 17 (OPERATION2)]
-    MINUS               [reduce using rule 24 (OPERATION4)]
-    MULTIPLY            reduce using rule 17 (OPERATION2)
-    MULTIPLY            [reduce using rule 24 (OPERATION4)]
-    DIVIDE              reduce using rule 17 (OPERATION2)
-    DIVIDE              [reduce using rule 24 (OPERATION4)]
-    MOD                 reduce using rule 17 (OPERATION2)
-    MOD                 [reduce using rule 24 (OPERATION4)]
-    POWER               reduce using rule 24 (OPERATION4)
-    CLOSED_PARENTHESIS  reduce using rule 17 (OPERATION2)
-    CLOSED_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    ENDLINE             reduce using rule 17 (OPERATION2)
-    ENDLINE             [reduce using rule 24 (OPERATION4)]
-    $default            reduce using rule 17 (OPERATION2)
+    AND                 reduce using rule 16 (OPERATION2)
+    AND                 [reduce using rule 23 (OPERATION4)]
+    OR                  reduce using rule 16 (OPERATION2)
+    OR                  [reduce using rule 23 (OPERATION4)]
+    PLUS                reduce using rule 16 (OPERATION2)
+    PLUS                [reduce using rule 23 (OPERATION4)]
+    MINUS               [reduce using rule 16 (OPERATION2)]
+    MINUS               [reduce using rule 23 (OPERATION4)]
+    MULTIPLY            reduce using rule 16 (OPERATION2)
+    MULTIPLY            [reduce using rule 23 (OPERATION4)]
+    DIVIDE              reduce using rule 16 (OPERATION2)
+    DIVIDE              [reduce using rule 23 (OPERATION4)]
+    MOD                 reduce using rule 16 (OPERATION2)
+    MOD                 [reduce using rule 23 (OPERATION4)]
+    POWER               reduce using rule 23 (OPERATION4)
+    CLOSED_PARENTHESIS  reduce using rule 16 (OPERATION2)
+    CLOSED_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    ENDLINE             reduce using rule 16 (OPERATION2)
+    ENDLINE             [reduce using rule 23 (OPERATION4)]
+    $default            reduce using rule 16 (OPERATION2)
 
     OPERATION   go to state 79
     OPERATION2  go to state 22
@@ -1550,22 +1545,22 @@ State 56
 
 State 57
 
-   18 OPERATION2: OPERATION2 MULTIPLY • OPERATION3
+   17 OPERATION2: OPERATION2 MULTIPLY • OPERATION3
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    MINUS     [reduce using rule 24 (OPERATION4)]
-    $default  reduce using rule 24 (OPERATION4)
+    MINUS     [reduce using rule 23 (OPERATION4)]
+    $default  reduce using rule 23 (OPERATION4)
 
     OPERATION3  go to state 80
     OPERATION4  go to state 24
@@ -1573,22 +1568,22 @@ State 57
 
 State 58
 
-   19 OPERATION2: OPERATION2 DIVIDE • OPERATION3
+   18 OPERATION2: OPERATION2 DIVIDE • OPERATION3
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    MINUS     [reduce using rule 24 (OPERATION4)]
-    $default  reduce using rule 24 (OPERATION4)
+    MINUS     [reduce using rule 23 (OPERATION4)]
+    $default  reduce using rule 23 (OPERATION4)
 
     OPERATION3  go to state 81
     OPERATION4  go to state 24
@@ -1596,22 +1591,22 @@ State 58
 
 State 59
 
-   20 OPERATION2: OPERATION2 MOD • OPERATION3
+   19 OPERATION2: OPERATION2 MOD • OPERATION3
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    MINUS     [reduce using rule 24 (OPERATION4)]
-    $default  reduce using rule 24 (OPERATION4)
+    MINUS     [reduce using rule 23 (OPERATION4)]
+    $default  reduce using rule 23 (OPERATION4)
 
     OPERATION3  go to state 82
     OPERATION4  go to state 24
@@ -1619,22 +1614,22 @@ State 59
 
 State 60
 
-   22 OPERATION3: OPERATION4 POWER • OPERATION3
+   21 OPERATION3: OPERATION4 POWER • OPERATION3
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    MINUS     [reduce using rule 24 (OPERATION4)]
-    $default  reduce using rule 24 (OPERATION4)
+    MINUS     [reduce using rule 23 (OPERATION4)]
+    $default  reduce using rule 23 (OPERATION4)
 
     OPERATION3  go to state 83
     OPERATION4  go to state 24
@@ -1642,50 +1637,50 @@ State 60
 
 State 61
 
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR • OPERATION_BOOLEAN1
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR • OPERATION_BOOLEAN1
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    ID_BOOL           shift, and go to state 39
+    ID                shift, and go to state 32
+    ID_BOOL           shift, and go to state 38
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
 
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
-    OPERATION           go to state 40
+    OPERATION           go to state 39
     OPERATION2          go to state 22
     OPERATION3          go to state 23
     OPERATION4          go to state 24
@@ -1696,50 +1691,50 @@ State 61
 
 State 62
 
-   39 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND • OPERATION_BOOLEAN2
+   38 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND • OPERATION_BOOLEAN2
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    ID_BOOL           shift, and go to state 39
+    ID                shift, and go to state 32
+    ID_BOOL           shift, and go to state 38
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    NOT               shift, and go to state 14
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 16
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    NOT               shift, and go to state 13
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 15
 
-    PLUS           reduce using rule 17 (OPERATION2)
-    PLUS           [reduce using rule 24 (OPERATION4)]
-    MINUS          [reduce using rule 17 (OPERATION2)]
-    MINUS          [reduce using rule 24 (OPERATION4)]
-    MULTIPLY       reduce using rule 17 (OPERATION2)
-    MULTIPLY       [reduce using rule 24 (OPERATION4)]
-    DIVIDE         reduce using rule 17 (OPERATION2)
-    DIVIDE         [reduce using rule 24 (OPERATION4)]
-    MOD            reduce using rule 17 (OPERATION2)
-    MOD            [reduce using rule 24 (OPERATION4)]
-    POWER          reduce using rule 24 (OPERATION4)
-    GREATER_THAN   reduce using rule 17 (OPERATION2)
-    GREATER_THAN   [reduce using rule 24 (OPERATION4)]
-    GREATER_EQUAL  reduce using rule 17 (OPERATION2)
-    GREATER_EQUAL  [reduce using rule 24 (OPERATION4)]
-    LESS_THAN      reduce using rule 17 (OPERATION2)
-    LESS_THAN      [reduce using rule 24 (OPERATION4)]
-    LESS_EQUAL     reduce using rule 17 (OPERATION2)
-    LESS_EQUAL     [reduce using rule 24 (OPERATION4)]
-    EQUAL          reduce using rule 17 (OPERATION2)
-    EQUAL          [reduce using rule 24 (OPERATION4)]
-    NOT_EQUAL      reduce using rule 17 (OPERATION2)
-    NOT_EQUAL      [reduce using rule 24 (OPERATION4)]
-    $default       reduce using rule 17 (OPERATION2)
+    PLUS           reduce using rule 16 (OPERATION2)
+    PLUS           [reduce using rule 23 (OPERATION4)]
+    MINUS          [reduce using rule 16 (OPERATION2)]
+    MINUS          [reduce using rule 23 (OPERATION4)]
+    MULTIPLY       reduce using rule 16 (OPERATION2)
+    MULTIPLY       [reduce using rule 23 (OPERATION4)]
+    DIVIDE         reduce using rule 16 (OPERATION2)
+    DIVIDE         [reduce using rule 23 (OPERATION4)]
+    MOD            reduce using rule 16 (OPERATION2)
+    MOD            [reduce using rule 23 (OPERATION4)]
+    POWER          reduce using rule 23 (OPERATION4)
+    GREATER_THAN   reduce using rule 16 (OPERATION2)
+    GREATER_THAN   [reduce using rule 23 (OPERATION4)]
+    GREATER_EQUAL  reduce using rule 16 (OPERATION2)
+    GREATER_EQUAL  [reduce using rule 23 (OPERATION4)]
+    LESS_THAN      reduce using rule 16 (OPERATION2)
+    LESS_THAN      [reduce using rule 23 (OPERATION4)]
+    LESS_EQUAL     reduce using rule 16 (OPERATION2)
+    LESS_EQUAL     [reduce using rule 23 (OPERATION4)]
+    EQUAL          reduce using rule 16 (OPERATION2)
+    EQUAL          [reduce using rule 23 (OPERATION4)]
+    NOT_EQUAL      reduce using rule 16 (OPERATION2)
+    NOT_EQUAL      [reduce using rule 23 (OPERATION4)]
+    $default       reduce using rule 16 (OPERATION2)
 
-    OPERATION           go to state 40
+    OPERATION           go to state 39
     OPERATION2          go to state 22
     OPERATION3          go to state 23
     OPERATION4          go to state 24
@@ -1749,16 +1744,16 @@ State 62
 
 State 63
 
-    7 expressio: ID ASSIGN OPERATION •
-    8          | ID ASSIGN OPERATION • MODE
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   46 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
-   47                   | OPERATION • NOT_EQUAL OPERATION
-   48                   | OPERATION • GREATER_EQUAL OPERATION
-   49                   | OPERATION • GREATER_THAN OPERATION
-   50                   | OPERATION • LESS_THAN OPERATION
-   51                   | OPERATION • LESS_EQUAL OPERATION
+    6 expressio: ID ASSIGN OPERATION •
+    7          | ID ASSIGN OPERATION • MODE
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   45 OPERATION_BOOLEAN3: OPERATION • EQUAL OPERATION
+   46                   | OPERATION • NOT_EQUAL OPERATION
+   47                   | OPERATION • GREATER_EQUAL OPERATION
+   48                   | OPERATION • GREATER_THAN OPERATION
+   49                   | OPERATION • LESS_THAN OPERATION
+   50                   | OPERATION • LESS_EQUAL OPERATION
 
     MODE           shift, and go to state 86
     PLUS           shift, and go to state 49
@@ -1770,89 +1765,89 @@ State 63
     EQUAL          shift, and go to state 55
     NOT_EQUAL      shift, and go to state 56
 
-    $default  reduce using rule 7 (expressio)
+    $default  reduce using rule 6 (expressio)
 
 
 State 64
 
-    9 expressio: ID ASSIGN OPERATION_BOOLEAN •
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
+    8 expressio: ID ASSIGN OPERATION_BOOLEAN •
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
+
+    OR  shift, and go to state 61
+
+    $default  reduce using rule 8 (expressio)
+
+
+State 65
+
+    9 expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN •
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
 
     OR  shift, and go to state 61
 
     $default  reduce using rule 9 (expressio)
 
 
-State 65
-
-   10 expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN •
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
-
-    OR  shift, and go to state 61
-
-    $default  reduce using rule 10 (expressio)
-
-
 State 66
 
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   35 OPERATION4: OPEN_PARENTHESIS OPERATION • CLOSED_PARENTHESIS
+   28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 • OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+
+    INTEGER           shift, and go to state 1
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 32
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
+
+    INTEGER           [reduce using rule 23 (OPERATION4)]
+    FLOAT             [reduce using rule 23 (OPERATION4)]
+    ID                [reduce using rule 23 (OPERATION4)]
+    STRING            [reduce using rule 23 (OPERATION4)]
+    SUBSTR            [reduce using rule 23 (OPERATION4)]
+    LEN               [reduce using rule 23 (OPERATION4)]
+    SIN               [reduce using rule 23 (OPERATION4)]
+    COS               [reduce using rule 23 (OPERATION4)]
+    TAN               [reduce using rule 23 (OPERATION4)]
+    MINUS             [reduce using rule 23 (OPERATION4)]
+    OPEN_PARENTHESIS  [reduce using rule 23 (OPERATION4)]
+    $default          reduce using rule 23 (OPERATION4)
+
+    OPERATION4  go to state 87
+
+
+State 67
+
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   34 OPERATION4: OPEN_PARENTHESIS OPERATION • CLOSED_PARENTHESIS
 
     PLUS                shift, and go to state 49
     MINUS               shift, and go to state 50
     CLOSED_PARENTHESIS  shift, and go to state 68
 
 
-State 67
-
-   29 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 • OPERATION4 OPERATION4 CLOSED_PARENTHESIS
-
-    INTEGER           shift, and go to state 1
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
-
-    INTEGER           [reduce using rule 24 (OPERATION4)]
-    FLOAT             [reduce using rule 24 (OPERATION4)]
-    ID                [reduce using rule 24 (OPERATION4)]
-    STRING            [reduce using rule 24 (OPERATION4)]
-    SUBSTR            [reduce using rule 24 (OPERATION4)]
-    LEN               [reduce using rule 24 (OPERATION4)]
-    SIN               [reduce using rule 24 (OPERATION4)]
-    COS               [reduce using rule 24 (OPERATION4)]
-    TAN               [reduce using rule 24 (OPERATION4)]
-    MINUS             [reduce using rule 24 (OPERATION4)]
-    OPEN_PARENTHESIS  [reduce using rule 24 (OPERATION4)]
-    $default          reduce using rule 24 (OPERATION4)
-
-    OPERATION4  go to state 87
-
-
 State 68
 
-   35 OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS •
+   34 OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS •
 
-    $default  reduce using rule 35 (OPERATION4)
+    $default  reduce using rule 34 (OPERATION4)
 
 
 State 69
 
-   42 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS •
+   41 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS •
 
-    $default  reduce using rule 42 (OPERATION_BOOLEAN3)
+    $default  reduce using rule 41 (OPERATION_BOOLEAN3)
 
 
 State 70
 
-    6 expressio: header DO expressio_list • DONE
+    5 expressio: header DO expressio_list • DONE
 
     DONE  shift, and go to state 88
 
@@ -1866,10 +1861,24 @@ State 71
 
 State 72
 
-   14 OPERATION: OPERATION PLUS OPERATION2 •
-   18 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
-   19           | OPERATION2 • DIVIDE OPERATION3
-   20           | OPERATION2 • MOD OPERATION3
+   13 OPERATION: OPERATION PLUS OPERATION2 •
+   17 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
+   18           | OPERATION2 • DIVIDE OPERATION3
+   19           | OPERATION2 • MOD OPERATION3
+
+    MULTIPLY  shift, and go to state 57
+    DIVIDE    shift, and go to state 58
+    MOD       shift, and go to state 59
+
+    $default  reduce using rule 13 (OPERATION)
+
+
+State 73
+
+   14 OPERATION: OPERATION MINUS OPERATION2 •
+   17 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
+   18           | OPERATION2 • DIVIDE OPERATION3
+   19           | OPERATION2 • MOD OPERATION3
 
     MULTIPLY  shift, and go to state 57
     DIVIDE    shift, and go to state 58
@@ -1878,37 +1887,11 @@ State 72
     $default  reduce using rule 14 (OPERATION)
 
 
-State 73
-
-   15 OPERATION: OPERATION MINUS OPERATION2 •
-   18 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
-   19           | OPERATION2 • DIVIDE OPERATION3
-   20           | OPERATION2 • MOD OPERATION3
-
-    MULTIPLY  shift, and go to state 57
-    DIVIDE    shift, and go to state 58
-    MOD       shift, and go to state 59
-
-    $default  reduce using rule 15 (OPERATION)
-
-
 State 74
 
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   49 OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION •
-
-    PLUS   shift, and go to state 49
-    MINUS  shift, and go to state 50
-
-    $default  reduce using rule 49 (OPERATION_BOOLEAN3)
-
-
-State 75
-
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   48 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION •
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   48 OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION •
 
     PLUS   shift, and go to state 49
     MINUS  shift, and go to state 50
@@ -1916,47 +1899,11 @@ State 75
     $default  reduce using rule 48 (OPERATION_BOOLEAN3)
 
 
-State 76
+State 75
 
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   50 OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION •
-
-    PLUS   shift, and go to state 49
-    MINUS  shift, and go to state 50
-
-    $default  reduce using rule 50 (OPERATION_BOOLEAN3)
-
-
-State 77
-
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   51 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION •
-
-    PLUS   shift, and go to state 49
-    MINUS  shift, and go to state 50
-
-    $default  reduce using rule 51 (OPERATION_BOOLEAN3)
-
-
-State 78
-
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   46 OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION •
-
-    PLUS   shift, and go to state 49
-    MINUS  shift, and go to state 50
-
-    $default  reduce using rule 46 (OPERATION_BOOLEAN3)
-
-
-State 79
-
-   14 OPERATION: OPERATION • PLUS OPERATION2
-   15          | OPERATION • MINUS OPERATION2
-   47 OPERATION_BOOLEAN3: OPERATION NOT_EQUAL OPERATION •
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   47 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION •
 
     PLUS   shift, and go to state 49
     MINUS  shift, and go to state 50
@@ -1964,95 +1911,143 @@ State 79
     $default  reduce using rule 47 (OPERATION_BOOLEAN3)
 
 
+State 76
+
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   49 OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION •
+
+    PLUS   shift, and go to state 49
+    MINUS  shift, and go to state 50
+
+    $default  reduce using rule 49 (OPERATION_BOOLEAN3)
+
+
+State 77
+
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   50 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION •
+
+    PLUS   shift, and go to state 49
+    MINUS  shift, and go to state 50
+
+    $default  reduce using rule 50 (OPERATION_BOOLEAN3)
+
+
+State 78
+
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   45 OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION •
+
+    PLUS   shift, and go to state 49
+    MINUS  shift, and go to state 50
+
+    $default  reduce using rule 45 (OPERATION_BOOLEAN3)
+
+
+State 79
+
+   13 OPERATION: OPERATION • PLUS OPERATION2
+   14          | OPERATION • MINUS OPERATION2
+   46 OPERATION_BOOLEAN3: OPERATION NOT_EQUAL OPERATION •
+
+    PLUS   shift, and go to state 49
+    MINUS  shift, and go to state 50
+
+    $default  reduce using rule 46 (OPERATION_BOOLEAN3)
+
+
 State 80
 
-   18 OPERATION2: OPERATION2 MULTIPLY OPERATION3 •
+   17 OPERATION2: OPERATION2 MULTIPLY OPERATION3 •
 
-    $default  reduce using rule 18 (OPERATION2)
+    $default  reduce using rule 17 (OPERATION2)
 
 
 State 81
 
-   19 OPERATION2: OPERATION2 DIVIDE OPERATION3 •
+   18 OPERATION2: OPERATION2 DIVIDE OPERATION3 •
 
-    $default  reduce using rule 19 (OPERATION2)
+    $default  reduce using rule 18 (OPERATION2)
 
 
 State 82
 
-   20 OPERATION2: OPERATION2 MOD OPERATION3 •
+   19 OPERATION2: OPERATION2 MOD OPERATION3 •
 
-    $default  reduce using rule 20 (OPERATION2)
+    $default  reduce using rule 19 (OPERATION2)
 
 
 State 83
 
-   22 OPERATION3: OPERATION4 POWER OPERATION3 •
+   21 OPERATION3: OPERATION4 POWER OPERATION3 •
 
-    $default  reduce using rule 22 (OPERATION3)
+    $default  reduce using rule 21 (OPERATION3)
 
 
 State 84
 
-   36 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1 •
-   39 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 • AND OPERATION_BOOLEAN2
+   35 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1 •
+   38 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 • AND OPERATION_BOOLEAN2
 
     AND  shift, and go to state 62
 
-    $default  reduce using rule 36 (OPERATION_BOOLEAN)
+    $default  reduce using rule 35 (OPERATION_BOOLEAN)
 
 
 State 85
 
-   39 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2 •
+   38 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2 •
 
-    $default  reduce using rule 39 (OPERATION_BOOLEAN1)
+    $default  reduce using rule 38 (OPERATION_BOOLEAN1)
 
 
 State 86
 
-    8 expressio: ID ASSIGN OPERATION MODE •
+    7 expressio: ID ASSIGN OPERATION MODE •
 
-    $default  reduce using rule 8 (expressio)
+    $default  reduce using rule 7 (expressio)
 
 
 State 87
 
-   29 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 • OPERATION4 CLOSED_PARENTHESIS
+   28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 • OPERATION4 CLOSED_PARENTHESIS
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 31
+    ID                shift, and go to state 32
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 9
-    LEN               shift, and go to state 10
-    SIN               shift, and go to state 11
-    COS               shift, and go to state 12
-    TAN               shift, and go to state 13
-    MINUS             shift, and go to state 15
-    OPEN_PARENTHESIS  shift, and go to state 32
+    SUBSTR            shift, and go to state 8
+    LEN               shift, and go to state 9
+    SIN               shift, and go to state 10
+    COS               shift, and go to state 11
+    TAN               shift, and go to state 12
+    MINUS             shift, and go to state 14
+    OPEN_PARENTHESIS  shift, and go to state 33
 
-    $default  reduce using rule 24 (OPERATION4)
+    $default  reduce using rule 23 (OPERATION4)
 
     OPERATION4  go to state 89
 
 
 State 88
 
-    6 expressio: header DO expressio_list DONE •
+    5 expressio: header DO expressio_list DONE •
 
-    $default  reduce using rule 6 (expressio)
+    $default  reduce using rule 5 (expressio)
 
 
 State 89
 
-   29 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 • CLOSED_PARENTHESIS
+   28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 • CLOSED_PARENTHESIS
 
     CLOSED_PARENTHESIS  shift, and go to state 90
 
 
 State 90
 
-   29 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS •
+   28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS •
 
-    $default  reduce using rule 29 (OPERATION4)
+    $default  reduce using rule 28 (OPERATION4)

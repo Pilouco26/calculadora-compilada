@@ -32,6 +32,7 @@ typedef struct {
 typedef struct{
   int contador;
   int linea;
+  int end;
 
 } heading;
 

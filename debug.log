@@ -3,19 +3,16 @@
 --accepting rule at line 163 (" ")
 --accepting rule at line 136 (":=")
 --accepting rule at line 163 (" ")
---accepting rule at line 26 ("0")
+--accepting rule at line 26 ("5")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
 --accepting rule at line 163 ("")
 --accepting rule at line 161 ("
 ")
 --accepting rule at line 36 ("repeat")
 --accepting rule at line 163 (" ")
---accepting rule at line 26 ("6")
---accepting rule at line 163 (" ")
---accepting rule at line 37 ("do")
---(end of buffer or a NUL)
---accepting rule at line 36 ("repeat")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("6")
+--accepting rule at line 26 ("2")
 --accepting rule at line 163 (" ")
 --accepting rule at line 37 ("do")
 --accepting rule at line 163 ("")
@@ -27,16 +24,52 @@
 --accepting rule at line 163 (" ")
 --accepting rule at line 104 ("fact")
 --accepting rule at line 163 (" ")
---accepting rule at line 139 ("+")
+--accepting rule at line 141 ("*")
 --accepting rule at line 163 (" ")
---accepting rule at line 26 ("1")
+--accepting rule at line 26 ("2")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
+--accepting rule at line 38 ("done")
+--(end of buffer or a NUL)
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
+--accepting rule at line 36 ("repeat")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("2")
+--accepting rule at line 163 (" ")
+--accepting rule at line 37 ("do")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
+--accepting rule at line 104 ("fact")
+--accepting rule at line 163 (" ")
+--accepting rule at line 136 (":=")
+--accepting rule at line 163 (" ")
+--accepting rule at line 104 ("fact")
+--accepting rule at line 163 (" ")
+--accepting rule at line 141 ("*")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("2")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
+--accepting rule at line 38 ("done")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
+--accepting rule at line 163 ("")
+--accepting rule at line 161 ("
+")
+--accepting rule at line 104 ("id")
+--accepting rule at line 163 (" ")
+--accepting rule at line 136 (":=")
+--accepting rule at line 163 (" ")
+--accepting rule at line 26 ("0")
 --accepting rule at line 163 ("")
 --accepting rule at line 161 ("
 ")
 --(end of buffer or a NUL)
---accepting rule at line 38 ("done")
---(end of buffer or a NUL)
 --EOF (start condition 0)
-Error: syntax error , in line 4
-Error: Line 22032 not found
-ERROR
+The compilation has been successful

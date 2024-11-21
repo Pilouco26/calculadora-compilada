@@ -49,11 +49,12 @@ int comptador = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  REPEAT DO DONE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor>  DO DONE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
 %type <header> header
+%token <header> REPEAT
 
 %start programa
 
@@ -63,59 +64,55 @@ int comptador = 0;
 programa : expressio_list {
              fprintf(yyout, "End of input reached.\n");
            }
-
+// fer una expressio per repeat nomes
 expressio_list : expressio ENDLINE {
-    $$ = (expression_list){ .index = 0 };
-    $$.expr_val[$$.index++] = $1;
+
 }
 | expressio ENDLINE expressio_list {
-    $$ = $3;
-    $$.expr_val[$$.index++] = $1;
+
 }
-| /* empty */ {
-    $$ = (expression_list){ .index = 0 };
-}
+
+
+
 
 
 header:
-    REPEAT OPERATION {
-        if (!contador_initialized) {
-            contador_initialized = 1;
-            fprintf(yyout, "linia %d\n", $$.linea);
+     REPEAT OPERATION {
+                 if (!contador_initialized) {
+                             contador_initialized = 1;
+                             comptador = 1;
+                 }
+                 if ($2.val_type == INT_TYPE) {
+                             if (comptador < $2.val_int) {
+                                 comptador++;
+                                 $$.end = 0;
+                                 $$.linea = yylineno;
+                             }
+                             else {
+                                    $$.end = 1;
+                             }
+                 }
+     }
 
-            $$.linea = yylineno;  // Save the current line number
-            comptador = 0;
-        }
-        if ($2.val_type == INT_TYPE) {
-            if (comptador < $2.val_int) {
-                comptador++;
-
-                fprintf(yyout, "passo per segon if comptador: %d, operacio: %d\n", comptador, $2.val_int);
-                // Restart lexer at saved line number
-                rewind(yyin);  // Reset file pointer to the beginning
-                // Reset file pointer to the beginning
-                long offset = find_line_offset(yyin, $$.linea);
-                fprintf(yyout, "linia loop %d\n", $$.linea);
-                   if (offset != -1) {
-                       fseek(yyin, offset, SEEK_SET);  // Go back to the saved line
-                       yyrestart(yyin);  // Restart the scanner with the new input file
-                    } else {
-                         printf("Error: Line %d not found\n", $$.linea);
-                    }
-
-            }
-        } else {
-            // Handle error for invalid type
-        }
-    }
-
-;
 
 expressio:
-    REPEAT OPERATION DO expressio_list DONE{
-           contador_initialized = 0;
-            comptador = 0;
-    }
+     header DO expressio_list DONE {
+         if ($1.end == 0) {
+             int delta = yylineno - $1.linea + 1;
+             long offset = find_line_offset(yyin, yylineno - delta);
+             if (offset != -1) {
+                 fseek(yyin, offset, SEEK_SET);  // Go to the new line
+                 yyrestart(yyin);  // Restart the scanner
+                 yylineno = yylineno - delta;  // Update the line number
+             } else {
+                 fprintf(stderr, "Error: Line %d not found\n", yylineno - 3);
+             }
+         } else {
+             contador_initialized = 0;
+             comptador = 1;
+         }
+     }
+
 
 |ID ASSIGN OPERATION {
                       sym_value_type existing_value;
@@ -254,7 +251,7 @@ expressio:
                     }
 
                     if ($1.val_type == INT_TYPE) {
-                        fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
+                       // fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
                         $1.val_type = INT_TYPE;
                         $1.val_int = (int)$1.val_int;
                     } else if ($1.val_type == FLOAT_TYPE) {
@@ -285,7 +282,6 @@ expressio:
 OPERATION:
     OPERATION PLUS OPERATION2 {
         char* result;
-        fprintf(yyout, " op %d %d \n", $1.val_int, $3.val_int);
         // Check if either operand is a string
         if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
 
@@ -590,7 +586,6 @@ OPERATION4:
             lookup_result = sym_lookup($1.lexema, &value);
 
             if (lookup_result == SYMTAB_OK) {
-                fprintf(yyout, "symtab trobat\n");
                 $$.val_type = value.val_type;  // Store the value for later use
                 if($$.val_type == STRING_TYPE){
                      $$.val_string = value.val_string;  // Store the value for later use

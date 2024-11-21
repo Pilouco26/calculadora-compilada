@@ -1,20 +1,20 @@
 // Assignments
-x := 5.5
-y := 12
-z := x * 3 + y / 2 - 2
-w := "Programming"
-m := z > 6 and y <= 12 or not x < 4.0
-n := "Challenge"
-z + y - x
-x * y / z
-w + " " + n + " is fun"
-substr(w 3 2) + substr(n 2 1)
-z + (x * 3) / y - x
-m or not (y > 10 and x < 6)
-w + y + "--" + substr(n 2 3)
-substr((w + n) 2 4) + "--" + x
-x + y * (z - 3) / x
-x > y or m and not (z < 12)
-justa := m and y > z or not (x = 5.5)
-w + " - " + n + ": " + z + x
-substr((w + n) 1 5) + (z - y)
+x := 5.5                // Expected: 5.5
+y := 12                 // Expected: 12
+z := x * 3 + y / 2 - 2  // Expected: 5.5 * 3 + 12 / 2 - 2 = 16.5 + 6 - 2 = 20.5
+w := "Programming"      // Expected: "Programming"
+m := z > 6 and y <= 12 or not x < 4.0  // Expected: 20.5 > 6 and 12 <= 12 or not 5.5 < 4.0 = True
+n := "Challenge"        // Expected: "Challenge"
+z + y - x               // Expected: 20.5 + 12 - 5.5 = 27
+x * y / z               // Expected: 5.5 * 12 / 20.5 ≈ 3.2195
+w + " " + n + " is fun" // Expected: "Programming Challenge is fun"
+substr(w 3 2) + substr(n 2 1) // Expected: "gra"
+z + (x * 3) / y - x     // Expected: 20.5 + (5.5 * 3) / 12 - 5.5 = 20.5 + 1.375 - 5.5 =  16.375000
+m or not (y > 10 and x < 6)  // Expected: True or not (12 > 10 and 5.5 < 6) = True
+w + y + "--" + substr(n 2 3) // Programming12--all
+substr((w + n) 2 4) + "--" + x // ogra--5.500000
+x + y * (z - 3) / x     // Expected: 43.681820
+x > y or m and not (z < 12)  // Expected: 5.5 > 12 or True and not (20.5 < 12) = False or True = True
+justa := m and y > z or not (x = 5.5)  // false
+w + " - " + n + ": " + z + x // Programming - Challenge: 20.5000005.500000
+substr((w + n) 1 5) + (z - y) // rogra8.500000
