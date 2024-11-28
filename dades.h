@@ -11,9 +11,23 @@ typedef enum {
   INT_TYPE,
   FLOAT_TYPE,
   STRING_TYPE,
-  BOOL_TYPE
+  BOOL_TYPE,
+  IDS_TYPE
 } data_type;
 
+typedef enum {
+  POW_TYPE = 1,
+  ADD_TYPE,
+  MUL_TYPE,
+  SUB_TYPE,
+  DIV_TYPE
+} op_type;
+
+typedef enum {
+  OPERATOR_TYPE =0,
+  OPERAND_TYPE,
+  ID_TYPE
+} list_type;
 
 typedef struct {
   data_type val_type;
@@ -21,7 +35,16 @@ typedef struct {
   float val_float;
   char *val_string;    // To store strings
   bool val_bool;    // To store strings
+  char *id_name;
 } value_info;
+
+typedef struct{
+  value_info val_info;
+  value_info val_info2;
+  list_type val_type_list;
+  char *val_op;
+  char *id_name;
+} three_address_code;
 
 
 typedef struct {
@@ -33,7 +56,6 @@ typedef struct{
   int contador;
   int linea;
   int end;
-
 } heading;
 
 char *type_to_str(data_type val_type);

@@ -1,7 +1,2 @@
-fact := 5
-
-repeat 2 do
-fact := fact * 2
-done
-
-id := 0
+i := 7 + 9 * 7 * 7
+j := i + 7

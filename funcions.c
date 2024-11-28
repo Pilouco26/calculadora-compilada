@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include "dades.h"
+
 
 // Declare yy_scan_string directly
 extern void yy_scan_string(const char *str);
@@ -11,6 +14,7 @@ extern FILE *yyin;
 extern FILE *yyout;
 extern int yylineno;
 extern char *yytext;
+
 
 static long saved_position = -1;
 
@@ -120,6 +124,19 @@ void yyerror(char *explanation)
 {
     fprintf(stderr, "Error: %s , in line %d\n", explanation, yylineno);
 }
+int is_number_in_list(int list[], int *size, int number) {
+    // Loop through the list to check if the number is present
+    for (int i = 0; i < *size; i++) {
+        if (list[i] == number) {
+            for (int j = i; j < *size - 1; j++) {
+                list[j] = list[j + 1];  // Shift elements left
+            }
+            (*size)--;  // Decrease the size of the list
+            return 1;   // Number found and removed
+        }
+    }
+    return 0;   // Number not found in the list
+}
 
 void save_line() {
     if (yyin) {
@@ -155,3 +172,77 @@ long find_line_offset(FILE *file, int target_line) {
 
     return offset; // +1 to move past the newline character
 }
+
+FILE *open_file_ca3() {
+    FILE *file_ca3 = fopen("./CA3.txt", "w"); // Change "w" to "r" if you need to read from it
+    if (file_ca3 == NULL) {
+        fprintf(stderr, "Error: Could not open ./CA3.txt\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(file_ca3, "START\n");
+    return file_ca3;
+}
+
+void close_file_ca3(FILE *file_ca3) {
+    if (file_ca3 != NULL) {
+        fprintf(file_ca3, "END\n");
+        fclose(file_ca3);
+    }
+}
+void print_list(three_address_code list[], int size, int number_list[], int number_size) {
+	int temporals = 0;
+
+    for (int i = 0; i < size; i++) {
+        // Print the current list item value
+        fprintf(yyout, "t%d: ", i);
+
+        if(list[i].val_info.id_name != NULL) {
+          fprintf(yyout, "%s ", strdup(list[i].val_info.id_name));
+        }
+		else if(!is_number_in_list(number_list, &number_size, list[i].val_info.val_int)){
+               fprintf(yyout, "t%d ", temporals++);
+		}
+        else fprintf(yyout, "%d ", list[i].val_info.val_int);
+        fprintf(stderr, "abans de op\n" );
+    	// Print the operation character
+    	fprintf(yyout, "%s ", list[i].val_op);
+        if(list[i].val_info2.id_name != NULL) {
+          fprintf(yyout, "%s\n", strdup(list[i].val_info2.id_name));
+        }
+		if(!is_number_in_list(number_list, &number_size, list[i].val_info2.val_int)){
+               fprintf(yyout, "t%d\n", temporals++);
+		}
+        else fprintf(yyout, "%d\n", list[i].val_info2.val_int);
+    }
+}
+
+
+void add_three_address_code(three_address_code list[], int *list_size, int value1, int value2, char* op, char* id1, char * id2) {
+    three_address_code integer;
+
+      integer.val_type_list = INT_TYPE;
+      integer.val_info.val_type = INT_TYPE;
+
+	integer.val_op = op;
+    if(id1 == NULL){
+    integer.val_info.val_int = value1;
+    integer.val_info.id_name = NULL;
+    }
+    else  { integer.val_info.id_name = strdup(id1);
+}
+
+	if(id2 == NULL){
+    integer.val_info2.val_int = value2;
+    integer.val_info2.id_name = NULL;
+	}
+    else  {
+          integer.val_info2.id_name = strdup(id2);
+    }
+    integer.val_type_list = OPERAND_TYPE;
+    list[*list_size] = integer;
+
+    (*list_size)++;
+
+
+}
+

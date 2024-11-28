@@ -1,55 +1,80 @@
 ######################################################################
-#
-#                           Compiladors
-#
+#                            Compiladors
 ######################################################################
 
+# Compiler and tools
 CC = gcc
 LEX = flex
 YACC = bison
-LIB = -lfl -lm  # Added -lm to link the math library
 
+# Libraries
+LIB = -lfl -lm  # Math and Flex libraries
+
+# Source files
 SRC_LEX = lexic.l
 SRC_YACC = sintaxi.y
+SRC_MAIN = main.c
+SRC_EXTRA = dades.c funcions.c symtab.c
 
-LEX_OUT = lex.yy.c
+# Bison outputs
 YACC_OUT_C = sintaxi.tab.c
 YACC_OUT_H = sintaxi.tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
-
 OTHERS = sintaxi.output
-OBJ = *.o
 
-SRC = main.c
+# Flex output
+LEX_OUT = lex.yy.c
+
+# Object files and binary
 BIN = calculadora.exe
 
-SRC_EXTRA = dades.c funcions.c symtab.c
-
+# Flags
 LFLAGS =
 YFLAGS = -d -v
 CFLAGS = -Wall -g
 
+# Example inputs/outputs
 EG_IN = ex_entrada.txt
 EG_OUT = ex_sortida.txt
 
+# Debug logs
+DEBUG_LOG = debug.log
+
+######################################################################
+# Targets
 ######################################################################
 
-all : yacc lex
-	$(CC) -o $(BIN) $(CFLAGS) $(SRC) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(LIB)
+.PHONY: all yacc lex clean eg run
 
-yacc : $(SRC_YACC)
-	$(YACC) $(YFLAGS) $(SRC_YACC) 2> debug.log
+# Default target
+all: $(BIN)
 
-lex : $(SRC_LEX)
-	$(LEX) $(LFLAGS) $(SRC_LEX) 2> debug.log
+# Build binary
+$(BIN): yacc lex $(SRC_MAIN) $(SRC_EXTRA)
+	$(CC) -o $(BIN) $(CFLAGS) $(SRC_MAIN) $(SRC_EXTRA) $(YACC_OUT_C) $(LEX_OUT) $(LIB)
 
-clean :
-	rm -f *~ $(BIN) $(OBJ) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT) debug.log
+# Generate parser files
+yacc: $(SRC_YACC)
+	$(YACC) $(YFLAGS) $(SRC_YACC) 2> $(DEBUG_LOG)
 
-eg : $(EG_IN)
+# Generate lexer files
+lex: $(SRC_LEX)
+	$(LEX) $(LFLAGS) $(SRC_LEX) 2>> $(DEBUG_LOG)
+
+# Clean build artifacts
+clean:
+	rm -f *~ $(BIN) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT) $(DEBUG_LOG)
+
+# Run example
+eg: $(EG_IN)
 	./$(BIN) $(EG_IN) $(EG_OUT)
 	cat $(EG_OUT)
 
-run : all
-	./$(BIN) $(EG_IN) $(EG_OUT) > debug.log 2>&1
+# Run example
+run: all
+	# Create or truncate ./CA3.txt to ensure it's ready
+	> ./CA3.txt
+	# Run the program with example input and output files
+	./$(BIN) $(EG_IN) $(EG_OUT) > $(DEBUG_LOG) 2>&1
+	# Show the output on the console
 	cat $(EG_OUT)

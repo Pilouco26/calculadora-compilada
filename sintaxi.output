@@ -1,5 +1,6 @@
 Terminals unused in grammar
 
+    EXTRALINE
     COMMENT
     COMMA
     SEMICOLON
@@ -115,76 +116,77 @@ Terminals, with rules where they appear
     ID <ident> (263) 6 7 8 32 33
     ID_BOOL <ident> (264) 9 43
     STRING <cadena> (265) 31
-    DO <sense_valor> (266) 5
-    DONE <sense_valor> (267) 5
-    COMMENT <sense_valor> (268)
-    SUBSTR <sense_valor> (269) 28
-    COMMA <sense_valor> (270)
-    LEN <sense_valor> (271) 27
-    SIN <sense_valor> (272) 24
-    COS <sense_valor> (273) 25
-    TAN <sense_valor> (274) 26
-    AND <sense_valor> (275) 38
-    OR <sense_valor> (276) 35
-    NOT <sense_valor> (277) 40
-    PLUS <sense_valor> (278) 13
-    MINUS <sense_valor> (279) 14 33
-    MULTIPLY <sense_valor> (280) 17
-    DIVIDE <sense_valor> (281) 18
-    MOD <sense_valor> (282) 19
-    POWER <sense_valor> (283) 21
-    CLOSED_PARENTHESIS <sense_valor> (284) 28 34 41
-    OPEN_PARENTHESIS <sense_valor> (285) 28 34 41
-    ASSIGN <sense_valor> (286) 6 7 8 9
-    ENDLINE <sense_valor> (287) 2 3
-    SEMICOLON <sense_valor> (288)
-    GREATER_THAN <sense_valor> (289) 48
-    GREATER_EQUAL <sense_valor> (290) 47
-    LESS_THAN <sense_valor> (291) 49
-    LESS_EQUAL <sense_valor> (292) 50
-    EQUAL <sense_valor> (293) 45
-    NOT_EQUAL <sense_valor> (294) 46
-    REPEAT <header> (295) 4
+    EXTRALINE <sense_valor> (266)
+    DO <sense_valor> (267) 5
+    DONE <sense_valor> (268) 5
+    COMMENT <sense_valor> (269)
+    SUBSTR <sense_valor> (270) 28
+    COMMA <sense_valor> (271)
+    LEN <sense_valor> (272) 27
+    SIN <sense_valor> (273) 24
+    COS <sense_valor> (274) 25
+    TAN <sense_valor> (275) 26
+    AND <sense_valor> (276) 38
+    OR <sense_valor> (277) 35
+    NOT <sense_valor> (278) 40
+    PLUS <sense_valor> (279) 13
+    MINUS <sense_valor> (280) 14 33
+    MULTIPLY <sense_valor> (281) 17
+    DIVIDE <sense_valor> (282) 18
+    MOD <sense_valor> (283) 19
+    POWER <sense_valor> (284) 21
+    CLOSED_PARENTHESIS <sense_valor> (285) 28 34 41
+    OPEN_PARENTHESIS <sense_valor> (286) 28 34 41
+    ASSIGN <sense_valor> (287) 6 7 8 9
+    ENDLINE <sense_valor> (288) 2 3
+    SEMICOLON <sense_valor> (289)
+    GREATER_THAN <sense_valor> (290) 48
+    GREATER_EQUAL <sense_valor> (291) 47
+    LESS_THAN <sense_valor> (292) 49
+    LESS_EQUAL <sense_valor> (293) 50
+    EQUAL <sense_valor> (294) 45
+    NOT_EQUAL <sense_valor> (295) 46
+    REPEAT <header> (296) 4
 
 
 Nonterminals, with rules where they appear
 
-    $accept (41)
+    $accept (42)
         on left: 0
-    programa <sense_valor> (42)
+    programa <sense_valor> (43)
         on left: 1
         on right: 0
-    expressio_list <expr_list> (43)
+    expressio_list <expr_list> (44)
         on left: 2 3
         on right: 1 3 5
-    header <header> (44)
+    header <header> (45)
         on left: 4
         on right: 5
-    expressio <expr_val> (45)
+    expressio <expr_val> (46)
         on left: 5 6 7 8 9 10 11 12
         on right: 2 3
-    OPERATION <expr_val> (46)
+    OPERATION <expr_val> (47)
         on left: 13 14 15
         on right: 4 6 7 10 11 13 14 34 45 46 47 48 49 50
-    OPERATION2 <expr_val> (47)
+    OPERATION2 <expr_val> (48)
         on left: 16 17 18 19 20
         on right: 13 14 15 17 18 19
-    OPERATION3 <expr_val> (48)
+    OPERATION3 <expr_val> (49)
         on left: 21 22
         on right: 17 18 19 20 21
-    OPERATION4 <expr_val> (49)
+    OPERATION4 <expr_val> (50)
         on left: 23 24 25 26 27 28 29 30 31 32 33 34
         on right: 21 22 24 25 26 27 28
-    OPERATION_BOOLEAN <expr_val> (50)
+    OPERATION_BOOLEAN <expr_val> (51)
         on left: 35 36
         on right: 8 9 12 35 41
-    OPERATION_BOOLEAN1 <expr_val> (51)
+    OPERATION_BOOLEAN1 <expr_val> (52)
         on left: 37 38
         on right: 35 36 38
-    OPERATION_BOOLEAN2 <expr_val> (52)
+    OPERATION_BOOLEAN2 <expr_val> (53)
         on left: 39 40
         on right: 37 38 40
-    OPERATION_BOOLEAN3 <expr_val> (53)
+    OPERATION_BOOLEAN3 <expr_val> (54)
         on left: 41 42 43 44 45 46 47 48 49 50
         on right: 39
 

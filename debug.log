@@ -1,75 +1,47 @@
 --(end of buffer or a NUL)
---accepting rule at line 104 ("fact")
---accepting rule at line 163 (" ")
---accepting rule at line 136 (":=")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("5")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
+--accepting rule at line 104 ("i")
+--accepting rule at line 155 (" ")
+--accepting rule at line 128 (":=")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("7")
+integer in
+--accepting rule at line 155 (" ")
+--accepting rule at line 131 ("+")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("9")
+integer in
+--accepting rule at line 155 (" ")
+--accepting rule at line 133 ("*")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("7")
+integer in
+--accepting rule at line 155 (" ")
+--accepting rule at line 133 ("*")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("7")
+integer in
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
 ")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
+before print
+abans de op
+abans de op
+abans de op
+--accepting rule at line 104 ("j")
+--accepting rule at line 155 (" ")
+--accepting rule at line 128 (":=")
+--accepting rule at line 155 (" ")
+--accepting rule at line 104 ("i")
+--accepting rule at line 155 (" ")
+--accepting rule at line 131 ("+")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("7")
+integer in
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
 ")
---accepting rule at line 36 ("repeat")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("2")
---accepting rule at line 163 (" ")
---accepting rule at line 37 ("do")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 104 ("fact")
---accepting rule at line 163 (" ")
---accepting rule at line 136 (":=")
---accepting rule at line 163 (" ")
---accepting rule at line 104 ("fact")
---accepting rule at line 163 (" ")
---accepting rule at line 141 ("*")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("2")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 38 ("done")
---(end of buffer or a NUL)
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 36 ("repeat")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("2")
---accepting rule at line 163 (" ")
---accepting rule at line 37 ("do")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 104 ("fact")
---accepting rule at line 163 (" ")
---accepting rule at line 136 (":=")
---accepting rule at line 163 (" ")
---accepting rule at line 104 ("fact")
---accepting rule at line 163 (" ")
---accepting rule at line 141 ("*")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("2")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 38 ("done")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
---accepting rule at line 104 ("id")
---accepting rule at line 163 (" ")
---accepting rule at line 136 (":=")
---accepting rule at line 163 (" ")
---accepting rule at line 26 ("0")
---accepting rule at line 163 ("")
---accepting rule at line 161 ("
-")
+before print
+abans de op
 --(end of buffer or a NUL)
 --EOF (start condition 0)
 The compilation has been successful

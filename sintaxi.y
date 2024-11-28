@@ -8,12 +8,22 @@
 #include "symtab.h"
 extern FILE *yyin;
 extern FILE *yyout;
+extern FILE *file_ca3;
 extern int yylineno;
 extern int yylex();
 void yyrestart(FILE *input_file);
 /*extern void yyerror(char*);*/
 int contador_initialized = 0;
 int comptador = 0;
+char *last_id = "init";    // To store strings
+three_address_code list[64];
+int list_size = 0;
+int op_list[64];
+int op_size = 0;
+int number_list[64];
+int number_size = 0;
+char *id_list[64];
+int id_size=0;
 %}
 
 %code requires {
@@ -40,7 +50,6 @@ int comptador = 0;
     bool boolean;
     expression_list expr_list;
     heading header;
-
 }
 
 %token <enter> INTEGER
@@ -49,7 +58,7 @@ int comptador = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor>  DO DONE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> EXTRALINE DO DONE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
@@ -64,20 +73,17 @@ int comptador = 0;
 programa : expressio_list {
              fprintf(yyout, "End of input reached.\n");
            }
-// fer una expressio per repeat nomes
-expressio_list : expressio ENDLINE {
 
-}
-| expressio ENDLINE expressio_list {
-
-}
-
-
+expressio_list:
+    expressio ENDLINE
+    | expressio ENDLINE expressio_list;
 
 
 
 header:
      REPEAT OPERATION {
+                fprintf(stderr, "repeat and %d\n", $2.val_int);
+                fprintf(stderr, "repeat\n");
                  if (!contador_initialized) {
                              contador_initialized = 1;
                              comptador = 1;
@@ -87,44 +93,45 @@ header:
                                  comptador++;
                                  $$.end = 0;
                                  $$.linea = yylineno;
-                             }
-                             else {
+                             } else {
                                     $$.end = 1;
                              }
+                 } else {
+                     fprintf(stderr, "Error: Invalid type for repeat count\n");
+                     $$.end = 1;
                  }
      }
 
-
 expressio:
-     header DO expressio_list DONE {
-         if ($1.end == 0) {
-             int delta = yylineno - $1.linea + 1;
-             long offset = find_line_offset(yyin, yylineno - delta);
-             if (offset != -1) {
-                 fseek(yyin, offset, SEEK_SET);  // Go to the new line
-                 yyrestart(yyin);  // Restart the scanner
-                 yylineno = yylineno - delta;  // Update the line number
-             } else {
-                 fprintf(stderr, "Error: Line %d not found\n", yylineno - 3);
-             }
-         } else {
-             contador_initialized = 0;
-             comptador = 1;
-         }
-     }
+    header DO expressio_list DONE {
+        if ($1.end == 0) {
+            int delta = yylineno - $1.linea;
+            long offset = find_line_offset(yyin, yylineno - delta);
+            if (offset != -1) {
+                fseek(yyin, offset, SEEK_SET);  // Correct file pointer position
+                yyrestart(yyin); // Ensure lexer restarts cleanly
+                yylineno = yylineno - delta;   // Synchronize line number
+                yyparse(); // Start parsing again
+            } else {
+                fprintf(stderr, "Error: Line %d not found (possible buffer issue)\n", yylineno - delta);
+            }
+        } else {
+            // Reset state for next iteration
+            contador_initialized = 0;
+            comptador = 1;
+        }
+    }
 
 
 |ID ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
                       if (lookup_result == SYMTAB_OK) {
-                          // ID already exists, check if the new value matches the existing type
                           if (existing_value.val_type != $3.val_type) {
                               fprintf(stderr, "Error: Type mismatch for ID '%s' in line %d.\n", $1.lexema, yylineno);
                               YYABORT;
                           }
                       }
-                      // Assign the new value
                       if ($3.val_type == INT_TYPE) {
                           fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
                           $$.val_type = INT_TYPE;
@@ -144,7 +151,10 @@ expressio:
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
                       }
-
+                      fprintf(stderr, "before print\n");
+                      print_list(list, list_size, number_list, number_size);
+                      list_size = 0;
+                      number_size = 0;
                       sym_enter($1.lexema, &$3);
                   }
                 | ID ASSIGN OPERATION MODE {
@@ -258,7 +268,7 @@ expressio:
                         fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
                         $1.val_type = FLOAT_TYPE;
                         $1.val_float = $1.val_int;
-                    } else {
+                    } else if ($1.val_type == STRING_TYPE) {
                         fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
                         $$.val_type = STRING_TYPE;
                         $$.val_string = $1.val_string;
@@ -281,8 +291,8 @@ expressio:
 
 OPERATION:
     OPERATION PLUS OPERATION2 {
+        add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "ADDI", $1.id_name, $3.id_name);
         char* result;
-        // Check if either operand is a string
         if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
 
             // Convert the first operand to string if it's an integer or float
@@ -345,8 +355,6 @@ OPERATION:
         }
     }
     | OPERATION MINUS OPERATION2 {
-                printf("operacio menos\n");
-                printf("%d, %d, \n", $1.val_type,$3.val_type);
 
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
@@ -376,6 +384,9 @@ OPERATION:
 
 OPERATION2:
     | OPERATION2 MULTIPLY OPERATION3 {
+
+        add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "MULI", $1.id_name, $3.id_name);
+
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
 
@@ -563,16 +574,15 @@ OPERATION4:
 }
 
     | INTEGER {
-
-
+            number_list[number_size] = $1;
+            number_size++;
             $$.val_type = INT_TYPE;
             $$.val_int = $1;
+
         }
     | FLOAT {
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1;
-            printf("%f \n", $1);
-
         }
     | STRING {
                 $$.val_type = STRING_TYPE;
@@ -596,7 +606,9 @@ OPERATION4:
                 else if($$.val_type == FLOAT_TYPE){
                      $$.val_float = value.val_float;  // Store the value for later use
                 }
-
+                $$.id_name = $1.lexema;
+                id_list[id_size]= $1.lexema;
+                id_size++;
             } else {
                 fprintf(stderr, "Error: ID '%s' not declared\n", $1.lexema);
                 exit(EXIT_FAILURE);  // Exit the program

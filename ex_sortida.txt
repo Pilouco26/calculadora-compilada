@@ -1,6 +1,7 @@
-ID: fact (int) pren per valor: 5
- (string) pren per valor: (null)
-ID: fact (int) pren per valor: 10
-ID: fact (int) pren per valor: 20
-ID: id (int) pren per valor: 0
+ID: i (int) pren per valor: 448
+t0: 9 MULI 7
+t1: t0 MULI 7
+t2: 7 ADDI t1
+ID: j (int) pren per valor: 455
+t0: i ADDI 7
 End of input reached.

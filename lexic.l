@@ -23,7 +23,7 @@ sign    [+-]?
 
 %%
 
-{sign}?{digit}+ { yylval.enter = atoi(yytext); return INTEGER; }
+{sign}?{digit}+ { yylval.enter = atoi(yytext);  fprintf(stderr, "integer in\n");return INTEGER; }
 "PI"                        {
                               yylval.real = M_PI;  // Set yylval to the value of pi
                               return FLOAT;        // Return the FLOAT token
@@ -33,7 +33,7 @@ sign    [+-]?
                               yylval.real = M_E;   // Set yylval to the value of e
                               return FLOAT;        // Return the FLOAT token
                             }
-"repeat"                  { return REPEAT; }
+"repeat"                  {  fprintf(stderr, "repeat in lexic\n"); return REPEAT; }
 "do"                      { return DO; }
 "done"                    { return DONE; }
 
@@ -122,14 +122,6 @@ sign    [+-]?
                 else return ID;
         }
 }
-\"([^\\"\n\r]*)\" {
-    yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
-    yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
-    yylval.ident.length = yyleng - 2;          // Adjust the length to exclude the quotes
-    yylval.ident.line = yylineno;              // Store the line number
-    yylval.ident.id_val.val_type = STRING_TYPE; // Set the type to STRING_TYPE (assuming it's defined)
-    return STRING;                             // Return STRING token
-}
 
 
 
@@ -153,7 +145,7 @@ sign    [+-]?
 "<>"                        { return NOT_EQUAL; }
 
 "//".*               { /* Ignore everything after '//' until the end of the line */ }
-"#".*[\n]                   { /* Ignore comment and newline */  yylineno++;}
+"#".*[\n]                   { /* Ignore comment and newline */}
 "/*"([^*]|\*+[^*/]|(\*+\/))*"\*/".*[\n] { /* Ignore multi-line comments */}
 
 ^[ \t]*[\n]                 { /* Ignore empty lines */ }
@@ -161,6 +153,16 @@ sign    [+-]?
 [\n]                        { return ENDLINE; }
 
 .                           {}
+
+\"([^\\"\n\r]*)\" {
+    yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
+    yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
+    yylval.ident.length = yyleng - 2;          // Adjust the length to exclude the quotes
+    yylval.ident.line = yylineno;              // Store the line number
+    yylval.ident.id_val.val_type = STRING_TYPE; // Set the type to STRING_TYPE (assuming it's defined)
+    return STRING;                             // Return STRING token
+}
+
 
 <<EOF>>                     { return  0; }   /* Signal end of input to Bison */
 

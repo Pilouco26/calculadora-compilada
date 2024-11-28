@@ -463,18 +463,18 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[116] =
     {   0,
-        0,    0,   49,   47,   46,   47,   47,   32,   34,   35,
-       30,   28,   27,   29,   31,    1,   47,   26,   38,   40,
-       36,   23,    3,   23,   23,   23,   23,   23,   23,   23,
-       23,   23,   23,   23,   23,   23,   47,   45,    0,   24,
-        0,   43,   33,    1,    0,   42,    0,   25,   39,   41,
-       37,   23,    2,   23,   23,   23,   23,    5,   23,   23,
+        0,    0,   49,   46,   45,   46,   46,   31,   33,   34,
+       29,   27,   26,   28,   30,    1,   46,   25,   37,   39,
+       35,   23,    3,   23,   23,   23,   23,   23,   23,   23,
+       23,   23,   23,   23,   23,   23,   46,   44,    0,   47,
+        0,   42,   32,    1,    0,   41,    0,   24,   38,   40,
+       36,   23,    2,   23,   23,   23,   23,    5,   23,   23,
        23,   23,   23,   12,   23,   23,   23,   23,   23,    0,
-       45,    0,    0,   42,    7,   11,   22,   15,   21,   23,
+       44,    0,    0,   41,    7,   11,   22,   15,   21,   23,
        23,   20,   17,   13,   19,   23,   14,   23,   16,   23,
         0,    0,    8,    0,    6,   23,   23,   23,   10,    0,
 
-       44,    0,    0,    0,    7,    9,   23,   23,    0,    0,
+       43,    0,    0,    0,    7,    9,   23,   23,    0,    0,
         0,    8,    4,   18,    0
     } ;
 
@@ -614,7 +614,7 @@ static const flex_int32_t yy_rule_can_match_eol[49] =
     {   0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 1, 1, 1, 1, 0, 0,     };
+    0, 0, 1, 1, 1, 1, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -626,9 +626,9 @@ static const flex_int16_t yy_rule_linenum[48] =
     {   0,
        26,   27,   32,   36,   37,   38,   43,   48,   53,   56,
        59,   62,   65,   68,   71,   74,   77,   81,   83,   88,
-       93,   98,  104,  125,  136,  137,  138,  139,  140,  141,
-      142,  143,  144,  145,  146,  148,  149,  150,  151,  152,
-      153,  155,  156,  157,  159,  161,  163
+       93,   98,  104,  128,  129,  130,  131,  132,  133,  134,
+      135,  136,  137,  138,  140,  141,  142,  143,  144,  145,
+      147,  148,  149,  151,  153,  155,  157
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -1029,7 +1029,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 26 "lexic.l"
-{ yylval.enter = atoi(yytext); return INTEGER; }
+{ yylval.enter = atoi(yytext);  fprintf(stderr, "integer in\n");return INTEGER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -1050,7 +1050,7 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 36 "lexic.l"
-{ return REPEAT; }
+{  fprintf(stderr, "repeat in lexic\n"); return REPEAT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -1209,7 +1209,126 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 125 "lexic.l"
+#line 128 "lexic.l"
+{ return ASSIGN; }
+	YY_BREAK
+case 25:
+YY_RULE_SETUP
+#line 129 "lexic.l"
+{ return SEMICOLON; }
+	YY_BREAK
+case 26:
+YY_RULE_SETUP
+#line 130 "lexic.l"
+{ return COMMA; }
+	YY_BREAK
+case 27:
+YY_RULE_SETUP
+#line 131 "lexic.l"
+{ return PLUS; }
+	YY_BREAK
+case 28:
+YY_RULE_SETUP
+#line 132 "lexic.l"
+{ return MINUS; }
+	YY_BREAK
+case 29:
+YY_RULE_SETUP
+#line 133 "lexic.l"
+{ return MULTIPLY; }
+	YY_BREAK
+case 30:
+YY_RULE_SETUP
+#line 134 "lexic.l"
+{ return DIVIDE; }
+	YY_BREAK
+case 31:
+YY_RULE_SETUP
+#line 135 "lexic.l"
+{ return MOD; }
+	YY_BREAK
+case 32:
+YY_RULE_SETUP
+#line 136 "lexic.l"
+{ return POWER; }
+	YY_BREAK
+case 33:
+YY_RULE_SETUP
+#line 137 "lexic.l"
+{ return OPEN_PARENTHESIS; }
+	YY_BREAK
+case 34:
+YY_RULE_SETUP
+#line 138 "lexic.l"
+{ return CLOSED_PARENTHESIS; }
+	YY_BREAK
+case 35:
+YY_RULE_SETUP
+#line 140 "lexic.l"
+{ return GREATER_THAN; }
+	YY_BREAK
+case 36:
+YY_RULE_SETUP
+#line 141 "lexic.l"
+{ return GREATER_EQUAL; }
+	YY_BREAK
+case 37:
+YY_RULE_SETUP
+#line 142 "lexic.l"
+{ return LESS_THAN; }
+	YY_BREAK
+case 38:
+YY_RULE_SETUP
+#line 143 "lexic.l"
+{ return LESS_EQUAL; }
+	YY_BREAK
+case 39:
+YY_RULE_SETUP
+#line 144 "lexic.l"
+{ return EQUAL; }
+	YY_BREAK
+case 40:
+YY_RULE_SETUP
+#line 145 "lexic.l"
+{ return NOT_EQUAL; }
+	YY_BREAK
+case 41:
+YY_RULE_SETUP
+#line 147 "lexic.l"
+{ /* Ignore everything after '//' until the end of the line */ }
+	YY_BREAK
+case 42:
+/* rule 42 can match eol */
+YY_RULE_SETUP
+#line 148 "lexic.l"
+{ /* Ignore comment and newline */}
+	YY_BREAK
+case 43:
+/* rule 43 can match eol */
+YY_RULE_SETUP
+#line 149 "lexic.l"
+{ /* Ignore multi-line comments */}
+	YY_BREAK
+case 44:
+/* rule 44 can match eol */
+YY_RULE_SETUP
+#line 151 "lexic.l"
+{ /* Ignore empty lines */ }
+	YY_BREAK
+case 45:
+/* rule 45 can match eol */
+YY_RULE_SETUP
+#line 153 "lexic.l"
+{ return ENDLINE; }
+	YY_BREAK
+case 46:
+YY_RULE_SETUP
+#line 155 "lexic.l"
+{}
+	YY_BREAK
+case 47:
+YY_RULE_SETUP
+#line 157 "lexic.l"
 {
     yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
     yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
@@ -1219,132 +1338,13 @@ YY_RULE_SETUP
     return STRING;                             // Return STRING token
 }
 	YY_BREAK
-case 25:
-YY_RULE_SETUP
-#line 136 "lexic.l"
-{ return ASSIGN; }
-	YY_BREAK
-case 26:
-YY_RULE_SETUP
-#line 137 "lexic.l"
-{ return SEMICOLON; }
-	YY_BREAK
-case 27:
-YY_RULE_SETUP
-#line 138 "lexic.l"
-{ return COMMA; }
-	YY_BREAK
-case 28:
-YY_RULE_SETUP
-#line 139 "lexic.l"
-{ return PLUS; }
-	YY_BREAK
-case 29:
-YY_RULE_SETUP
-#line 140 "lexic.l"
-{ return MINUS; }
-	YY_BREAK
-case 30:
-YY_RULE_SETUP
-#line 141 "lexic.l"
-{ return MULTIPLY; }
-	YY_BREAK
-case 31:
-YY_RULE_SETUP
-#line 142 "lexic.l"
-{ return DIVIDE; }
-	YY_BREAK
-case 32:
-YY_RULE_SETUP
-#line 143 "lexic.l"
-{ return MOD; }
-	YY_BREAK
-case 33:
-YY_RULE_SETUP
-#line 144 "lexic.l"
-{ return POWER; }
-	YY_BREAK
-case 34:
-YY_RULE_SETUP
-#line 145 "lexic.l"
-{ return OPEN_PARENTHESIS; }
-	YY_BREAK
-case 35:
-YY_RULE_SETUP
-#line 146 "lexic.l"
-{ return CLOSED_PARENTHESIS; }
-	YY_BREAK
-case 36:
-YY_RULE_SETUP
-#line 148 "lexic.l"
-{ return GREATER_THAN; }
-	YY_BREAK
-case 37:
-YY_RULE_SETUP
-#line 149 "lexic.l"
-{ return GREATER_EQUAL; }
-	YY_BREAK
-case 38:
-YY_RULE_SETUP
-#line 150 "lexic.l"
-{ return LESS_THAN; }
-	YY_BREAK
-case 39:
-YY_RULE_SETUP
-#line 151 "lexic.l"
-{ return LESS_EQUAL; }
-	YY_BREAK
-case 40:
-YY_RULE_SETUP
-#line 152 "lexic.l"
-{ return EQUAL; }
-	YY_BREAK
-case 41:
-YY_RULE_SETUP
-#line 153 "lexic.l"
-{ return NOT_EQUAL; }
-	YY_BREAK
-case 42:
-YY_RULE_SETUP
-#line 155 "lexic.l"
-{ /* Ignore everything after '//' until the end of the line */ }
-	YY_BREAK
-case 43:
-/* rule 43 can match eol */
-YY_RULE_SETUP
-#line 156 "lexic.l"
-{ /* Ignore comment and newline */  yylineno++;}
-	YY_BREAK
-case 44:
-/* rule 44 can match eol */
-YY_RULE_SETUP
-#line 157 "lexic.l"
-{ /* Ignore multi-line comments */}
-	YY_BREAK
-case 45:
-/* rule 45 can match eol */
-YY_RULE_SETUP
-#line 159 "lexic.l"
-{ /* Ignore empty lines */ }
-	YY_BREAK
-case 46:
-/* rule 46 can match eol */
-YY_RULE_SETUP
-#line 161 "lexic.l"
-{ return ENDLINE; }
-	YY_BREAK
-case 47:
-YY_RULE_SETUP
-#line 163 "lexic.l"
-{}
-	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 165 "lexic.l"
+#line 167 "lexic.l"
 { return  0; }   /* Signal end of input to Bison */
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 167 "lexic.l"
+#line 169 "lexic.l"
 ECHO;
 	YY_BREAK
 #line 1351 "lex.yy.c"
@@ -2460,6 +2460,6 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 167 "lexic.l"
+#line 169 "lexic.l"
 
 
