@@ -21,9 +21,14 @@ int list_size = 0;
 int op_list[64];
 int op_size = 0;
 int number_list[64];
+float float_list[64];
 int number_size = 0;
+int float_size = 0;
 char *id_list[64];
 int id_size=0;
+
+float result_list[64];
+int result_size = 0;
 %}
 
 %code requires {
@@ -152,7 +157,7 @@ expressio:
                           $1.id_val.val_string = $3.val_string;
                       }
                       fprintf(stderr, "before print\n");
-                      print_list(list, list_size, number_list, number_size);
+                      print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;
                       sym_enter($1.lexema, &$3);
@@ -275,9 +280,11 @@ expressio:
                     }
                 }
                 | OPERATION_BOOLEAN {
-                            fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
-                            $$.val_type = BOOL_TYPE;
-                            $$.val_bool = $1.val_bool;
+                            if($1.val_type == BOOL_TYPE){
+                                fprintf(yyout, " (bool) pren per valor: %s\n", $1.val_bool ? "true" : "false");
+                                $$.val_type = BOOL_TYPE;
+                                $$.val_bool = $1.val_bool;
+                            }
                 }
 
 
@@ -291,7 +298,7 @@ expressio:
 
 OPERATION:
     OPERATION PLUS OPERATION2 {
-        add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "ADDI", $1.id_name, $3.id_name);
+
         char* result;
         if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
 
@@ -340,39 +347,57 @@ OPERATION:
             // Handle float addition
             if ($1.val_type == INT_TYPE) {
                 $1.val_float = (float) $1.val_int; // Convert int to float
+                add_to_float_list(result_list, &result_size,$1.val_float);
+                $1.type_conversion = 1;
+
             }
             if ($3.val_type == INT_TYPE) {
                 $3.val_float = (float) $3.val_int; // Convert int to float
+                add_to_float_list(result_list, &result_size,$3.val_float);
+                $3.type_conversion = 1;
+
             }
 
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1.val_float + $3.val_float;
+            add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "ADDF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
+            add_to_float_list(result_list, &result_size,$$.val_float);
+
 
         } else {
-            // Both operands are integers, add them
+            add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "ADDI", $1.id_name, $3.id_name);
             $$.val_type = INT_TYPE;
             $$.val_int = $1.val_int + $3.val_int;
+            add_to_float_list(result_list, &result_size, (float)$$.val_int);
         }
     }
     | OPERATION MINUS OPERATION2 {
-
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                printf("operacio float menos\n");
                 if ($1.val_type == INT_TYPE) {
                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                    add_to_float_list(result_list, &result_size,$1.val_float);
+                    $1.type_conversion = 1;
                 }
                 if ($3.val_type == INT_TYPE) {
                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                    add_to_float_list(result_list, &result_size,$3.val_float);
+                     $3.type_conversion = 1;
                 }
+                add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "SUBF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
 
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = $1.val_float - $3.val_float;
+                add_to_float_list(result_list, &result_size,$$.val_float);
+
             } else {
                 // Both operands are integers
+                add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "SUBI", $1.id_name, $3.id_name);
                 $$.val_type = INT_TYPE;
                 $$.val_int = $1.val_int - $3.val_int;
+                add_to_float_list(result_list, &result_size,(float)$$.val_int);
+
             }
         } else {
             fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
@@ -384,26 +409,32 @@ OPERATION:
 
 OPERATION2:
     | OPERATION2 MULTIPLY OPERATION3 {
-
-        add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "MULI", $1.id_name, $3.id_name);
-
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
 
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                 if ($1.val_type == INT_TYPE) {
                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                    add_to_float_list(result_list, &result_size,$1.val_float);
+                    $1.type_conversion = 1;
                 }
                 if ($3.val_type == INT_TYPE) {
                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                    add_to_float_list(result_list, &result_size,$3.val_float);
+                    $3.type_conversion = 1;
                 }
 
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = $1.val_float * $3.val_float;
+                add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "MULF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
+                add_to_float_list(result_list, &result_size,$$.val_float);
+
             } else {
-                // Both operands are integers
+                add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "MULI", $1.id_name, $3.id_name);
                 $$.val_type = INT_TYPE;
                 $$.val_int = $1.val_int * $3.val_int;
+                add_to_float_list(result_list, &result_size, (float)$$.val_int);
+
             }
         } else {
             fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
@@ -425,17 +456,38 @@ OPERATION2:
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                 if ($1.val_type == INT_TYPE) {
                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                    add_to_float_list(result_list, &result_size,$1.val_float);
+                    $1.type_conversion = 1;
                 }
                 if ($3.val_type == INT_TYPE) {
                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                    add_to_float_list(result_list, &result_size,$3.val_float);
+                    $3.type_conversion = 1;
                 }
-
+                add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "DIVF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = $1.val_float / $3.val_float;
+                add_to_float_list(result_list, &result_size,$$.val_float);
+
             } else {
-                // Both operands are integers
-                $$.val_type = INT_TYPE;
-                $$.val_int = $1.val_int / $3.val_int;
+                if($1.val_int % $3.val_int == 0){
+                    add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "DIVI", $1.id_name, $3.id_name);
+                    $$.val_type = INT_TYPE;
+                    $$.val_int = $1.val_int / $3.val_int;
+                    add_to_float_list(result_list, &result_size, $$.val_int);
+
+                }
+                else {
+                      $$.val_type = FLOAT_TYPE;
+                      $1.val_float = (float)$1.val_int;
+                      $3.val_float = (float)$3.val_int;
+                      $$.val_float = $1.val_float / $3.val_float;
+                      add_to_float_list(result_list, &result_size, $1.val_float);
+                      add_to_float_list(result_list, &result_size, $3.val_float);
+                      add_to_float_list(result_list, &result_size, $$.val_float);
+                      add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "DIVF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
+
+                }
             }
         } else {
             fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
@@ -581,6 +633,7 @@ OPERATION4:
 
         }
     | FLOAT {
+            add_to_float_list(float_list, &float_size, $1);
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1;
         }

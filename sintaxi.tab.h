@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 29 "sintaxi.y"
+#line 34 "sintaxi.y"
 
   #include "dades.h"
   #include "funcions.h"
@@ -108,7 +108,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 34 "sintaxi.y"
+#line 39 "sintaxi.y"
 
     struct {
         char *lexema;

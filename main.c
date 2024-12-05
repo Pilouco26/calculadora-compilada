@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "funcions.h"
 
+int lines = 1;
+
 int main(int argc, char *argv[]) {
   int error;
   FILE *file_ca3;

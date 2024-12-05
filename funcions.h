@@ -13,7 +13,7 @@ int init_analisi_sintactica(char *);
 int end_analisi_sintactica(void);
 void save_line();
 FILE *open_file_ca3();
-void print_list(three_address_code [], int, int [], int);
+void print_list(three_address_code [], int, int [], int, float float_list[], int float_size,char * );
 void add_three_address_code(three_address_code[], int *, int , int, char *, char* id1, char * id2);
 void close_file_ca3();
 void reparse_line();
@@ -24,5 +24,7 @@ void float_to_binary(float, char *);
 char *substr(const char *string, int start, int length);
 void yyerror(char *explanation);
 int is_number_in_list(int list[],  int *size, int number);
-
+int is_number_in_list_without_retrieving(int list[],  int size, int number);
+void add_to_float_list(float float_list[], int *float_size, float value);
+void add_three_address_code_float(three_address_code list[], int *list_size, float value1, float value2, char* op, char* id1, char * id2, int conversion1, int conversion2);
 #endif
