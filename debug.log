@@ -1,26 +1,14 @@
 --(end of buffer or a NUL)
---accepting rule at line 104 ("i")
+--accepting rule at line 104 ("x")
 --accepting rule at line 155 (" ")
 --accepting rule at line 128 (":=")
---accepting rule at line 155 (" ")
---accepting rule at line 155 (" ")
---accepting rule at line 43 ("2.2")
---accepting rule at line 155 (" ")
---accepting rule at line 133 ("*")
---accepting rule at line 155 (" ")
---accepting rule at line 26 ("4")
-integer in
---accepting rule at line 155 (" ")
---accepting rule at line 133 ("*")
---accepting rule at line 155 (" ")
---accepting rule at line 137 ("(")
 --accepting rule at line 155 (" ")
 --accepting rule at line 26 ("5")
 integer in
 --accepting rule at line 155 (" ")
 --accepting rule at line 131 ("+")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("8")
+--accepting rule at line 26 ("6")
 integer in
 --accepting rule at line 155 (" ")
 --accepting rule at line 131 ("+")
@@ -28,11 +16,9 @@ integer in
 --accepting rule at line 26 ("7")
 integer in
 --accepting rule at line 155 (" ")
---accepting rule at line 138 (")")
---accepting rule at line 155 (" ")
 --accepting rule at line 133 ("*")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("2")
+--accepting rule at line 26 ("8")
 integer in
 --accepting rule at line 155 ("")
 --accepting rule at line 153 ("
@@ -41,9 +27,33 @@ before print
 --accepting rule at line 155 ("")
 --accepting rule at line 153 ("
 ")
+--accepting rule at line 104 ("x")
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+--accepting rule at line 104 ("y")
+--accepting rule at line 155 (" ")
+--accepting rule at line 128 (":=")
+--accepting rule at line 155 (" ")
+--accepting rule at line 104 ("x")
+--accepting rule at line 155 (" ")
+--accepting rule at line 131 ("+")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("4")
+integer in
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+before print
 --accepting rule at line 155 ("")
 --accepting rule at line 153 ("
 ")
 --(end of buffer or a NUL)
 --EOF (start condition 0)
+CALL PUT, 21957
+CALL PUT, 32767
+CALL PUT, 21957
 The compilation has been successful

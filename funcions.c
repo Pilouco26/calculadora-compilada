@@ -224,33 +224,24 @@ void close_file_ca3(FILE *file_ca3) {
 }
 
 void print_list(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size , char * id_name ) {
-	for(int i = 0; i < number_size; i++) {
-          fprintf(yyout, "i : %d , %d \n", i, number_list[i]);
-    }
-    for(int i = 0; i < result_size; i++) {
-          fprintf(yyout, "i : %d , %f \n", i, result_list[i]);
-    }
-  	int correcio = 0;
     for (int i = 0; i < size; i++) {
-//		if(strcmp(list[i].val_op, "IDF") == 0 && i != 0) correcio =2;
+
+		if (strcmp(list[i].val_op, "CALL") == 0) {
+  		  // Add logic here, such as calling a function or performing an action
+   	      printf("CALL PUT, %d\n", list[i].val_info2.val_int);
+		}
+        else{
         if (size == 1 || size == i + 1){
             fprintf(file_ca3, "%d : %s := ",lines++, id_name);
         }
         else {
-            if(correcio > 0){
               fprintf(file_ca3, "%d : $t%d := ",lines++, i);
-            }
-            else fprintf(file_ca3, "%d : $t%d := ",lines++, i);
-            if(correcio > 0){
-               correcio--;
-            }
         }
 
         if(list[i].type_op == 'I'){
-
-            if(list[i].val_info.id_name != NULL) {
-              fprintf(file_ca3, "%s ", strdup(list[i].val_info.id_name));
-            }
+			if (list[i].val_info.id_name && !strchr(list[i].val_info.id_name, '\x03')) {
+ 		  		fprintf(file_ca3, "%s ", list[i].val_info.id_name);
+			}
 		    else if(!is_number_in_list(number_list, &number_size, list[i].val_info.val_int)){
                int temporal = is_result_in_list(result_list, &result_size, (float)list[i].val_info.val_int);
  			   if (temporal != -1) {
@@ -262,11 +253,10 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
 
     	    fprintf(file_ca3, "%s ", list[i].val_op);
 
-            if(list[i].val_info2.id_name != NULL) {
-                fprintf(file_ca3, "%s\n", strdup(list[i].val_info2.id_name));
-            }
+			if (list[i].val_info2.id_name && !strchr(list[i].val_info2.id_name, '\x03')) {
+ 		  		fprintf(file_ca3, "%s ", list[i].val_info2.id_name);
+			}
 		    if(!is_number_in_list(number_list, &number_size, list[i].val_info2.val_int)){
-               fprintf(yyout, "float %f\n", (float)list[i].val_info2.val_int);
                int temporal = is_result_in_list(result_list, &result_size, (float)list[i].val_info2.val_int);
  			   if (temporal != -1 && strcmp(list[i].val_op, "IDF") != 0) {
  					fprintf(file_ca3, "t%d \n", temporal);
@@ -277,30 +267,33 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
         }
 
         else if(list[i].type_op == 'F') {
-            if(list[i].val_info.id_name != NULL) {
-                fprintf(file_ca3, "%s ", strdup(list[i].val_info.id_name)); // print id
-            }
 
-            if(list[i].val_info.val_float == -1){
+			if (list[i].val_info.id_name && !strchr(list[i].val_info.id_name, '\x03')) {
+ 		  		fprintf(file_ca3, "%s ", list[i].val_info.id_name);
+			}
+
+            else if(list[i].val_info.val_float == -1){
 
             }
             else if(!(is_real_in_list(float_list, &float_size, list[i].val_info.val_float)) ){
                 int temporal = is_result_in_list(result_list, &result_size, list[i].val_info.val_float);
-				if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size,(int)list[i].val_info2.val_float)) {
+
+				if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size,(int)list[i].val_info.val_float)) {
  					fprintf(file_ca3, "t%d ", temporal);
 			   	}
+
                 else fprintf(file_ca3, "%d", (int)list[i].val_info.val_float);
             }
             else fprintf(file_ca3, "%f ", list[i].val_info.val_float);    // print float
 
             fprintf(file_ca3, "%s ", list[i].val_op);
 
-            if(list[i].val_info2.id_name != NULL) {
-                fprintf(file_ca3, "%s\n", strdup(list[i].val_info2.id_name));  // print id
-            }
-            if(list[i].val_info2.val_float == -1){
+			if(list[i].val_info2.val_float == -1){
 				fprintf(file_ca3, "\n");
             }
+			if (list[i].val_info2.id_name && !strchr(list[i].val_info2.id_name, '\x03')) {
+ 		  		fprintf(file_ca3, "%s ", list[i].val_info2.id_name);
+			}
             else if(!is_real_in_list(float_list, &float_size, list[i].val_info2.val_float) ) {
                int temporal = is_result_in_list(result_list, &result_size, list[i].val_info2.val_float);
  			   if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)list[i].val_info2.val_float)) {
@@ -312,8 +305,6 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
         }
 
     }
-	    for(int i = 0; i < result_size; i++) {
-          fprintf(yyout, "i : %d , %f \n", i, result_list[i]);
     }
 }
 
@@ -404,6 +395,31 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
 
 }
 
+void call_put(three_address_code list[], int *list_size, float value_float, int value_int, int op){
+    if(op == 1){
+        three_address_code change;
+        change.val_info.val_float = -1;
+        change.val_info2.val_float = value_float;
+        change.type_op = 'F';
+        change.val_type_list = FLOAT_TYPE;
+    	change.val_info.val_type = FLOAT_TYPE;
+        change.val_op = "CALL";
+        list[*list_size] = change;
+    	(*list_size)++;
+    }
+    else{
+        three_address_code change;
+        change.val_info.val_int = -1;
+        change.val_info2.val_int = value_int;
+        change.type_op = 'F';
+        change.val_type_list = INT_TYPE;
+    	change.val_info.val_type = INT_TYPE;
+        change.val_op = "CALL PUT, ";
+        list[*list_size] = change;
+    	(*list_size)++;
+    }
+
+}
 
 void add_to_float_list(float float_list[], int *float_size, float value) {
     float_list[*float_size] = value;

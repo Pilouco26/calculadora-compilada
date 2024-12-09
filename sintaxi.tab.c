@@ -87,8 +87,6 @@ int comptador = 0;
 char *last_id = "init";    // To store strings
 three_address_code list[64];
 int list_size = 0;
-int op_list[64];
-int op_size = 0;
 int number_list[64];
 float float_list[64];
 int number_size = 0;
@@ -99,7 +97,7 @@ int id_size=0;
 float result_list[64];
 int result_size = 0;
 
-#line 103 "sintaxi.tab.c"
+#line 101 "sintaxi.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -571,8 +569,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    78,    78,    83,    84,    89,   111,   131,   165,   194,
-     205,   220,   262,   282,   300,   374,   407,   410,   411,   444,
+       0,    76,    76,    81,    82,    87,   109,   129,   163,   192,
+     203,   218,   260,   282,   300,   374,   407,   410,   411,   444,
      497,   513,   517,   534,   536,   537,   546,   555,   572,   582,
      628,   635,   640,   644,   670,   695,   718,   724,   727,   728,
      736,   737,   744,   752,   756,   768,   772,   786,   800,   814,
@@ -1220,15 +1218,15 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* programa: expressio_list  */
-#line 78 "sintaxi.y"
+#line 76 "sintaxi.y"
                           {
              fprintf(yyout, "End of input reached.\n");
            }
-#line 1228 "sintaxi.tab.c"
+#line 1226 "sintaxi.tab.c"
     break;
 
   case 5: /* header: REPEAT OPERATION  */
-#line 89 "sintaxi.y"
+#line 87 "sintaxi.y"
                       {
                 fprintf(stderr, "repeat and %d\n", (yyvsp[0].expr_val).val_int);
                 fprintf(stderr, "repeat\n");
@@ -1249,11 +1247,11 @@ yyreduce:
                      (yyval.header).end = 1;
                  }
      }
-#line 1253 "sintaxi.tab.c"
+#line 1251 "sintaxi.tab.c"
     break;
 
   case 6: /* expressio: header DO expressio_list DONE  */
-#line 111 "sintaxi.y"
+#line 109 "sintaxi.y"
                                   {
         if ((yyvsp[-3].header).end == 0) {
             int delta = yylineno - (yyvsp[-3].header).linea;
@@ -1272,11 +1270,11 @@ yyreduce:
             comptador = 1;
         }
     }
-#line 1276 "sintaxi.tab.c"
+#line 1274 "sintaxi.tab.c"
     break;
 
   case 7: /* expressio: ID ASSIGN OPERATION  */
-#line 131 "sintaxi.y"
+#line 129 "sintaxi.y"
                      {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup((yyvsp[-2].ident).lexema, &existing_value);
@@ -1311,11 +1309,11 @@ yyreduce:
                       number_size = 0;
                       sym_enter((yyvsp[-2].ident).lexema, &(yyvsp[0].expr_val));
                   }
-#line 1315 "sintaxi.tab.c"
+#line 1313 "sintaxi.tab.c"
     break;
 
   case 8: /* expressio: ID ASSIGN OPERATION MODE  */
-#line 165 "sintaxi.y"
+#line 163 "sintaxi.y"
                                            {
                 if ((yyvsp[-1].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1345,11 +1343,11 @@ yyreduce:
                                  fprintf(stderr, "Mode only supported in INTEGER, error declared in line %d\n", yylineno);
                               }
                 }
-#line 1349 "sintaxi.tab.c"
+#line 1347 "sintaxi.tab.c"
     break;
 
   case 9: /* expressio: ID ASSIGN OPERATION_BOOLEAN  */
-#line 194 "sintaxi.y"
+#line 192 "sintaxi.y"
                                               {
                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool ? "true" : "false");
                             fprintf(stderr, "ID: %s (bool) pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool ? "true" : "false");
@@ -1361,11 +1359,11 @@ yyreduce:
                             sym_enter((yyvsp[-2].ident).lexema, &value_to_store);
 
                 }
-#line 1365 "sintaxi.tab.c"
+#line 1363 "sintaxi.tab.c"
     break;
 
   case 10: /* expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN  */
-#line 205 "sintaxi.y"
+#line 203 "sintaxi.y"
                                                    {
                 if ((yyvsp[0].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1381,11 +1379,11 @@ yyreduce:
 
 
                 }
-#line 1385 "sintaxi.tab.c"
+#line 1383 "sintaxi.tab.c"
     break;
 
   case 11: /* expressio: OPERATION MODE  */
-#line 220 "sintaxi.y"
+#line 218 "sintaxi.y"
                                  {
                 if ((yyvsp[-1].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1428,25 +1426,27 @@ yyreduce:
                                        (yyval.expr_val).val_string = (yyvsp[-1].expr_val).val_string;
                                        }
                 }
-#line 1432 "sintaxi.tab.c"
+#line 1430 "sintaxi.tab.c"
     break;
 
   case 12: /* expressio: OPERATION  */
-#line 262 "sintaxi.y"
+#line 260 "sintaxi.y"
                             {
                     if ((yyvsp[0].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
                         YYABORT;
                     }
-
                     if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
                        // fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
                         (yyvsp[0].expr_val).val_type = INT_TYPE;
                         (yyvsp[0].expr_val).val_int = (int)(yyvsp[0].expr_val).val_int;
+                        call_put(list, &list_size, 0, (int)(yyvsp[0].expr_val).val_int, 1);
                     } else if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
                         fprintf(yyout, "(real) pren per valor: %f\n", (yyvsp[0].expr_val).val_float);
                         (yyvsp[0].expr_val).val_type = FLOAT_TYPE;
-                        (yyvsp[0].expr_val).val_float = (yyvsp[0].expr_val).val_int;
+                        (yyvsp[0].expr_val).val_float = (yyvsp[0].expr_val).val_float;
+                        call_put(list, &list_size, 0, (yyvsp[0].expr_val).val_float, 1);
+
                     } else if ((yyvsp[0].expr_val).val_type == STRING_TYPE) {
                         fprintf(yyout, " (string) pren per valor: %s\n", (yyvsp[0].expr_val).val_string);
                         (yyval.expr_val).val_type = STRING_TYPE;

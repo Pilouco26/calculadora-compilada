@@ -1,10 +1,6 @@
 1 : START
-2 : $t0 := IDF 4
-3 : $t1 := 2.200000 MULF 4
-4 : $t2 := 5 ADDI 8
-5 : $t3 := t2 ADDI 7
-6 : $t4 := IDF t3 
-7 : $t5 := t1 MULF t4 
-8 : $t6 := IDF 2
-9 : i := 176MULF 2
-10 : HALT
+2 : $t0 := 5 ADDI 6
+3 : $t1 := 7 MULI 8
+4 : x := t0 ADDI t1 
+5 : y := x ADDI 4
+6 : HALT

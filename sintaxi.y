@@ -18,8 +18,6 @@ int comptador = 0;
 char *last_id = "init";    // To store strings
 three_address_code list[64];
 int list_size = 0;
-int op_list[64];
-int op_size = 0;
 int number_list[64];
 float float_list[64];
 int number_size = 0;
@@ -264,15 +262,17 @@ expressio:
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
                         YYABORT;
                     }
-
                     if ($1.val_type == INT_TYPE) {
                        // fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
                         $1.val_type = INT_TYPE;
                         $1.val_int = (int)$1.val_int;
+                        call_put(list, &list_size, 0, (int)$1.val_int, 1);
                     } else if ($1.val_type == FLOAT_TYPE) {
                         fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
                         $1.val_type = FLOAT_TYPE;
-                        $1.val_float = $1.val_int;
+                        $1.val_float = $1.val_float;
+                        call_put(list, &list_size, 0, $1.val_float, 1);
+
                     } else if ($1.val_type == STRING_TYPE) {
                         fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
                         $$.val_type = STRING_TYPE;
