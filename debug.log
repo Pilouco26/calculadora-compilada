@@ -1,37 +1,21 @@
 --(end of buffer or a NUL)
---accepting rule at line 104 ("fact")
+--accepting rule at line 104 ("m")
 --accepting rule at line 155 (" ")
 --accepting rule at line 128 (":=")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("2")
---accepting rule at line 155 ("")
---accepting rule at line 153 ("
-")
---accepting rule at line 104 ("i")
---accepting rule at line 155 (" ")
---accepting rule at line 128 (":=")
---accepting rule at line 155 (" ")
---accepting rule at line 26 ("1")
+--accepting rule at line 26 ("4")
 --accepting rule at line 155 (" ")
 --accepting rule at line 131 ("+")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("5")
+--accepting rule at line 26 ("3")
+--accepting rule at line 155 (" ")
+--accepting rule at line 131 ("+")
+--accepting rule at line 155 (" ")
+--accepting rule at line 43 ("4.5")
 --accepting rule at line 155 (" ")
 --accepting rule at line 133 ("*")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("4")
---accepting rule at line 155 ("")
---accepting rule at line 153 ("
-")
---accepting rule at line 104 ("j")
---accepting rule at line 155 (" ")
---accepting rule at line 128 (":=")
---accepting rule at line 155 (" ")
---accepting rule at line 26 ("4")
---accepting rule at line 155 (" ")
---accepting rule at line 131 ("+")
---accepting rule at line 155 (" ")
---accepting rule at line 104 ("i")
+--accepting rule at line 26 ("2")
 --accepting rule at line 155 (" ")
 --accepting rule at line 134 ("/")
 --accepting rule at line 155 (" ")
@@ -43,33 +27,50 @@
 --accepting rule at line 155 (" ")
 --accepting rule at line 128 (":=")
 --accepting rule at line 155 (" ")
---accepting rule at line 43 ("2.3")
+--accepting rule at line 26 ("0")
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+--accepting rule at line 36 ("repeat")
+repeat in lexic
 --accepting rule at line 155 (" ")
---accepting rule at line 131 ("+")
+--accepting rule at line 26 ("4")
+--accepting rule at line 155 (" ")
+--accepting rule at line 37 ("do")
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+--accepting rule at line 104 ("j")
+--accepting rule at line 155 (" ")
+--accepting rule at line 128 (":=")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("7")
+--accepting rule at line 155 (" ")
+--accepting rule at line 134 ("/")
 --accepting rule at line 155 (" ")
 --accepting rule at line 26 ("4")
 --accepting rule at line 155 ("")
 --accepting rule at line 153 ("
 ")
+--accepting rule at line 104 ("k")
+--accepting rule at line 155 (" ")
+--accepting rule at line 128 (":=")
+--accepting rule at line 155 (" ")
+--accepting rule at line 43 ("4.52")
+--accepting rule at line 155 (" ")
+--accepting rule at line 131 ("+")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("3")
+--accepting rule at line 155 ("")
+--accepting rule at line 153 ("
+")
+Error: Type mismatch for ID 'k' in line 7.
 --(end of buffer or a NUL)
---accepting rule at line 149 ("/* repeat 4 do
-i := 15 - 2 + i
-fact := fact * 2
-done */
-")
---accepting rule at line 155 ("")
---accepting rule at line 153 ("
-")
---accepting rule at line 155 ("")
---accepting rule at line 153 ("
-")
---accepting rule at line 104 ("i")
---accepting rule at line 155 ("")
---accepting rule at line 153 ("
-")
---accepting rule at line 155 ("")
---accepting rule at line 153 ("
-")
+--accepting rule at line 38 ("done")
 --(end of buffer or a NUL)
 --EOF (start condition 0)
-The compilation has been successful
+Error: syntax error , in line 7
+ERROR

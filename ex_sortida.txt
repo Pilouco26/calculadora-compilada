@@ -1,6 +1,4 @@
-ID: fact (int) pren per valor: 2
-ID: i (int) pren per valor: 21
-ID: j (real) pren per valor: 14.500000
-ID: k (real) pren per valor: 6.300000
-(real) pren per valor: 6.300000
-End of input reached.
+floatelse if floatID: m (real) pren per valor: 11.500000
+ID: k (int) pren per valor: 0
+else if floatID: j (real) pren per valor: 1.750000
+floatelse if floatID: k (real) pren per valor: 7.520000

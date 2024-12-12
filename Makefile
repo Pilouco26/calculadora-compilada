@@ -36,6 +36,7 @@ CFLAGS = -Wall -g
 # Example inputs/outputs
 EG_IN = ex_entrada.txt
 EG_OUT = ex_sortida.txt
+EG_3AC = CA3.txt
 
 # Debug logs
 DEBUG_LOG = debug.log
@@ -77,4 +78,4 @@ run: all
 	# Run the program with example input and output files
 	./$(BIN) $(EG_IN) $(EG_OUT) > $(DEBUG_LOG) 2>&1
 	# Show the output on the console
-	cat $(EG_OUT)
+	cat $(EG_3AC)

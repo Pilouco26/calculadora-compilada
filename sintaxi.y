@@ -85,12 +85,14 @@ expressio_list:
 
 
 header:
-     REPEAT OPERATION {
+     ENDLINE REPEAT OPERATION {
+                 fprintf(file_ca3, "repeat\n");
 
-                 if ($2.val_type == INT_TYPE) {
-                             if ($2.val_int > 0) {
+                 if ($3.val_type == INT_TYPE) {
+                             if ($3.val_int > 0) {
+                                fprintf(file_ca3, "float size %d : list_size := %d\n", float_size, list_size);
                                 print_list(list, list_size, number_list, number_size, float_list, float_size,  "no");
-                                fprintf(file_ca3, "%d : compt := %d\n", lines++, $2.val_int);
+                                fprintf(file_ca3, "%d : compt := %d\n", lines++, $3.val_int);
                                 $$.linea = lines;
                                 fprintf(file_ca3, "%d : k := k ADDI 1\n", lines++);
                                 list_size = 0;
@@ -98,7 +100,7 @@ header:
                                 float_size = 0;
                                 id_size = 0;
                                 result_size = 0;
-                                comptador = $2.val_int;
+                                comptador = $3.val_int;
 
                              }
                  } else {
@@ -107,21 +109,19 @@ header:
      }
 
 expressio:
-    header DO expressio_list DONE{
+    header DO ENDLINE expressio_list DONE{
         delta = yylineno - $1.linea;
         fprintf(file_ca3, "%d : if k < compt GO TO %d \n",lines++, $1.linea);
         fprintf(file_ca3, "%d : GO TO %d \n",lines++, $1.linea);
 
     }
 
-
-|ID ASSIGN OPERATION {
+| ID ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
                       if (lookup_result == SYMTAB_OK) {
                           if (existing_value.val_type != $3.val_type) {
                               fprintf(stderr, "Error: Type mismatch for ID '%s' in line %d.\n", $1.lexema, yylineno);
-                              YYABORT;
                           }
                       }
                       if ($3.val_type == INT_TYPE) {
@@ -131,6 +131,7 @@ expressio:
                           $1.id_val.val_type = INT_TYPE;
                           $1.id_val.val_int = $3.val_int;
                       } else if ($3.val_type == FLOAT_TYPE) {
+                          fprintf(yyout, "else if float");
                           fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
                           $$.val_type = FLOAT_TYPE;
                           $$.val_float = $3.val_float;
@@ -356,7 +357,6 @@ OPERATION:
 
 
         } else {
-
             add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "ADDI", $1.id_name, $3.id_name);
             $$.val_type = INT_TYPE;
             $$.val_int = $1.val_int + $3.val_int;
@@ -364,6 +364,7 @@ OPERATION:
         }
     }
     | OPERATION MINUS OPERATION2 {
+        fprintf(file_ca3, "minus\n");
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
@@ -375,13 +376,14 @@ OPERATION:
                 if ($3.val_type == INT_TYPE) {
                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
                     add_to_float_list(result_list, &result_size,$3.val_float);
-                     $3.type_conversion = 1;
+                    $3.type_conversion = 1;
                 }
                 add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "SUBF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
-
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = $1.val_float - $3.val_float;
+                fprintf(yyout, "result minus %f\n", $$.val_float);
                 add_to_float_list(result_list, &result_size,$$.val_float);
+                fprintf(file_ca3, " after float, float size %d : list_size := %d\n", float_size, list_size);
 
             } else {
                 // Both operands are integers
@@ -400,7 +402,7 @@ OPERATION:
     ;
 
 OPERATION2:
-    | OPERATION2 MULTIPLY OPERATION3 {
+     OPERATION2 MULTIPLY OPERATION3 {
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
 
@@ -527,7 +529,7 @@ OPERATION3:
     | OPERATION4
 ;
 OPERATION4:
-    | SIN OPERATION4 {
+     SIN OPERATION4 {
         if ($2.val_type == FLOAT_TYPE) {
             $$.val_type = FLOAT_TYPE;
             $$.val_float = sin($2.val_float);
@@ -626,6 +628,7 @@ OPERATION4:
 
         }
     | FLOAT {
+            fprintf(yyout, "float");
             add_to_float_list(float_list, &float_size, $1);
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1;

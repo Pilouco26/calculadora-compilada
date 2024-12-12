@@ -1,12 +1,7 @@
-fact := 2
-i := 1 + 5 * 4
-j := 4 + i / 2
-k := 2.3 + 4
-/* repeat 4 do
-i := 15 - 2 + i
-fact := fact * 2
-done */
+m := 4 + 3 + 4.5 * 2 / 2
+k := 0
 
-
-i
-
+repeat 4 do
+j := 7 / 4
+k := 4.52 + 3
+done

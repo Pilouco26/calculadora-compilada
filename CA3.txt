@@ -1,9 +1,18 @@
 1 : START
-2 : $t0 := 5 MULI 4
-3 : i := 1 ADDI t0 
-4 : $t0 := i DIVF 2
-5 : $t1 := –π~ÛVU IDF
-6 : j := 4ADDF i 
-7 : $t0 := †∫~ÛVU IDF  
-8 : k := 2.300000 ADDF 4
-9 : HALT
+2 : $t0 := 4 ADDI 3
+3 : $t1 := IDF 2
+4 : $t2 := 4.500000 MULF 2
+5 : $t3 := IDF 2
+6 : $t4 := t2 DIVF 2
+7 : $t5 := IDF t0 
+8 : m := t5 ADDF t4 
+repeat
+float size 0 : list_size := 0
+9 : compt := 4
+10 : k := k ADDI 1
+11 : j := 7 DIVF 4
+12 : $t0 := IDF 3
+13 : k := 4.520000 ADDF 3
+14 : if k < compt GO TO 10 
+15 : GO TO 10 
+16 : HALT
