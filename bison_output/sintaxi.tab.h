@@ -35,22 +35,23 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_OUT_TAB_H_INCLUDED
-# define YY_YY_OUT_TAB_H_INCLUDED
+#ifndef YY_YY_BISON_OUTPUT_SINTAXI_TAB_H_INCLUDED
+# define YY_YY_BISON_OUTPUT_SINTAXI_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 16 "./fitxers/sintaxi.y"
+#line 33 "bison_flex/sintaxi.y"
 
-  #include "dades.h"
-  #include "funcions.h"
+  #include "../header_files/dades.h"
+  #include "../header_files/funcions.h"
+  #include "../header_files/funcions_ca3.h"
 
-#line 54 "./out/tab.h"
+#line 55 "bison_output/sintaxi.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -69,31 +70,37 @@ extern int yydebug;
     ID = 263,                      /* ID  */
     ID_BOOL = 264,                 /* ID_BOOL  */
     STRING = 265,                  /* STRING  */
-    COMMA = 266,                   /* COMMA  */
-    LEN = 267,                     /* LEN  */
-    SIN = 268,                     /* SIN  */
-    COS = 269,                     /* COS  */
-    TAN = 270,                     /* TAN  */
-    AND = 271,                     /* AND  */
-    OR = 272,                      /* OR  */
-    NOT = 273,                     /* NOT  */
-    PLUS = 274,                    /* PLUS  */
-    MINUS = 275,                   /* MINUS  */
-    MULTIPLY = 276,                /* MULTIPLY  */
-    DIVIDE = 277,                  /* DIVIDE  */
-    MOD = 278,                     /* MOD  */
-    POWER = 279,                   /* POWER  */
-    CLOSED_PARENTHESIS = 280,      /* CLOSED_PARENTHESIS  */
-    OPEN_PARENTHESIS = 281,        /* OPEN_PARENTHESIS  */
-    ASSIGN = 282,                  /* ASSIGN  */
-    ENDLINE = 283,                 /* ENDLINE  */
-    SEMICOLON = 284,               /* SEMICOLON  */
-    GREATER_THAN = 285,            /* GREATER_THAN  */
-    GREATER_EQUAL = 286,           /* GREATER_EQUAL  */
-    LESS_THAN = 287,               /* LESS_THAN  */
-    LESS_EQUAL = 288,              /* LESS_EQUAL  */
-    EQUAL = 289,                   /* EQUAL  */
-    NOT_EQUAL = 290                /* NOT_EQUAL  */
+    EXTRALINE = 266,               /* EXTRALINE  */
+    DO = 267,                      /* DO  */
+    DONE = 268,                    /* DONE  */
+    COMMENT = 269,                 /* COMMENT  */
+    SUBSTR = 270,                  /* SUBSTR  */
+    COMMA = 271,                   /* COMMA  */
+    LEN = 272,                     /* LEN  */
+    SIN = 273,                     /* SIN  */
+    COS = 274,                     /* COS  */
+    TAN = 275,                     /* TAN  */
+    AND = 276,                     /* AND  */
+    OR = 277,                      /* OR  */
+    NOT = 278,                     /* NOT  */
+    PLUS = 279,                    /* PLUS  */
+    MINUS = 280,                   /* MINUS  */
+    MULTIPLY = 281,                /* MULTIPLY  */
+    DIVIDE = 282,                  /* DIVIDE  */
+    MOD = 283,                     /* MOD  */
+    POWER = 284,                   /* POWER  */
+    CLOSED_PARENTHESIS = 285,      /* CLOSED_PARENTHESIS  */
+    OPEN_PARENTHESIS = 286,        /* OPEN_PARENTHESIS  */
+    ASSIGN = 287,                  /* ASSIGN  */
+    ENDLINE = 288,                 /* ENDLINE  */
+    SEMICOLON = 289,               /* SEMICOLON  */
+    GREATER_THAN = 290,            /* GREATER_THAN  */
+    GREATER_EQUAL = 291,           /* GREATER_EQUAL  */
+    LESS_THAN = 292,               /* LESS_THAN  */
+    LESS_EQUAL = 293,              /* LESS_EQUAL  */
+    EQUAL = 294,                   /* EQUAL  */
+    NOT_EQUAL = 295,               /* NOT_EQUAL  */
+    REPEAT = 296                   /* REPEAT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -102,7 +109,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "./fitxers/sintaxi.y"
+#line 39 "bison_flex/sintaxi.y"
 
     struct {
         char *lexema;
@@ -120,8 +127,10 @@ union YYSTYPE
     void *sense_valor;
     char *cadena;
     bool boolean;
+    expression_list expr_list;
+    heading header;
 
-#line 125 "./out/tab.h"
+#line 134 "bison_output/sintaxi.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -136,4 +145,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_OUT_TAB_H_INCLUDED  */
+#endif /* !YY_YY_BISON_OUTPUT_SINTAXI_TAB_H_INCLUDED  */

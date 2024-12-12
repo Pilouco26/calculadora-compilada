@@ -1,7 +1,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "funcions.h"
+#include "./header_files/funcions.h"
+#include "./header_files/funcions_ca3.h"
 
 int lines = 1;
 

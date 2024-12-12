@@ -1,5 +1,5 @@
 1 : START
-2 : $t0 := 8 ADDI 3
+2 : $t0 := 4 ADDI 3
 3 : $t1 := IDF 2
 4 : $t2 := 4.500000 MULF 2
 5 : $t3 := IDF 2

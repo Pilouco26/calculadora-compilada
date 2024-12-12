@@ -4,7 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symtab.h"
+#include "../header_files/symtab.h"
+
 
 /****************************************************************************/
 /*                                                                          */

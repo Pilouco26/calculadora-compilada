@@ -1,4 +1,0 @@
-floatelse if floatID: m (real) pren per valor: 11.500000
-ID: k (int) pren per valor: 0
-else if floatID: j (real) pren per valor: 1.750000
-floatelse if floatID: k (real) pren per valor: 7.520000

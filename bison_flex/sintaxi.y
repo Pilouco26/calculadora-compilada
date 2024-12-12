@@ -5,7 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdbool.h>
-#include "symtab.h"
+#include "../header_files/symtab.h"
 extern FILE *yyin;
 extern FILE *yyout;
 extern FILE *file_ca3;
@@ -31,8 +31,9 @@ int result_size = 0;
 %}
 
 %code requires {
-  #include "dades.h"
-  #include "funcions.h"
+  #include "../header_files/dades.h"
+  #include "../header_files/funcions.h"
+  #include "../header_files/funcions_ca3.h"
 }
 
 %union {
@@ -86,15 +87,13 @@ expressio_list:
 
 header:
      ENDLINE REPEAT OPERATION {
-                 fprintf(file_ca3, "repeat\n");
 
                  if ($3.val_type == INT_TYPE) {
                              if ($3.val_int > 0) {
-                                fprintf(file_ca3, "float size %d : list_size := %d\n", float_size, list_size);
                                 print_list(list, list_size, number_list, number_size, float_list, float_size,  "no");
-                                fprintf(file_ca3, "%d : compt := %d\n", lines++, $3.val_int);
+                                fprintf(file_ca3, "%d : t-02 := %d\n", lines++, $3.val_int);
                                 $$.linea = lines;
-                                fprintf(file_ca3, "%d : k := k ADDI 1\n", lines++);
+                                fprintf(file_ca3, "%d : t-01 := 0\n", lines++);
                                 list_size = 0;
                                 number_size = 0;
                                 float_size = 0;
@@ -111,8 +110,8 @@ header:
 expressio:
     header DO ENDLINE expressio_list DONE{
         delta = yylineno - $1.linea;
-        fprintf(file_ca3, "%d : if k < compt GO TO %d \n",lines++, $1.linea);
-        fprintf(file_ca3, "%d : GO TO %d \n",lines++, $1.linea);
+        fprintf(file_ca3, "%d : t-01 := t-01 ADDI 1\n", lines++);
+        fprintf(file_ca3, "%d : if t-01 < t-02 GO TO %d \n",lines++, $1.linea);
 
     }
 
@@ -130,6 +129,9 @@ expressio:
                           $$.val_int = (int)$3.val_int;
                           $1.id_val.val_type = INT_TYPE;
                           $1.id_val.val_int = $3.val_int;
+                          if(list_size == 0){
+                              fprintf(file_ca3, "%d : %s := %d\n", lines++, $1.lexema, $$.val_int);
+                          }
                       } else if ($3.val_type == FLOAT_TYPE) {
                           fprintf(yyout, "else if float");
                           fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
@@ -137,6 +139,9 @@ expressio:
                           $$.val_float = $3.val_float;
                           $1.id_val.val_type = FLOAT_TYPE;
                           $1.id_val.val_float = $3.val_float;
+                          if(list_size == 0){
+                                fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
+                          }
                       } else {
                           fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
                           $$.val_type = STRING_TYPE;
@@ -144,6 +149,7 @@ expressio:
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
                       }
+
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;
@@ -381,9 +387,7 @@ OPERATION:
                 add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "SUBF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
                 $$.val_type = FLOAT_TYPE;
                 $$.val_float = $1.val_float - $3.val_float;
-                fprintf(yyout, "result minus %f\n", $$.val_float);
                 add_to_float_list(result_list, &result_size,$$.val_float);
-                fprintf(file_ca3, " after float, float size %d : list_size := %d\n", float_size, list_size);
 
             } else {
                 // Both operands are integers

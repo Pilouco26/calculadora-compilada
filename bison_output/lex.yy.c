@@ -1,5 +1,6 @@
+#line 2 "bison_output/lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "bison_output/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -639,19 +640,19 @@ static const flex_int16_t yy_rule_linenum[48] =
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lexic.l"
-#line 2 "lexic.l"
+#line 1 "bison_flex/lexic.l"
+#line 2 "bison_flex/lexic.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "symtab.h"
+#include "../header_files/symtab.h"
 #include "sintaxi.tab.h"
-#include "funcions.h"
+#include "../header_files/funcions.h"
 
-#line 653 "lex.yy.c"
+#line 654 "bison_output/lex.yy.c"
 #define YY_NO_INPUT 1
-#line 655 "lex.yy.c"
+#line 656 "bison_output/lex.yy.c"
 
 #define INITIAL 0
 
@@ -932,10 +933,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 24 "lexic.l"
+#line 24 "bison_flex/lexic.l"
 
 
-#line 939 "lex.yy.c"
+#line 940 "bison_output/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1028,12 +1029,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 26 "lexic.l"
+#line 26 "bison_flex/lexic.l"
 { yylval.enter = atoi(yytext);  return INTEGER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "lexic.l"
+#line 27 "bison_flex/lexic.l"
 {
                               yylval.real = M_PI;  // Set yylval to the value of pi
                               return FLOAT;        // Return the FLOAT token
@@ -1041,7 +1042,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 32 "lexic.l"
+#line 32 "bison_flex/lexic.l"
 {
                               yylval.real = M_E;   // Set yylval to the value of e
                               return FLOAT;        // Return the FLOAT token
@@ -1049,22 +1050,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 36 "lexic.l"
+#line 36 "bison_flex/lexic.l"
 {  fprintf(stderr, "repeat in lexic\n"); return REPEAT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 37 "lexic.l"
+#line 37 "bison_flex/lexic.l"
 { return DO; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 38 "lexic.l"
+#line 38 "bison_flex/lexic.l"
 { return DONE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 43 "lexic.l"
+#line 43 "bison_flex/lexic.l"
 {
     yylval.real = atof(yytext);
     return FLOAT;
@@ -1072,7 +1073,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 48 "lexic.l"
+#line 48 "bison_flex/lexic.l"
 {
     yylval.real = atof(yytext);
     return FLOAT;
@@ -1080,75 +1081,75 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 53 "lexic.l"
+#line 53 "bison_flex/lexic.l"
 {
                               return FALSE;
                             }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 56 "lexic.l"
+#line 56 "bison_flex/lexic.l"
 {
                               return TRUE;
                             }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 59 "lexic.l"
+#line 59 "bison_flex/lexic.l"
 {
                               return AND;
                             }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 62 "lexic.l"
+#line 62 "bison_flex/lexic.l"
 {
                               return OR;
                             }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 65 "lexic.l"
+#line 65 "bison_flex/lexic.l"
 {
                               return NOT;
                             }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 68 "lexic.l"
+#line 68 "bison_flex/lexic.l"
 {
                               return SIN;
                             }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 71 "lexic.l"
+#line 71 "bison_flex/lexic.l"
 {
                               return COS;
                             }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 74 "lexic.l"
+#line 74 "bison_flex/lexic.l"
 {
                               return TAN;
                             }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 77 "lexic.l"
+#line 77 "bison_flex/lexic.l"
 {
     return LEN;
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 81 "lexic.l"
+#line 81 "bison_flex/lexic.l"
 {return SUBSTR;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 83 "lexic.l"
+#line 83 "bison_flex/lexic.l"
 {
                                 yylval.mode.representacio = "oct";
                                 yylval.mode.set = true;
@@ -1157,7 +1158,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 88 "lexic.l"
+#line 88 "bison_flex/lexic.l"
 {
                                 yylval.mode.representacio = "hex";
                                 yylval.mode.set = true;
@@ -1166,7 +1167,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 93 "lexic.l"
+#line 93 "bison_flex/lexic.l"
 {
                                 yylval.mode.representacio = "dec";
                                 yylval.mode.set = true;
@@ -1175,7 +1176,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 98 "lexic.l"
+#line 98 "bison_flex/lexic.l"
 {
                                 yylval.mode.representacio = "bin";
                                 yylval.mode.set = true;
@@ -1184,7 +1185,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 104 "lexic.l"
+#line 104 "bison_flex/lexic.l"
 {
         yylval.ident.lexema = strdup(yytext);
         if (yylval.ident.lexema == NULL) {
@@ -1209,126 +1210,126 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 128 "lexic.l"
+#line 128 "bison_flex/lexic.l"
 { return ASSIGN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 129 "lexic.l"
+#line 129 "bison_flex/lexic.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 130 "lexic.l"
+#line 130 "bison_flex/lexic.l"
 { return COMMA; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 131 "lexic.l"
+#line 131 "bison_flex/lexic.l"
 { return PLUS; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 132 "lexic.l"
+#line 132 "bison_flex/lexic.l"
 { return MINUS; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 133 "lexic.l"
+#line 133 "bison_flex/lexic.l"
 { return MULTIPLY; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 134 "lexic.l"
+#line 134 "bison_flex/lexic.l"
 { return DIVIDE; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 135 "lexic.l"
+#line 135 "bison_flex/lexic.l"
 { return MOD; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 136 "lexic.l"
+#line 136 "bison_flex/lexic.l"
 { return POWER; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 137 "lexic.l"
+#line 137 "bison_flex/lexic.l"
 { return OPEN_PARENTHESIS; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 138 "lexic.l"
+#line 138 "bison_flex/lexic.l"
 { return CLOSED_PARENTHESIS; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 140 "lexic.l"
+#line 140 "bison_flex/lexic.l"
 { return GREATER_THAN; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 141 "lexic.l"
+#line 141 "bison_flex/lexic.l"
 { return GREATER_EQUAL; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 142 "lexic.l"
+#line 142 "bison_flex/lexic.l"
 { return LESS_THAN; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 143 "lexic.l"
+#line 143 "bison_flex/lexic.l"
 { return LESS_EQUAL; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 144 "lexic.l"
+#line 144 "bison_flex/lexic.l"
 { return EQUAL; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 145 "lexic.l"
+#line 145 "bison_flex/lexic.l"
 { return NOT_EQUAL; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 147 "lexic.l"
+#line 147 "bison_flex/lexic.l"
 { /* Ignore everything after '//' until the end of the line */ }
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 148 "lexic.l"
+#line 148 "bison_flex/lexic.l"
 { /* Ignore comment and newline */}
 	YY_BREAK
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 149 "lexic.l"
+#line 149 "bison_flex/lexic.l"
 { /* Ignore multi-line comments */}
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 151 "lexic.l"
+#line 151 "bison_flex/lexic.l"
 { /* Ignore empty lines */ }
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 153 "lexic.l"
+#line 153 "bison_flex/lexic.l"
 { return ENDLINE; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 155 "lexic.l"
+#line 155 "bison_flex/lexic.l"
 {}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 157 "lexic.l"
+#line 157 "bison_flex/lexic.l"
 {
     yylval.ident.lexema = strdup(yytext + 1);  // Copy the string starting from the second character (skip the opening quote)
     yylval.ident.lexema[yyleng - 2] = '\0';    // Replace the closing quote with null terminator
@@ -1339,15 +1340,15 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 167 "lexic.l"
+#line 167 "bison_flex/lexic.l"
 { return  0; }   /* Signal end of input to Bison */
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 169 "lexic.l"
+#line 169 "bison_flex/lexic.l"
 ECHO;
 	YY_BREAK
-#line 1351 "lex.yy.c"
+#line 1352 "bison_output/lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2460,6 +2461,6 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 169 "lexic.l"
+#line 169 "bison_flex/lexic.l"
 
 

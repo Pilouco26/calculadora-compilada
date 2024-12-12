@@ -3,7 +3,7 @@
 --accepting rule at line 155 (" ")
 --accepting rule at line 128 (":=")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("4")
+--accepting rule at line 26 ("8")
 --accepting rule at line 155 (" ")
 --accepting rule at line 131 ("+")
 --accepting rule at line 155 (" ")
@@ -63,7 +63,11 @@ repeat in lexic
 --accepting rule at line 155 (" ")
 --accepting rule at line 131 ("+")
 --accepting rule at line 155 (" ")
---accepting rule at line 26 ("3")
+--accepting rule at line 104 ("j")
+--accepting rule at line 155 (" ")
+--accepting rule at line 131 ("+")
+--accepting rule at line 155 (" ")
+--accepting rule at line 26 ("4")
 --accepting rule at line 155 ("")
 --accepting rule at line 153 ("
 ")

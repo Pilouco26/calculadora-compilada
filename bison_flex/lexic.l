@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "symtab.h"
+#include "../header_files/symtab.h"
 #include "sintaxi.tab.h"
-#include "funcions.h"
+#include "../header_files/funcions.h"
 
 %}
 

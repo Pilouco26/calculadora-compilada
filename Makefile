@@ -11,19 +11,19 @@ YACC = bison
 LIB = -lfl -lm  # Math and Flex libraries
 
 # Source files
-SRC_LEX = lexic.l
-SRC_YACC = sintaxi.y
+SRC_LEX = bison_flex/lexic.l
+SRC_YACC = bison_flex/sintaxi.y
 SRC_MAIN = main.c
-SRC_EXTRA = dades.c funcions.c symtab.c
+SRC_EXTRA = c_files/dades.c c_files/funcions.c c_files/symtab.c c_files/funcions_ca3.c
 
 # Bison outputs
-YACC_OUT_C = sintaxi.tab.c
-YACC_OUT_H = sintaxi.tab.h
+YACC_OUT_C = bison_output/sintaxi.tab.c
+YACC_OUT_H = bison_output/sintaxi.tab.h
 YACC_OUT = $(YACC_OUT_C) $(YACC_OUT_H)
-OTHERS = sintaxi.output
+OTHERS = bison_output/sintaxi.output
 
 # Flex output
-LEX_OUT = lex.yy.c
+LEX_OUT = bison_output/lex.yy.c
 
 # Object files and binary
 BIN = calculadora.exe
@@ -34,12 +34,12 @@ YFLAGS = -d -v
 CFLAGS = -Wall -g
 
 # Example inputs/outputs
-EG_IN = ex_entrada.txt
-EG_OUT = ex_sortida.txt
-EG_3AC = CA3.txt
+EG_IN = text/ex_entrada.txt
+EG_OUT = text/ex_sortida.txt
+EG_3AC = text/CA3.txt
 
 # Debug logs
-DEBUG_LOG = debug.log
+DEBUG_LOG = log/debug.log
 
 ######################################################################
 # Targets
@@ -56,15 +56,17 @@ $(BIN): yacc lex $(SRC_MAIN) $(SRC_EXTRA)
 
 # Generate parser files
 yacc: $(SRC_YACC)
-	$(YACC) $(YFLAGS) $(SRC_YACC) 2> $(DEBUG_LOG)
+	mkdir -p bison_output
+	$(YACC) $(YFLAGS) -o $(YACC_OUT_C) $(SRC_YACC) 2> $(DEBUG_LOG)
 
 # Generate lexer files
 lex: $(SRC_LEX)
-	$(LEX) $(LFLAGS) $(SRC_LEX) 2>> $(DEBUG_LOG)
+	mkdir -p bison_output
+	$(LEX) $(LFLAGS) -o $(LEX_OUT) $(SRC_LEX) 2>> $(DEBUG_LOG)
 
 # Clean build artifacts
 clean:
-	rm -f *~ $(BIN) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT) $(DEBUG_LOG)
+	rm -f *~ $(BIN) $(YACC_OUT) $(LEX_OUT) $(OTHERS) $(EG_OUT) $(DEBUG_LOG) c_files/*~ bison_flex/*~ bison_output/*
 
 # Run example
 eg: $(EG_IN)
@@ -73,8 +75,10 @@ eg: $(EG_IN)
 
 # Run example
 run: all
-	# Create or truncate ./CA3.txt to ensure it's ready
-	> ./CA3.txt
+	# Ensure the text directory exists
+	mkdir -p text
+	# Create or truncate text/CA3.txt to ensure it's ready
+	> $(EG_3AC)
 	# Run the program with example input and output files
 	./$(BIN) $(EG_IN) $(EG_OUT) > $(DEBUG_LOG) 2>&1
 	# Show the output on the console
