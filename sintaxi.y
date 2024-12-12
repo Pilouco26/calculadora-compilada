@@ -11,21 +11,22 @@ extern FILE *yyout;
 extern FILE *file_ca3;
 extern int yylineno;
 extern int yylex();
+extern int lines;
 void yyrestart(FILE *input_file);
 /*extern void yyerror(char*);*/
-int contador_initialized = 0;
+int loops_made = 0;
 int comptador = 0;
+int delta = 0;
 char *last_id = "init";    // To store strings
-three_address_code list[64];
+three_address_code list[1024];
+char *id_list[1024];
+int number_list[1024];
+float float_list[1024];
+float result_list[1024];
 int list_size = 0;
-int number_list[64];
-float float_list[64];
 int number_size = 0;
 int float_size = 0;
-char *id_list[64];
 int id_size=0;
-
-float result_list[64];
 int result_size = 0;
 %}
 
@@ -85,44 +86,32 @@ expressio_list:
 
 header:
      REPEAT OPERATION {
-                fprintf(stderr, "repeat and %d\n", $2.val_int);
-                fprintf(stderr, "repeat\n");
-                 if (!contador_initialized) {
-                             contador_initialized = 1;
-                             comptador = 1;
-                 }
+
                  if ($2.val_type == INT_TYPE) {
-                             if (comptador < $2.val_int) {
-                                 comptador++;
-                                 $$.end = 0;
-                                 $$.linea = yylineno;
-                             } else {
-                                    $$.end = 1;
+                             if ($2.val_int > 0) {
+                                print_list(list, list_size, number_list, number_size, float_list, float_size,  "no");
+                                fprintf(file_ca3, "%d : compt := %d\n", lines++, $2.val_int);
+                                $$.linea = lines;
+                                fprintf(file_ca3, "%d : k := k ADDI 1\n", lines++);
+                                list_size = 0;
+                                number_size = 0;
+                                float_size = 0;
+                                id_size = 0;
+                                result_size = 0;
+                                comptador = $2.val_int;
+
                              }
                  } else {
                      fprintf(stderr, "Error: Invalid type for repeat count\n");
-                     $$.end = 1;
                  }
      }
 
 expressio:
-    header DO expressio_list DONE ENDLINE{
-        if ($1.end == 0) {
-            int delta = yylineno - $1.linea;
-            yylineno = yylineno - delta;
-            long offset = find_line_offset(yyin, yylineno);
-            if (offset != -1) {
-                fseek(yyin, offset, SEEK_SET);  // Correct file pointer position
-                yyrestart(yyin); // Ensure lexer restarts cleanly
-                yyparse(); // Start parsing again
-            } else {
-                fprintf(stderr, "Error: Line %d not found (possible buffer issue)\n", yylineno - delta);
-            }
-        } else {
-            // Reset state for next iteration
-            contador_initialized = 0;
-            comptador = 1;
-        }
+    header DO expressio_list DONE{
+        delta = yylineno - $1.linea;
+        fprintf(file_ca3, "%d : if k < compt GO TO %d \n",lines++, $1.linea);
+        fprintf(file_ca3, "%d : GO TO %d \n",lines++, $1.linea);
+
     }
 
 
@@ -157,6 +146,9 @@ expressio:
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;
+                      result_size = 0;
+                      float_size = 0;
+                      id_size = 0;
                       sym_enter($1.lexema, &$3);
                   }
                 | ID ASSIGN OPERATION MODE {
@@ -364,6 +356,7 @@ OPERATION:
 
 
         } else {
+
             add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "ADDI", $1.id_name, $3.id_name);
             $$.val_type = INT_TYPE;
             $$.val_int = $1.val_int + $3.val_int;
@@ -433,6 +426,7 @@ OPERATION2:
                 $$.val_type = INT_TYPE;
                 $$.val_int = $1.val_int * $3.val_int;
                 add_to_float_list(result_list, &result_size, (float)$$.val_int);
+
 
             }
         } else {

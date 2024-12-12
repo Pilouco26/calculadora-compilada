@@ -1,11 +1,9 @@
 1 : START
-CALL PUT, 21957
-2 : i := 5 ADDI i 1
-3 : fact := fact MULI 2
-4 : i := 5 ADDI i 1
-5 : fact := fact MULI 2
-6 : i := 5 ADDI i 1
-7 : fact := fact MULI 2
-8 : i := 5 ADDI i 1
-9 : fact := fact MULI 2
-10 : HALT
+2 : $t0 := 5 MULI 4
+3 : i := 1 ADDI t0 
+4 : $t0 := i DIVF 2
+5 : $t1 := –π~ÛVU IDF
+6 : j := 4ADDF i 
+7 : $t0 := †∫~ÛVU IDF  
+8 : k := 2.300000 ADDF 4
+9 : HALT

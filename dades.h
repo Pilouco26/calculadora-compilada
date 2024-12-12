@@ -47,6 +47,8 @@ typedef struct{
   char *val_op;
   char type_op;
   char *id_name;
+  int delta;
+  int repeat;
 } three_address_code;
 
 

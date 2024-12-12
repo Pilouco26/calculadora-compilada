@@ -1,10 +1,11 @@
 fact := 2
-i := 1
-
-repeat 4 do
-i := 5 + i
+i := 1 + 5 * 4
+j := 4 + i / 2
+k := 2.3 + 4
+/* repeat 4 do
+i := 15 - 2 + i
 fact := fact * 2
-done
+done */
 
 
 i

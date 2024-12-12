@@ -16,7 +16,11 @@ extern int yylineno;
 extern int lines;
 extern char *yytext;
 extern float result_list[];
+extern three_address_code list[];
 extern int result_size;
+extern int list_size;
+extern int comptador;
+extern int delta;
 FILE *file_ca3 = NULL; // Global variable for the fileç
 
 
@@ -224,11 +228,12 @@ void close_file_ca3(FILE *file_ca3) {
 }
 
 void print_list(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size , char * id_name ) {
+
     for (int i = 0; i < size; i++) {
 
 		if (strcmp(list[i].val_op, "CALL") == 0) {
   		  // Add logic here, such as calling a function or performing an action
-   	      fprintf(file_ca3, "CALL PUT, %d\n", list[i].val_info2.val_int);
+//   	      fprintf(file_ca3, "CALL PUT, %d\n", list[i].val_info2.val_int);
 		}
         else{
         if (size == 1 || size == i + 1){
@@ -237,7 +242,6 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
         else {
               fprintf(file_ca3, "%d : $t%d := ",lines++, i);
         }
-
         if(list[i].type_op == 'I'){
 			if (list[i].val_info.id_name && !strchr(list[i].val_info.id_name, '\x03')) {
  		  		fprintf(file_ca3, "%s ", list[i].val_info.id_name);
@@ -247,14 +251,14 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
  			   if (temporal != -1) {
  					fprintf(file_ca3, "t%d ", temporal);
 			   }
-               else fprintf(file_ca3, "%d\n", (int)list[i].val_info.val_int);
+               else fprintf(file_ca3, "%d" , (int)list[i].val_info.val_int);
 		    }
             else fprintf(file_ca3, "%d ", list[i].val_info.val_int);
 
     	    fprintf(file_ca3, "%s ", list[i].val_op);
 
 			if (list[i].val_info2.id_name && !strchr(list[i].val_info2.id_name, '\x03')) {
- 		  		fprintf(file_ca3, "%s ", list[i].val_info2.id_name);
+ 		  		fprintf(file_ca3, "%s \n", list[i].val_info2.id_name);
 			}
 		    if(!is_number_in_list(number_list, &number_size, list[i].val_info2.val_int)){
                int temporal = is_result_in_list(result_list, &result_size, (float)list[i].val_info2.val_int);
@@ -292,7 +296,7 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
 				fprintf(file_ca3, "\n");
             }
 			if (list[i].val_info2.id_name && !strchr(list[i].val_info2.id_name, '\x03')) {
- 		  		fprintf(file_ca3, "%s ", list[i].val_info2.id_name);
+ 		  		fprintf(file_ca3, "%s \n", list[i].val_info2.id_name);
 			}
             else if(!is_real_in_list(float_list, &float_size, list[i].val_info2.val_float) ) {
                int temporal = is_result_in_list(result_list, &result_size, list[i].val_info2.val_float);
@@ -311,10 +315,8 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
 
 void add_three_address_code(three_address_code list[], int *list_size, int value1, int value2, char* op, char* id1, char * id2) {
     three_address_code integer;
-
     integer.val_type_list = INT_TYPE;
     integer.val_info.val_type = INT_TYPE;
-
 	integer.val_op = op;
     integer.type_op = 'I';
     if(id1 == NULL){
@@ -335,9 +337,10 @@ void add_three_address_code(three_address_code list[], int *list_size, int value
     list[*list_size] = integer;
 
     (*list_size)++;
-
-
 }
+
+
+
 void add_three_address_code_float(three_address_code list[], int *list_size, float value1, float value2, char* op, char* id1, char * id2, int conversion1, int conversion2) {
     three_address_code real;
 
