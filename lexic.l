@@ -23,7 +23,7 @@ sign    [+-]?
 
 %%
 
-{sign}?{digit}+ { yylval.enter = atoi(yytext);  fprintf(stderr, "integer in\n");return INTEGER; }
+{sign}?{digit}+ { yylval.enter = atoi(yytext);  return INTEGER; }
 "PI"                        {
                               yylval.real = M_PI;  // Set yylval to the value of pi
                               return FLOAT;        // Return the FLOAT token

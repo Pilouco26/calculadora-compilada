@@ -48,7 +48,7 @@ Grammar
 
     4 header: REPEAT OPERATION
 
-    5 expressio: header DO expressio_list DONE
+    5 expressio: header DO expressio_list DONE ENDLINE
     6          | ID ASSIGN OPERATION
     7          | ID ASSIGN OPERATION MODE
     8          | ID ASSIGN OPERATION_BOOLEAN
@@ -138,7 +138,7 @@ Terminals, with rules where they appear
     CLOSED_PARENTHESIS <sense_valor> (285) 28 34 41
     OPEN_PARENTHESIS <sense_valor> (286) 28 34 41
     ASSIGN <sense_valor> (287) 6 7 8 9
-    ENDLINE <sense_valor> (288) 2 3
+    ENDLINE <sense_valor> (288) 2 3 5
     SEMICOLON <sense_valor> (289)
     GREATER_THAN <sense_valor> (290) 48
     GREATER_EQUAL <sense_valor> (291) 47
@@ -618,7 +618,7 @@ State 18
 
 State 19
 
-    5 expressio: header • DO expressio_list DONE
+    5 expressio: header • DO expressio_list DONE ENDLINE
 
     DO  shift, and go to state 46
 
@@ -1037,7 +1037,7 @@ State 45
 
 State 46
 
-    5 expressio: header DO • expressio_list DONE
+    5 expressio: header DO • expressio_list DONE ENDLINE
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
@@ -1849,7 +1849,7 @@ State 69
 
 State 70
 
-    5 expressio: header DO expressio_list • DONE
+    5 expressio: header DO expressio_list • DONE ENDLINE
 
     DONE  shift, and go to state 88
 
@@ -2036,19 +2036,26 @@ State 87
 
 State 88
 
-    5 expressio: header DO expressio_list DONE •
+    5 expressio: header DO expressio_list DONE • ENDLINE
 
-    $default  reduce using rule 5 (expressio)
+    ENDLINE  shift, and go to state 90
 
 
 State 89
 
    28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 • CLOSED_PARENTHESIS
 
-    CLOSED_PARENTHESIS  shift, and go to state 90
+    CLOSED_PARENTHESIS  shift, and go to state 91
 
 
 State 90
+
+    5 expressio: header DO expressio_list DONE ENDLINE •
+
+    $default  reduce using rule 5 (expressio)
+
+
+State 91
 
    28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS •
 

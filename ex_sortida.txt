@@ -1,3 +1,11 @@
-ID: x (int) pren per valor: 67
-ID: y (int) pren per valor: 71
+ID: fact (int) pren per valor: 2
+ID: i (int) pren per valor: 1
+ID: i (int) pren per valor: 6
+ID: fact (int) pren per valor: 4
+ID: i (int) pren per valor: 11
+ID: fact (int) pren per valor: 8
+ID: i (int) pren per valor: 16
+ID: fact (int) pren per valor: 16
+ID: i (int) pren per valor: 21
+ID: fact (int) pren per valor: 32
 End of input reached.

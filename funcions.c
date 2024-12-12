@@ -178,10 +178,10 @@ void save_line() {
     }
 }
 
-void reparse_line() {
-    if (saved_position != -1 && yyin) {
-        fseek(yyin, saved_position, SEEK_SET);
-        fprintf(stderr, "Debug: Reparse from position: %ld\n", saved_position);
+void reparse_line(long offset) {
+    if (offset != -1 && yyin) {
+        fseek(yyin, offset, SEEK_SET);
+        fprintf(stderr, "Debug: Reparse from position: %ld\n", offset);
         yyrestart(yyin); // Restart the lexer to read from the new position
         yyparse();
     }
@@ -228,7 +228,7 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
 
 		if (strcmp(list[i].val_op, "CALL") == 0) {
   		  // Add logic here, such as calling a function or performing an action
-   	      printf("CALL PUT, %d\n", list[i].val_info2.val_int);
+   	      fprintf(file_ca3, "CALL PUT, %d\n", list[i].val_info2.val_int);
 		}
         else{
         if (size == 1 || size == i + 1){

@@ -16,7 +16,7 @@ FILE *open_file_ca3();
 void print_list(three_address_code [], int, int [], int, float float_list[], int float_size,char * );
 void add_three_address_code(three_address_code[], int *, int , int, char *, char* id1, char * id2);
 void close_file_ca3();
-void reparse_line();
+void reparse_line(long offset);
 long find_line_offset(FILE *file, int number);
 int analisi_semantica(void);
 void int_to_binary(int, char *);

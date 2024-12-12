@@ -106,14 +106,14 @@ header:
      }
 
 expressio:
-    header DO expressio_list DONE {
+    header DO expressio_list DONE ENDLINE{
         if ($1.end == 0) {
             int delta = yylineno - $1.linea;
-            long offset = find_line_offset(yyin, yylineno - delta);
+            yylineno = yylineno - delta;
+            long offset = find_line_offset(yyin, yylineno);
             if (offset != -1) {
                 fseek(yyin, offset, SEEK_SET);  // Correct file pointer position
                 yyrestart(yyin); // Ensure lexer restarts cleanly
-                yylineno = yylineno - delta;   // Synchronize line number
                 yyparse(); // Start parsing again
             } else {
                 fprintf(stderr, "Error: Line %d not found (possible buffer issue)\n", yylineno - delta);
@@ -154,7 +154,6 @@ expressio:
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
                       }
-                      fprintf(stderr, "before print\n");
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;

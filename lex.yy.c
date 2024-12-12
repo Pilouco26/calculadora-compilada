@@ -1029,7 +1029,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 26 "lexic.l"
-{ yylval.enter = atoi(yytext);  fprintf(stderr, "integer in\n");return INTEGER; }
+{ yylval.enter = atoi(yytext);  return INTEGER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
