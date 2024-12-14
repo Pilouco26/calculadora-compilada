@@ -1,18 +1,17 @@
 1 : START
 2 : x := 5.000000
-3 : i := 3
-4 : $t0 := i ADDI i 
-5 : $t1 := t0 ADDI 3
-6 : $t2 := t1 ADDI 3
-7 : $t3 := IDF t2 
-8 : y := t3 SUBF x 
-9 : n := 10
-10 : fact := 1
-11 : i := 2
-12 : $t-esp02 := n SUBI 1
-13 : $t-esp01 := 0
-14 : fact := fact MULI i 
-15 : i := i ADDI 1
-16 : t-esp01 := t-esp01 ADDI 1
-17 : if t-esp01 LTI $t-esp02 GO TO 14 
-18 : HALT
+3 : i := 4
+4 : $t0 := i MULI 3
+5 : $t1 := i ADDI t0 
+6 : $t2 := IDF t1 
+7 : y := t2 SUBF x 5.000000
+8 : n := 10
+9 : fact := 1
+10 : i := 2
+11 : $t-esp02 := n SUBI 1
+12 : $t-esp01 := 0
+13 : fact := fact MULI i 
+14 : i := i ADDI 1
+15 : t-esp01 := t-esp01 ADDI 1
+16 : if t-esp01 LTI $t-esp02 GO TO 13 
+17 : HALT

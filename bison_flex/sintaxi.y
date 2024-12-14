@@ -472,6 +472,7 @@ OPERATION2:
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
                 if ($1.val_type == INT_TYPE) {
                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                    fprintf(stderr, "\n\nValue of FLOAT %f\n\n", $1.val_float);
                     add_to_float_list(result_list, &result_size,$1.val_float);
                     $1.type_conversion = 1;
                 }

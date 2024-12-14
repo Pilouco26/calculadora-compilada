@@ -37,6 +37,7 @@ typedef struct {
   char *val_string;    // To store strings
   bool val_bool;    // To store strings
   char *id_name;
+  char *id_name_copy;
   int type_conversion;
   int temp;
 } value_info;

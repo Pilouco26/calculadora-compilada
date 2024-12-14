@@ -68,18 +68,13 @@ int is_number_in_list_without_retrieving(int list[], int size, int number) {
 // Function to process id_name and set last_id, return if it's not null
 bool process_id_name(char *last_id, const char *id_name) {
     bool null = true;
-
     if (id_name != NULL) {
-        fprintf(stderr, "before strcpy NULL\n");
-
         if (strcmp(id_name, "NULL") != 0) {
             strcpy(last_id, id_name);
             null = false;
         }
 
-        fprintf(stderr, "after strcpy NULL\n");
     }
-
     return null;
 }
 
@@ -115,10 +110,14 @@ void handle_integer_operation(three_address_code *item, int i, char *id_name, in
         if (temporal != -1) {
             fprintf(file_ca3, "t%d ", temporal);
         } else {
-            fprintf(file_ca3, "%d ", item->val_info.val_int);
+           if(item->val_info.id_name_copy != NULL){
+           		fprintf(file_ca3, "%s ", item->val_info.id_name_copy);
+        	}
+            else
+            		fprintf(file_ca3, "%d ", item->val_info.val_int);
         }
     } else {
-        fprintf(file_ca3, "%d ", item->val_info.val_int);
+        	fprintf(file_ca3, "%d ", item->val_info.val_int);
     }
     fprintf(file_ca3, "%s ", item->val_op);
 
@@ -130,6 +129,9 @@ void handle_integer_operation(three_address_code *item, int i, char *id_name, in
         if (temporal != -1 && strcmp(item->val_op, "IDF") != 0) {
             fprintf(file_ca3, "t%d \n", temporal);
         } else {
+            if(item->val_info2.id_name_copy != NULL){
+           		fprintf(file_ca3, "%s ", item->val_info2.id_name_copy);
+        	}
             fprintf(file_ca3, "%d\n", item->val_info2.val_int);
         }
     } else {
@@ -137,39 +139,49 @@ void handle_integer_operation(three_address_code *item, int i, char *id_name, in
     }
 }
 
-void process_val_info(three_address_code item, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
-    if(strcmp(item.val_info.id_name, "NULL") != 0) {
-        fprintf(file_ca3, "%s ", item.val_info.id_name);
+void process_val_info(three_address_code *item, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
+    if(strcmp(item->val_info.id_name, "NULL") != 0) {
+        fprintf(file_ca3, "%s ", item->val_info.id_name);
+        strcpy(item->val_info.id_name, "NULL");
     }
-    if (!(item.val_info.val_float == -1 || is_real_in_list(float_list, float_size, item.val_info.val_float))) {
-        int temporal = is_result_in_list(result_list, result_size, item.val_info.val_float);
-        if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)item.val_info.val_float)) {
+    else if (!(item->val_info.val_float == -1 || is_real_in_list(float_list, float_size, item->val_info.val_float))) {
+        int temporal = is_result_in_list(result_list, result_size, item->val_info.val_float);
+        if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)item->val_info.val_float)) {
             fprintf(file_ca3, "t%d ", temporal);
         } else {
-            fprintf(file_ca3, "%d ", (int)item.val_info.val_float);
+            if(item->val_info.id_name_copy != NULL){
+           		fprintf(file_ca3, "%s ", item->val_info.id_name_copy);
+        	}
+            else
+            	fprintf(file_ca3, "%f ", item->val_info.val_float);
         }
-    } else if (item.val_info.val_float != -1) {
-        fprintf(file_ca3, "%f ", item.val_info.val_float);
+    } else if (item->val_info.val_float != -1) {
+        fprintf(file_ca3, "%f ", item->val_info.val_float);
     }
 }
-void process_val_info2(three_address_code item, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
-    if (strcmp(item.val_info2.id_name, "NULL") != 0) {
-        fprintf(file_ca3, "%s \n", item.val_info2.id_name);
-    } else if (!is_real_in_list(float_list, float_size, item.val_info2.val_float)) {
-        int temporal = is_result_in_list(result_list, result_size, item.val_info2.val_float);
-        if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)item.val_info2.val_float)) {
+void process_val_info2(three_address_code *item, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
+    if (strcmp(item->val_info2.id_name, "NULL") != 0) {
+        fprintf(file_ca3, "%s \n", item->val_info2.id_name);
+        strcpy(item->val_info2.id_name, "NULL");
+
+    } else if (!is_real_in_list(float_list, float_size, item->val_info2.val_float)) {
+        int temporal = is_result_in_list(result_list, result_size, item->val_info2.val_float);
+        if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)item->val_info2.val_float)) {
             fprintf(file_ca3, "t%d \n", temporal);
         } else {
-            fprintf(file_ca3, "%d\n", (int)item.val_info2.val_float);
+            if(item->val_info2.id_name_copy != NULL){
+           		fprintf(file_ca3, "%s ", item->val_info2.id_name_copy);
+        	}
+            fprintf(file_ca3, "%f\n", item->val_info2.val_float);
         }
     } else {
-        fprintf(file_ca3, "%f\n", item.val_info2.val_float);
+        fprintf(file_ca3, "%f\n", item->val_info2.val_float);
     }
 }
 
-void handle_float_operation(three_address_code item, int i, char *id_name, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
+void handle_float_operation(three_address_code *item, int i, char *id_name, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
     process_val_info(item, number_list, number_size, float_list, float_size, result_list, result_size);
-    fprintf(file_ca3, "%s ", item.val_op);
+    fprintf(file_ca3, "%s ", item->val_op);
     process_val_info2(item, number_list, number_size, float_list, float_size, result_list, result_size);
 }
 
@@ -184,12 +196,11 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
             } else {
                 fprintf(file_ca3, "%d : $t%d := ", lines++, i);
             }
-
+            char last_id[256];  // Adjust MAX_SIZE to fit your needs
+            char last_id2[256];  // Adjust MAX_SIZE to fit your needs
+            bool null = process_id_name(last_id, list[i].val_info.id_name);  // Use the new function to process the id_name
+            bool null2 = process_id_name(last_id2, list[i].val_info2.id_name);  // Use the new function to process the id_name
             if (list[i].type_op == 'I') {
-                char last_id[256];  // Adjust MAX_SIZE to fit your needs
-                char last_id2[256];  // Adjust MAX_SIZE to fit your needs
-                bool null = process_id_name(last_id, list[i].val_info.id_name);  // Use the new function to process the id_name
-                bool null2 = process_id_name(last_id2, list[i].val_info2.id_name);  // Use the new function to process the id_name
                 handle_integer_operation(&list[i], i, id_name, number_list, &number_size, result_list, &result_size);
                 if (!null) {
                     if (strcmp(list[i].val_info.id_name, "NULL") == 0) {
@@ -203,7 +214,17 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
                 }
 
             } else if (list[i].type_op == 'F') {
-                handle_float_operation(list[i], i, id_name, number_list, number_size, float_list, &float_size, result_list, &result_size);
+                handle_float_operation(&list[i], i, id_name, number_list, number_size, float_list, &float_size, result_list, &result_size);
+                 if (!null) {
+                    if (strcmp(list[i].val_info.id_name, "NULL") == 0) {
+                        update_id_name_to_null(list, size, last_id, last_id2);
+                    }
+                }
+                if (!null2) {
+                    if (strcmp(list[i].val_info2.id_name, "NULL") == 0) {
+                        update_id_name_to_null(list, size, last_id, last_id2);
+                    }
+                }
             }
         }
     }
@@ -224,9 +245,11 @@ void add_three_address_code(three_address_code list[], int *list_size, int value
     if (id1 == NULL) {
         integer.val_info.val_int = value1;
         integer.val_info.id_name = "NULL";
+        integer.val_info.id_name = "NULL";
     } else {
         integer.val_info.val_int = value1;
         integer.val_info.id_name = strdup(id1);
+        integer.val_info.id_name_copy = strdup(id1);
     }
 
     if (id2 == NULL) {
@@ -235,6 +258,7 @@ void add_three_address_code(three_address_code list[], int *list_size, int value
     } else {
         integer.val_info2.val_int = value2;
         integer.val_info2.id_name = strdup(id2);
+        integer.val_info2.id_name_copy = strdup(id2);
     }
 
     integer.val_type_list = OPERAND_TYPE;
@@ -259,6 +283,7 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
     } else {
         real.val_info.val_float = value1;
         real.val_info.id_name = strdup(id1);
+        real.val_info.id_name_copy = strdup(id1);
     }
 
     if (id2 == NULL) {
@@ -266,7 +291,7 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
         real.val_info2.id_name = "NULL";
     } else {
         real.val_info2.val_float = value2;
-        real.val_info2.id_name = strdup(id2);
+        real.val_info2.id_name_copy = strdup(id2);
     }
 
     if (conversion1 == 1) {
@@ -278,6 +303,7 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
         } else {
             change.val_info.id_name = "NULL";
             change.val_info2.id_name = strdup(id1);
+            change.val_info2.id_name_copy = strdup(id1);
         }
         change.val_info2.val_float = value1;
         change.type_op = 'F';
@@ -304,6 +330,7 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
         } else {
             change.val_info.id_name = "NULL";
             change.val_info2.id_name = strdup(id2);
+            change.val_info2.id_name_copy = strdup(id2);
         }
 
         list[*list_size] = change;
