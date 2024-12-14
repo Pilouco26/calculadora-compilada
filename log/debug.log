@@ -92,7 +92,19 @@ repeat in lexic
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")
---accepting rule at line 106 ("i")
+--accepting rule at line 106 ("j")
+--accepting rule at line 157 (" ")
+--accepting rule at line 130 (":=")
+--accepting rule at line 157 (" ")
+--accepting rule at line 106 ("fact")
+--accepting rule at line 157 (" ")
+--accepting rule at line 133 ("+")
+--accepting rule at line 157 (" ")
+--accepting rule at line 26 ("5")
+--accepting rule at line 157 ("")
+--accepting rule at line 155 ("
+")
+ values 2, 5, 7--accepting rule at line 106 ("i")
 --accepting rule at line 157 (" ")
 --accepting rule at line 130 (":=")
 --accepting rule at line 157 (" ")

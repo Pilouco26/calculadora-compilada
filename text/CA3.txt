@@ -10,8 +10,11 @@
 10 : i := 2
 11 : $t-esp02 := n SUBI 1
 12 : $t-esp01 := 0
-13 : fact := fact MULI i 
-14 : i := i ADDI 1
-15 : t-esp01 := t-esp01 ADDI 1
-16 : if t-esp01 LTI $t-esp02 GO TO 13 
-17 : HALT
+13 : $t2 := fact MULI i 
+14 : fact := $t2 
+15 : j := fact ADDI 5
+16 : $t2 := i ADDI 1
+17 : i := $t2 
+18 : t-esp01 := t-esp01 ADDI 1
+19 : if t-esp01 LTI $t-esp02 GO TO 13 
+20 : HALT

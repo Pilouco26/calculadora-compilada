@@ -6,5 +6,6 @@ ID: n (int) pren per valor: 10
 ID: fact (int) pren per valor: 1
 ID: i (int) pren per valor: 2
 ID: fact (int) pren per valor: 2
+ID: j (int) pren per valor: 7
 ID: i (int) pren per valor: 3
 End of input reached.

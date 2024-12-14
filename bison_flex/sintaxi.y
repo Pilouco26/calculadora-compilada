@@ -338,7 +338,7 @@ expressio:
                                 fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
                           }
                       }
-                      print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
+                      //print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;
                       result_size = 0;

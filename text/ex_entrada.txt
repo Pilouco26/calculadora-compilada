@@ -8,6 +8,7 @@ i := 2
 
 repeat n - 1 do
 fact := fact * i
+j := fact + 5
 i := i + 1
 done
 fact
