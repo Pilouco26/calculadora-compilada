@@ -1,4 +1,9 @@
-floatelse if floatID: m (real) pren per valor: 15.500000
-ID: k (int) pren per valor: 0
-else if floatID: j (real) pren per valor: 1.750000
-floatelse if floatID: k (real) pren per valor: 10.270000
+floatelse if floatID: x (real) pren per valor: 5.000000
+ID: i (int) pren per valor: 3
+else if floatID: y (real) pren per valor: 7.000000
+ID: n (int) pren per valor: 10
+ID: fact (int) pren per valor: 1
+ID: i (int) pren per valor: 2
+ID: fact (int) pren per valor: 2
+ID: i (int) pren per valor: 3
+End of input reached.

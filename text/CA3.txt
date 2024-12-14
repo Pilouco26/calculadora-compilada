@@ -1,18 +1,18 @@
 1 : START
-2 : $t0 := 8 ADDI 3
-3 : $t1 := IDF 2
-4 : $t2 := 4.500000 MULF 2
-5 : $t3 := IDF 2
-6 : $t4 := t2 DIVF 2
-7 : $t5 := IDF t0 
-8 : m := t5 ADDF t4 
-9 : k := 0
-10 : t-02 := 4
-11 : t-01 := 0
-12 : j := 7 DIVF 4
-13 : $t0 := 4.520000 ADDF j 
-14 : $t1 := IDF 4
-15 : k := t0 ADDF 4
-16 : t-01 := t-01 ADDI 1
-17 : if t-01 < t-02 GO TO 11 
+2 : x := 5.000000
+3 : i := 3
+4 : $t0 := i ADDI i 
+5 : $t1 := t0 ADDI 3
+6 : $t2 := t1 ADDI 3
+7 : $t3 := IDF t2 
+8 : y := t3 SUBF x 
+9 : n := 10
+10 : fact := 1
+11 : i := 2
+12 : $t-esp02 := n SUBI 1
+13 : $t-esp01 := 0
+14 : fact := fact MULI i 
+15 : i := i ADDI 1
+16 : t-esp01 := t-esp01 ADDI 1
+17 : if t-esp01 LTI $t-esp02 GO TO 14 
 18 : HALT

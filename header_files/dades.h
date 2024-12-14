@@ -12,7 +12,8 @@ typedef enum {
   FLOAT_TYPE,
   STRING_TYPE,
   BOOL_TYPE,
-  IDS_TYPE
+  IDS_TYPE,
+  LIST_TYPE,
 } data_type;
 
 typedef enum {

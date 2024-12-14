@@ -1,7 +1,12 @@
-m := 8 + 3 + 4.5 * 2 / 2
-k := 0
+    x := 5.0
+i := 3
+y := i + i + i + 3 - x
+n := 10
+fact := 1
+i := 2
 
-repeat 4 do
-j := 7 / 4
-k := 4.52 + j + 4
+repeat n - 1 do
+fact := fact * i
+i := i + 1
 done
+fact

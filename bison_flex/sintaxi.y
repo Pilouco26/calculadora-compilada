@@ -63,7 +63,7 @@ int result_size = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> EXTRALINE DO DONE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> EXTRALINE DO DONE OPEN_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
@@ -87,20 +87,22 @@ expressio_list:
 
 header:
      ENDLINE REPEAT OPERATION {
-
                  if ($3.val_type == INT_TYPE) {
                              if ($3.val_int > 0) {
-                                print_list(list, list_size, number_list, number_size, float_list, float_size,  "no");
-                                fprintf(file_ca3, "%d : t-02 := %d\n", lines++, $3.val_int);
+                                print_list(list, list_size, number_list, number_size, float_list, float_size,  "$t-esp02");
                                 $$.linea = lines;
-                                fprintf(file_ca3, "%d : t-01 := 0\n", lines++);
+                                fprintf(file_ca3, "%d : $t-esp01 := 0\n", lines++);
                                 list_size = 0;
                                 number_size = 0;
                                 float_size = 0;
                                 id_size = 0;
                                 result_size = 0;
                                 comptador = $3.val_int;
-
+                             }
+                             else {
+                                fprintf(stderr, "Error: Counter needs to be bigger\n");
+                                fprintf(file_ca3, "Error: Counter needs to be bigger\n");
+                                YYABORT;
                              }
                  } else {
                      fprintf(stderr, "Error: Invalid type for repeat count\n");
@@ -108,14 +110,12 @@ header:
      }
 
 expressio:
-    header DO ENDLINE expressio_list DONE{
-        delta = yylineno - $1.linea;
-        fprintf(file_ca3, "%d : t-01 := t-01 ADDI 1\n", lines++);
-        fprintf(file_ca3, "%d : if t-01 < t-02 GO TO %d \n",lines++, $1.linea);
-
-    }
-
-| ID ASSIGN OPERATION {
+                header DO ENDLINE expressio_list DONE{
+                    delta = yylineno - $1.linea;
+                    fprintf(file_ca3, "%d : t-esp01 := t-esp01 ADDI 1\n", lines++);
+                    fprintf(file_ca3, "%d : if t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
+                }
+                | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
                       if (lookup_result == SYMTAB_OK) {
@@ -264,7 +264,7 @@ expressio:
                        // fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
                         $1.val_type = INT_TYPE;
                         $1.val_int = (int)$1.val_int;
-                        call_put(list, &list_size, 0, (int)$1.val_int, 1);
+                        //call_put(list, &list_size, 0, (int)$1.val_int, 1);
                     } else if ($1.val_type == FLOAT_TYPE) {
                         fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
                         $1.val_type = FLOAT_TYPE;
@@ -284,9 +284,68 @@ expressio:
                                 $$.val_bool = $1.val_bool;
                             }
                 }
+                | ID ASSIGN ID OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
+                    fprintf(file_ca3, "assign llsita");
+                    sym_value_type value;
+                    int lookup_result;
+                    lookup_result = sym_lookup($3.lexema, &value);
 
-
-
+                    if (lookup_result == SYMTAB_OK) {
+                        $$.val_type = value.val_type;  // Store the value for later use
+                        if($$.val_type == INT_TYPE){
+                             $$.val_int = value.val_int;  // Store the value for later use
+                        }
+                        else if($$.val_type == FLOAT_TYPE){
+                             $$.val_float = value.val_float;  // Store the value for later use
+                        }
+                        $$.id_name = $3.lexema;
+                        id_list[id_size]= $3.lexema;
+                        id_size++;
+                    } else {
+                        fprintf(stderr, "Error: ID '%s' not declared\n", $3.lexema);
+                        exit(EXIT_FAILURE);  // Exit the program
+                    }
+                 }
+                | ID OPEN_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION {
+                      sym_value_type existing_value;
+                      int lookup_result = sym_lookup($1.lexema, &existing_value);
+                      if ($3.val_type != INT_TYPE) {
+                              fprintf(stderr, "Error: Type mismatch for index array '%s' in line %d.\n", $1.lexema, yylineno);
+                              YYABORT;
+                      }
+                      if (lookup_result == SYMTAB_OK) {
+                          if (existing_value.val_type != $6.val_type) {
+                              fprintf(stderr, "Error: Type mismatch for ID '%s' in line %d.\n", $1.lexema, yylineno);
+                          }
+                      }
+                      if ($6.val_type == INT_TYPE) {
+                          fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$6.val_int);
+                          $$.val_type = INT_TYPE;
+                          $$.val_int = (int)$6.val_int;
+                          $1.id_val.val_type = INT_TYPE;
+                          $1.id_val.val_int = $6.val_int;
+                          if(list_size == 0){
+                              fprintf(file_ca3, "%d : %s := %d\n", lines++, $1.lexema, $$.val_int);
+                          }
+                      } else if ($6.val_type == FLOAT_TYPE) {
+                          fprintf(yyout, "else if float");
+                          fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $6.val_float);
+                          $$.val_type = FLOAT_TYPE;
+                          $$.val_float = $6.val_float;
+                          $1.id_val.val_type = FLOAT_TYPE;
+                          $1.id_val.val_float = $6.val_float;
+                          if(list_size == 0){
+                                fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
+                          }
+                      }
+                      print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
+                      list_size = 0;
+                      number_size = 0;
+                      result_size = 0;
+                      float_size = 0;
+                      id_size = 0;
+                      //sym_enter($1.lexema, &$6);
+                }
 
 
 
@@ -296,7 +355,6 @@ expressio:
 
 OPERATION:
     OPERATION PLUS OPERATION2 {
-
         char* result;
         if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
 
@@ -366,11 +424,12 @@ OPERATION:
             add_three_address_code(list, &list_size, $1.val_int, $3.val_int, "ADDI", $1.id_name, $3.id_name);
             $$.val_type = INT_TYPE;
             $$.val_int = $1.val_int + $3.val_int;
+            fprintf(stderr, " values %d, %d, %d", $1.val_int, $3.val_int, $$.val_int);
+
             add_to_float_list(result_list, &result_size, (float)$$.val_int);
         }
     }
     | OPERATION MINUS OPERATION2 {
-        fprintf(file_ca3, "minus\n");
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
             ($3.val_type == INT_TYPE || $3.val_type == FLOAT_TYPE)) {
             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
@@ -708,11 +767,7 @@ OPERATION4:
             $$.val_string = strdup($2.val_string);  // Duplicate the string to avoid pointer issues
         }
     }
-
-
 ;
-
-
 
 OPERATION_BOOLEAN:
     OPERATION_BOOLEAN OR OPERATION_BOOLEAN1{
