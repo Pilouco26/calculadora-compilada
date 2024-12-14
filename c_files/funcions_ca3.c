@@ -114,11 +114,12 @@ void handle_integer_operation(three_address_code *item, int i, char *id_name, in
            		fprintf(file_ca3, "%s ", item->val_info.id_name_copy);
         	}
             else
-            		fprintf(file_ca3, "%d ", item->val_info.val_int);
+            	fprintf(file_ca3, "%d ", item->val_info.val_int);
         }
     } else {
         	fprintf(file_ca3, "%d ", item->val_info.val_int);
     }
+
     fprintf(file_ca3, "%s ", item->val_op);
 
     if (strcmp(item->val_info2.id_name, "NULL") != 0) {
@@ -130,9 +131,10 @@ void handle_integer_operation(three_address_code *item, int i, char *id_name, in
             fprintf(file_ca3, "t%d \n", temporal);
         } else {
             if(item->val_info2.id_name_copy != NULL){
-           		fprintf(file_ca3, "%s ", item->val_info2.id_name_copy);
+           		fprintf(file_ca3, "%s\n", item->val_info2.id_name_copy);
         	}
-            fprintf(file_ca3, "%d\n", item->val_info2.val_int);
+            else
+            	fprintf(file_ca3, "%d\n", item->val_info2.val_int);
         }
     } else {
         fprintf(file_ca3, "%d\n", item->val_info2.val_int);
@@ -154,6 +156,7 @@ void process_val_info(three_address_code *item, int number_list[], int number_si
         	}
             else
             	fprintf(file_ca3, "%f ", item->val_info.val_float);
+
         }
     } else if (item->val_info.val_float != -1) {
         fprintf(file_ca3, "%f ", item->val_info.val_float);
@@ -163,20 +166,22 @@ void process_val_info2(three_address_code *item, int number_list[], int number_s
     if (strcmp(item->val_info2.id_name, "NULL") != 0) {
         fprintf(file_ca3, "%s \n", item->val_info2.id_name);
         strcpy(item->val_info2.id_name, "NULL");
-
     } else if (!is_real_in_list(float_list, float_size, item->val_info2.val_float)) {
+
         int temporal = is_result_in_list(result_list, result_size, item->val_info2.val_float);
         if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)item->val_info2.val_float)) {
             fprintf(file_ca3, "t%d \n", temporal);
         } else {
             if(item->val_info2.id_name_copy != NULL){
-           		fprintf(file_ca3, "%s ", item->val_info2.id_name_copy);
+           		fprintf(file_ca3, "%s\n", item->val_info2.id_name_copy);
         	}
-            fprintf(file_ca3, "%f\n", item->val_info2.val_float);
+            else
+           		fprintf(file_ca3, "%f\n", item->val_info2.val_float);
         }
     } else {
         fprintf(file_ca3, "%f\n", item->val_info2.val_float);
     }
+
 }
 
 void handle_float_operation(three_address_code *item, int i, char *id_name, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
@@ -291,6 +296,7 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
         real.val_info2.id_name = "NULL";
     } else {
         real.val_info2.val_float = value2;
+        real.val_info2.id_name = strdup(id2);
         real.val_info2.id_name_copy = strdup(id2);
     }
 

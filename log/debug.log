@@ -11,6 +11,14 @@
 --accepting rule at line 157 (" ")
 --accepting rule at line 130 (":=")
 --accepting rule at line 157 (" ")
+--accepting rule at line 45 ("4.1")
+--accepting rule at line 157 ("")
+--accepting rule at line 155 ("
+")
+--accepting rule at line 106 ("j")
+--accepting rule at line 157 (" ")
+--accepting rule at line 130 (":=")
+--accepting rule at line 157 (" ")
 --accepting rule at line 26 ("4")
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
@@ -27,11 +35,7 @@
 --accepting rule at line 157 (" ")
 --accepting rule at line 135 ("*")
 --accepting rule at line 157 (" ")
---accepting rule at line 26 ("3")
---accepting rule at line 157 (" ")
---accepting rule at line 134 ("-")
- values 4, 12, 16--accepting rule at line 157 (" ")
---accepting rule at line 106 ("x")
+--accepting rule at line 106 ("j")
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")
@@ -59,6 +63,7 @@
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")
+Error: Type mismatch for ID 'i' in line 8.
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")

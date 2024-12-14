@@ -1,10 +1,10 @@
 1 : START
 2 : x := 5.000000
-3 : i := 4
-4 : $t0 := i MULI 3
-5 : $t1 := i ADDI t0 
-6 : $t2 := IDF t1 
-7 : y := t2 SUBF x 5.000000
+3 : i := 4.100000
+4 : j := 4
+5 : $t0 := IDF j 
+6 : $t1 := i MULF t0 
+7 : y := i ADDF t1 
 8 : n := 10
 9 : fact := 1
 10 : i := 2
