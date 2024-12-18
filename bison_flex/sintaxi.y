@@ -294,9 +294,9 @@ expressio:
                      int result = 8 * result;
                      add_to_float_list(result_list, &result_size,(float)result);
                      if($5.val_type == FLOAT_TYPE)
-                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.lexema, $5.val_float);
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.lexema, $5.val_float, NULL);
                      else
-                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.lexema, (float)$5.val_int);
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.lexema, (float)$5.val_int, NULL);
 
                         list_size = 0;
                         number_size = 0;
@@ -337,10 +337,11 @@ expressio:
                         add_three_address_code(list, &list_size, $3.val_int, 8, "MULI", NULL, NULL);
                         int result = 8 * result;
                         add_to_float_list(result_list, &result_size,(float)result);
+
                       if($6.val_type == FLOAT_TYPE)
-                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.id_name, $6.val_float);
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.id_name, $6.val_float, $6.id_name);
                       else
-                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.id_name, (float)$6.val_int);
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.id_name, (float)$6.val_int, $6.id_name);
 
                       list_size = 0;
                       number_size = 0;

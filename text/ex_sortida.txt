@@ -1,3 +1,2 @@
 ID: i (int) pren per valor: 4
-ID: x (int) pren per valor: 0
 End of input reached.

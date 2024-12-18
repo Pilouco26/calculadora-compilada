@@ -8,7 +8,7 @@
 FILE *open_file_ca3();
 void close_file_ca3();
 void print_list(three_address_code [], int, int [], int, float float_list[], int float_size,char * );
-void print_list_array(three_address_code [], int, int [], int, float float_list[], int float_size,char *, char *pos_id, float val_float);
+void print_list_array(three_address_code [], int, int [], int, float float_list[], int float_size,char *, char *pos_id, float val_float, char *result_id);
 void add_three_address_code(three_address_code[], int *, int , int, char *, char* id1, char * id2);
 void add_lines_length(int lines_length);
 void add_three_address_code_repeat(three_address_code[], int *, int , int, char *, char* id1, char * id2, int repeat_length);

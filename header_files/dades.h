@@ -42,6 +42,19 @@ typedef struct {
   int temp;
 } value_info;
 
+typedef struct {
+  char *lexema;
+  int length;
+  int line;
+  value_info id_val;
+} ident;
+
+typedef struct{
+  ident id;
+  value_info op;
+} array;
+
+
 typedef struct{
   value_info val_info;
   value_info val_info2;

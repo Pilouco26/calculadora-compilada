@@ -264,7 +264,7 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
         }
     }
 }
-void print_list_array(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size, char *id_name, char *pos_id, float result_val_float) {
+void print_list_array(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size, char *id_name, char *pos_id, float result_val_float, char *result_id) {
     int temporal_aux = result_size+1;
     bool four_ac = false;
     for (int i = 0; i < size; i++) {
@@ -326,7 +326,11 @@ void print_list_array(three_address_code list[], int size, int number_list[], in
    				fprintf(file_ca3, "%d : %s[$t%d] := $t%d\n", lines++, id_name, temporal_aux, temporal);
 		}
    		else
-    	        fprintf(file_ca3, "%d : %s[$t%d] := %f\n", lines++, id_name, temporal_aux, result_val_float);
+                if(result_id == NULL)
+    	        	fprintf(file_ca3, "%d : %s[$t%d] := %f\n", lines++, id_name, temporal_aux, result_val_float);
+                else
+                    fprintf(file_ca3, "%d : %s[$t%d] := %s\n", lines++, id_name, temporal_aux, result_id);
+
 	}
 }
 
