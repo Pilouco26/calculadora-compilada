@@ -28,6 +28,7 @@ int number_size = 0;
 int float_size = 0;
 int id_size=0;
 int result_size = 0;
+bool mode_assign = false;
 %}
 
 %code requires {
@@ -63,7 +64,7 @@ int result_size = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> EXTRALINE DO DONE OPEN_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
@@ -110,7 +111,7 @@ header:
      }
 
 expressio:
-                header DO ENDLINE expressio_list DONE{
+                header DO ENDLINE expressio_list DONE ENDLINE{
                     delta = yylineno - $1.linea;
                     fprintf(file_ca3, "%d : t-esp01 := t-esp01 ADDI 1\n", lines++);
                     fprintf(file_ca3, "%d : if t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
@@ -149,8 +150,8 @@ expressio:
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
                       }
+                        print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
 
-                      print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;
                       result_size = 0;
@@ -284,29 +285,28 @@ expressio:
                                 $$.val_bool = $1.val_bool;
                             }
                 }
-                | ID ASSIGN ID OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS {
-                    fprintf(file_ca3, "assign llsita");
-                    sym_value_type value;
-                    int lookup_result;
-                    lookup_result = sym_lookup($3.lexema, &value);
+                | ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE {
+                     mode_assign = true;
+                     if($5.id_name != NULL)
+                        add_three_address_code(list, &list_size, $5.val_int, 8, "MULI", $5.id_name, NULL);
+                     else
+                        add_three_address_code(list, &list_size, $5.val_int, 8, "MULI", NULL, NULL);
+                     int result = 8 * result;
+                     add_to_float_list(result_list, &result_size,(float)result);
+                     if($5.val_type == FLOAT_TYPE)
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.lexema, $5.val_float);
+                     else
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.lexema, (float)$5.val_int);
 
-                    if (lookup_result == SYMTAB_OK) {
-                        $$.val_type = value.val_type;  // Store the value for later use
-                        if($$.val_type == INT_TYPE){
-                             $$.val_int = value.val_int;  // Store the value for later use
-                        }
-                        else if($$.val_type == FLOAT_TYPE){
-                             $$.val_float = value.val_float;  // Store the value for later use
-                        }
-                        $$.id_name = $3.lexema;
-                        id_list[id_size]= $3.lexema;
-                        id_size++;
-                    } else {
-                        fprintf(stderr, "Error: ID '%s' not declared\n", $3.lexema);
-                        exit(EXIT_FAILURE);  // Exit the program
-                    }
+                        list_size = 0;
+                        number_size = 0;
+                        result_size = 0;
+                        float_size = 0;
+                        id_size = 0;
+                        mode_assign = false;
+
                  }
-                | ID OPEN_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION {
+                | ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
                       if ($3.val_type != INT_TYPE) {
@@ -319,32 +319,34 @@ expressio:
                           }
                       }
                       if ($6.val_type == INT_TYPE) {
-                          fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$6.val_int);
                           $$.val_type = INT_TYPE;
                           $$.val_int = (int)$6.val_int;
                           $1.id_val.val_type = INT_TYPE;
                           $1.id_val.val_int = $6.val_int;
-                          if(list_size == 0){
-                              fprintf(file_ca3, "%d : %s := %d\n", lines++, $1.lexema, $$.val_int);
-                          }
+
                       } else if ($6.val_type == FLOAT_TYPE) {
-                          fprintf(yyout, "else if float");
-                          fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $6.val_float);
                           $$.val_type = FLOAT_TYPE;
                           $$.val_float = $6.val_float;
                           $1.id_val.val_type = FLOAT_TYPE;
                           $1.id_val.val_float = $6.val_float;
-                          if(list_size == 0){
-                                fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
-                          }
+
                       }
-                      //print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
+                      if($3.id_name != NULL)
+                        add_three_address_code(list, &list_size, $3.val_int, 8, "MULI", $3.id_name, NULL);
+                      else
+                        add_three_address_code(list, &list_size, $3.val_int, 8, "MULI", NULL, NULL);
+                        int result = 8 * result;
+                        add_to_float_list(result_list, &result_size,(float)result);
+                      if($6.val_type == FLOAT_TYPE)
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.id_name, $6.val_float);
+                      else
+                        print_list_array(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema, $3.id_name, (float)$6.val_int);
+
                       list_size = 0;
                       number_size = 0;
                       result_size = 0;
                       float_size = 0;
                       id_size = 0;
-                      //sym_enter($1.lexema, &$6);
                 }
 
 

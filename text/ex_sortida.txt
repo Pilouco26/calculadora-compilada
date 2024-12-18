@@ -1,11 +1,3 @@
-floatelse if floatID: x (real) pren per valor: 5.000000
-floatelse if floatID: i (real) pren per valor: 4.100000
-ID: j (int) pren per valor: 4
-else if floatID: y (real) pren per valor: 20.500000
-ID: n (int) pren per valor: 10
-ID: fact (int) pren per valor: 1
-ID: i (int) pren per valor: 2
-ID: fact (int) pren per valor: 2
-ID: j (int) pren per valor: 7
-ID: i (int) pren per valor: 3
+ID: i (int) pren per valor: 4
+ID: x (int) pren per valor: 0
 End of input reached.

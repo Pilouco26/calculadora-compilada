@@ -1,21 +1,5 @@
 --(end of buffer or a NUL)
---accepting rule at line 106 ("x")
---accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
---accepting rule at line 45 ("5.0")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
 --accepting rule at line 106 ("i")
---accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
---accepting rule at line 45 ("4.1")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 106 ("j")
 --accepting rule at line 157 (" ")
 --accepting rule at line 130 (":=")
 --accepting rule at line 157 (" ")
@@ -23,104 +7,22 @@
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")
---accepting rule at line 106 ("y")
+--accepting rule at line 106 ("x")
 --accepting rule at line 157 (" ")
 --accepting rule at line 130 (":=")
 --accepting rule at line 157 (" ")
---accepting rule at line 106 ("i")
---accepting rule at line 157 (" ")
---accepting rule at line 133 ("+")
---accepting rule at line 157 (" ")
---accepting rule at line 106 ("i")
---accepting rule at line 157 (" ")
---accepting rule at line 135 ("*")
---accepting rule at line 157 (" ")
---accepting rule at line 106 ("j")
+--accepting rule at line 26 ("0")
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")
---accepting rule at line 106 ("n")
+--accepting rule at line 106 ("m")
 --accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
---accepting rule at line 26 ("10")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 106 ("fact")
---accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
---accepting rule at line 26 ("1")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 106 ("i")
---accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
+--accepting rule at line 39 ("[")
 --accepting rule at line 26 ("2")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
-Error: Type mismatch for ID 'i' in line 8.
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 36 ("repeat")
-repeat in lexic
---accepting rule at line 157 (" ")
---accepting rule at line 106 ("n")
---accepting rule at line 157 (" ")
---accepting rule at line 134 ("-")
---accepting rule at line 157 (" ")
---accepting rule at line 26 ("1")
---accepting rule at line 157 (" ")
---accepting rule at line 37 ("do")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 106 ("fact")
---accepting rule at line 157 (" ")
+--accepting rule at line 40 ("]")
 --accepting rule at line 130 (":=")
 --accepting rule at line 157 (" ")
---accepting rule at line 106 ("fact")
---accepting rule at line 157 (" ")
---accepting rule at line 135 ("*")
---accepting rule at line 157 (" ")
---accepting rule at line 106 ("i")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 106 ("j")
---accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
---accepting rule at line 106 ("fact")
---accepting rule at line 157 (" ")
---accepting rule at line 133 ("+")
---accepting rule at line 157 (" ")
---accepting rule at line 26 ("5")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
- values 2, 5, 7--accepting rule at line 106 ("i")
---accepting rule at line 157 (" ")
---accepting rule at line 130 (":=")
---accepting rule at line 157 (" ")
---accepting rule at line 106 ("i")
---accepting rule at line 157 (" ")
---accepting rule at line 133 ("+")
---accepting rule at line 157 (" ")
---accepting rule at line 26 ("1")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
- values 2, 1, 3--accepting rule at line 38 ("done")
---accepting rule at line 157 ("")
---accepting rule at line 155 ("
-")
---accepting rule at line 106 ("fact")
+--accepting rule at line 106 ("x")
 --accepting rule at line 157 ("")
 --accepting rule at line 155 ("
 ")

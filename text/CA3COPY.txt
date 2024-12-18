@@ -1,18 +1,11 @@
-1 : START
-2 : $t0 := 4 ADDI 3
-3 : $t1 := IDF 2
-4 : $t2 := 4.500000 MULF 2
-5 : $t3 := IDF 2
-6 : $t4 := t2 DIVF 2
-7 : $t5 := IDF t0 
-8 : m := t5 ADDF t4 
-9 : k := 0
-10 : t-02 := 4
-11 : t-01 := 0
-12 : j := 7 DIVF 4
-13 : $t0 := 4.520000 ADDF j 
-14 : $t1 := IDF 4
-15 : k := t0 ADDF 4
-16 : t-01 := t-01 ADDI 1
-17 : if t-01 < t-02 GO TO 11 
-18 : HALT
+                      if($3.id_name != NULL){
+                        fprintf(file_ca3, "%d : $t0 := %s SUBI 5\n", lines++, $3.id_name);
+                        int result = $3.val_int - 5;
+                        add_to_float_list(result_list, &result_size,(float)result);
+                        fprintf(file_ca3, "%d : $t1 := $t0 MULI 8\n", lines++);
+                        result = 8 * result;
+                        add_to_float_list(result_list, &result_size,(float)result);
+                        fprintf(file_ca3, "%d : %s[$t1] := %d\n", lines++, $1.lexema, $6.val_int);
+                      }
+                      else
+                          fprintf(file_ca3, "%d : %s[%d] := %d\n", lines++, $1.lexema, $3.val_int, $6.val_int);

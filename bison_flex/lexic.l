@@ -36,7 +36,7 @@ sign    [+-]?
 "repeat"                  {  fprintf(stderr, "repeat in lexic\n"); return REPEAT; }
 "do"                      { return DO; }
 "done"                    { return DONE; }
-"["                    { return OPEN_CLAUSE; }
+"["                    { return OPENED_CLAUSE; }
 "]"                    { return CLOSED_CLAUSE; }
 
 

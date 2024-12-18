@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 33 "bison_flex/sintaxi.y"
+#line 34 "bison_flex/sintaxi.y"
 
   #include "../header_files/dades.h"
   #include "../header_files/funcions.h"
@@ -73,7 +73,7 @@ extern int yydebug;
     EXTRALINE = 266,               /* EXTRALINE  */
     DO = 267,                      /* DO  */
     DONE = 268,                    /* DONE  */
-    OPEN_CLAUSE = 269,             /* OPEN_CLAUSE  */
+    OPENED_CLAUSE = 269,           /* OPENED_CLAUSE  */
     CLOSED_CLAUSE = 270,           /* CLOSED_CLAUSE  */
     COMMENT = 271,                 /* COMMENT  */
     SUBSTR = 272,                  /* SUBSTR  */
@@ -111,7 +111,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 39 "bison_flex/sintaxi.y"
+#line 40 "bison_flex/sintaxi.y"
 
     struct {
         char *lexema;

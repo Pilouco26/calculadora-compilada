@@ -17,7 +17,7 @@ Grammar
 
     4 header: ENDLINE REPEAT OPERATION
 
-    5 expressio: header DO ENDLINE expressio_list DONE
+    5 expressio: header DO ENDLINE expressio_list DONE ENDLINE
     6          | ID ASSIGN OPERATION
     7          | ID ASSIGN OPERATION MODE
     8          | ID ASSIGN OPERATION_BOOLEAN
@@ -25,8 +25,8 @@ Grammar
    10          | OPERATION MODE
    11          | OPERATION
    12          | OPERATION_BOOLEAN
-   13          | ID ASSIGN ID OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS
-   14          | ID OPEN_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION
+   13          | ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE
+   14          | ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION
 
    15 OPERATION: OPERATION PLUS OPERATION2
    16          | OPERATION MINUS OPERATION2
@@ -88,8 +88,8 @@ Terminals, with rules where they appear
     EXTRALINE <sense_valor> (266)
     DO <sense_valor> (267) 5
     DONE <sense_valor> (268) 5
-    OPEN_CLAUSE <sense_valor> (269) 14
-    CLOSED_CLAUSE <sense_valor> (270) 14
+    OPENED_CLAUSE <sense_valor> (269) 13 14
+    CLOSED_CLAUSE <sense_valor> (270) 13 14
     COMMENT <sense_valor> (271)
     SUBSTR <sense_valor> (272) 28
     COMMA <sense_valor> (273)
@@ -106,8 +106,8 @@ Terminals, with rules where they appear
     DIVIDE <sense_valor> (284) 19
     MOD <sense_valor> (285) 20
     POWER <sense_valor> (286) 22
-    CLOSED_PARENTHESIS <sense_valor> (287) 13 28 34 41
-    OPEN_PARENTHESIS <sense_valor> (288) 13 28 34 41
+    CLOSED_PARENTHESIS <sense_valor> (287) 28 34 41
+    OPEN_PARENTHESIS <sense_valor> (288) 28 34 41
     ASSIGN <sense_valor> (289) 6 7 8 9 13 14
     ENDLINE <sense_valor> (290) 2 3 4 5
     SEMICOLON <sense_valor> (291)
@@ -230,12 +230,12 @@ State 5
     6 expressio: ID • ASSIGN OPERATION
     7          | ID • ASSIGN OPERATION MODE
     8          | ID • ASSIGN OPERATION_BOOLEAN
-   13          | ID • ASSIGN ID OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS
-   14          | ID • OPEN_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION
+   13          | ID • ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE
+   14          | ID • OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION
    32 OPERATION4: ID •
 
-    OPEN_CLAUSE  shift, and go to state 29
-    ASSIGN       shift, and go to state 30
+    OPENED_CLAUSE  shift, and go to state 29
+    ASSIGN         shift, and go to state 30
 
     $default  reduce using rule 32 (OPERATION4)
 
@@ -429,7 +429,7 @@ State 18
 
 State 19
 
-    5 expressio: header • DO ENDLINE expressio_list DONE
+    5 expressio: header • DO ENDLINE expressio_list DONE ENDLINE
 
     DO  shift, and go to state 47
 
@@ -535,7 +535,7 @@ State 28
 
 State 29
 
-   14 expressio: ID OPEN_CLAUSE • OPERATION CLOSED_CLAUSE ASSIGN OPERATION
+   14 expressio: ID OPENED_CLAUSE • OPERATION CLOSED_CLAUSE ASSIGN OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
@@ -560,7 +560,7 @@ State 30
     6 expressio: ID ASSIGN • OPERATION
     7          | ID ASSIGN • OPERATION MODE
     8          | ID ASSIGN • OPERATION_BOOLEAN
-   13          | ID ASSIGN • ID OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS
+   13          | ID ASSIGN • ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
@@ -799,7 +799,7 @@ State 46
 
 State 47
 
-    5 expressio: header DO • ENDLINE expressio_list DONE
+    5 expressio: header DO • ENDLINE expressio_list DONE ENDLINE
 
     ENDLINE  shift, and go to state 74
 
@@ -1161,7 +1161,7 @@ State 63
 
 State 64
 
-   14 expressio: ID OPEN_CLAUSE OPERATION • CLOSED_CLAUSE ASSIGN OPERATION
+   14 expressio: ID OPENED_CLAUSE OPERATION • CLOSED_CLAUSE ASSIGN OPERATION
    15 OPERATION: OPERATION • PLUS OPERATION2
    16          | OPERATION • MINUS OPERATION2
 
@@ -1172,10 +1172,10 @@ State 64
 
 State 65
 
-   13 expressio: ID ASSIGN ID • OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS
+   13 expressio: ID ASSIGN ID • OPENED_CLAUSE OPERATION CLOSED_CLAUSE
    32 OPERATION4: ID •
 
-    OPEN_PARENTHESIS  shift, and go to state 91
+    OPENED_CLAUSE  shift, and go to state 91
 
     $default  reduce using rule 32 (OPERATION4)
 
@@ -1284,7 +1284,7 @@ State 73
 
 State 74
 
-    5 expressio: header DO ENDLINE • expressio_list DONE
+    5 expressio: header DO ENDLINE • expressio_list DONE ENDLINE
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
@@ -1470,14 +1470,14 @@ State 89
 
 State 90
 
-   14 expressio: ID OPEN_CLAUSE OPERATION CLOSED_CLAUSE • ASSIGN OPERATION
+   14 expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE • ASSIGN OPERATION
 
     ASSIGN  shift, and go to state 95
 
 
 State 91
 
-   13 expressio: ID ASSIGN ID OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
+   13 expressio: ID ASSIGN ID OPENED_CLAUSE • OPERATION CLOSED_CLAUSE
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
@@ -1525,14 +1525,14 @@ State 93
 
 State 94
 
-    5 expressio: header DO ENDLINE expressio_list • DONE
+    5 expressio: header DO ENDLINE expressio_list • DONE ENDLINE
 
     DONE  shift, and go to state 98
 
 
 State 95
 
-   14 expressio: ID OPEN_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN • OPERATION
+   14 expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN • OPERATION
 
     INTEGER           shift, and go to state 1
     FLOAT             shift, and go to state 4
@@ -1554,13 +1554,13 @@ State 95
 
 State 96
 
-   13 expressio: ID ASSIGN ID OPEN_PARENTHESIS OPERATION • CLOSED_PARENTHESIS
+   13 expressio: ID ASSIGN ID OPENED_CLAUSE OPERATION • CLOSED_CLAUSE
    15 OPERATION: OPERATION • PLUS OPERATION2
    16          | OPERATION • MINUS OPERATION2
 
-    PLUS                shift, and go to state 50
-    MINUS               shift, and go to state 51
-    CLOSED_PARENTHESIS  shift, and go to state 100
+    CLOSED_CLAUSE  shift, and go to state 100
+    PLUS           shift, and go to state 50
+    MINUS          shift, and go to state 51
 
 
 State 97
@@ -1572,14 +1572,14 @@ State 97
 
 State 98
 
-    5 expressio: header DO ENDLINE expressio_list DONE •
+    5 expressio: header DO ENDLINE expressio_list DONE • ENDLINE
 
-    $default  reduce using rule 5 (expressio)
+    ENDLINE  shift, and go to state 102
 
 
 State 99
 
-   14 expressio: ID OPEN_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION •
+   14 expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION •
    15 OPERATION: OPERATION • PLUS OPERATION2
    16          | OPERATION • MINUS OPERATION2
 
@@ -1591,7 +1591,7 @@ State 99
 
 State 100
 
-   13 expressio: ID ASSIGN ID OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS •
+   13 expressio: ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE •
 
     $default  reduce using rule 13 (expressio)
 
@@ -1601,3 +1601,10 @@ State 101
    28 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS •
 
     $default  reduce using rule 28 (OPERATION4)
+
+
+State 102
+
+    5 expressio: header DO ENDLINE expressio_list DONE ENDLINE •
+
+    $default  reduce using rule 5 (expressio)
