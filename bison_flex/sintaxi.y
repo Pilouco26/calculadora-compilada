@@ -64,11 +64,11 @@ int esp = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
-%type <header> header
+%type <header> header if_header
 %token <header> REPEAT
 
 %start programa
@@ -114,11 +114,19 @@ header:
                  }
      }
 
+if_header: ENDLINE IF OPERATION_BOOLEAN THEN{
+            fprintf("IF ")
+            $$.linea = lines;
+            fprintf(file_ca3, "HEADER\n");
+           }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
                     delta = yylineno - $1.linea;
                     fprintf(file_ca3, "%d : $t-esp01 := t-esp01 ADDI 1\n", lines++);
                     fprintf(file_ca3, "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
+                }
+                | if_header ENDLINE expressio_list FI ENDLINE {
+                    fprintf(file_ca3, "fi\n");
                 }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
@@ -156,7 +164,6 @@ expressio:
                       }
 
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
-
                       list_size = 0;
                       number_size = 0;
                       result_size = 0;

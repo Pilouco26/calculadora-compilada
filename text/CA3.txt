@@ -1,5 +1,5 @@
 1 : START
-2 : i := 0 ADDI 2
-3 : $t0 := 7 ADDI 5
-4 : CALL PUT, $t0
-5 : HALT
+HEADER
+2 : i := 4
+fi
+3 : HALT

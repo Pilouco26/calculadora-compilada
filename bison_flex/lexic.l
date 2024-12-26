@@ -33,9 +33,14 @@ sign    [+-]?
                               yylval.real = M_E;   // Set yylval to the value of e
                               return FLOAT;        // Return the FLOAT token
                             }
+
+
 "repeat"                  {  fprintf(stderr, "repeat in lexic\n"); return REPEAT; }
 "do"                      { return DO; }
 "done"                    { return DONE; }
+"fi"                    { return FI; }
+"then"                    { return THEN; }
+"if"                    { return IF; }
 "["                    { return OPENED_CLAUSE; }
 "]"                    { return CLOSED_CLAUSE; }
 
