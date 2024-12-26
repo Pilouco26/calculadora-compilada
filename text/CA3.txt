@@ -1,8 +1,9 @@
 1 : START
-2 : i := 4
-3 : $t0 := i ADDI 2
-4 : $t1 := $t0 ADDI 4
-5 : $t2 := i ADDI 5
-6 : $t5 := $t1 MULI 8
-7 : m[$t5] := $t2
-8 : HALT
+2 : $t-esp02 := 5
+3 : $t-esp01 := 0
+4 : $t0 := 3 MULI 3
+5 : $t-esp01 := t-esp01 ADDI 1
+6 : if $t-esp01 LTI $t-esp02 GO TO 2 
+7 : $t0 := 6 ADDI $t0 
+8 : i := $t1 ADDI 7
+9 : HALT

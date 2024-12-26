@@ -333,6 +333,13 @@ void print_list_array(three_address_code list[], int size, int number_list[], in
 
 	}
 }
+void generate_power_logic(int *power, int *lines) {
+    if (*power != 0) {
+        fprintf(file_ca3, "%d : $t-esp01 := t-esp01 ADDI 1\n", (*lines)++);
+        fprintf(file_ca3, "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n", (*lines)++, *power + 1);
+        *power = 0;
+    }
+}
 
 
 

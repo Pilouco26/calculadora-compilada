@@ -18,4 +18,5 @@ int is_number_in_list_without_retrieving(int list[],  int size, int number);
 void add_to_float_list(float float_list[], int *float_size, float value);
 void call_put(three_address_code list[], int *list_size, float value_float, int value_int, int op);
 void add_three_address_code_float(three_address_code list[], int *list_size, float value1, float value2, char* op, char* id1, char * id2, int conversion1, int conversion2);
+void generate_power_logic( int *power, int *lines);
 #endif

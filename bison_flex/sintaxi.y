@@ -14,10 +14,9 @@ extern int yylex();
 extern int lines;
 void yyrestart(FILE *input_file);
 /*extern void yyerror(char*);*/
-int loops_made = 0;
 int comptador = 0;
+int power = 0;
 int delta = 0;
-char *last_id = "init";    // To store strings
 three_address_code list[1024];
 char *id_list[1024];
 int number_list[1024];
@@ -29,6 +28,7 @@ int float_size = 0;
 int id_size=0;
 int result_size = 0;
 bool mode_assign = false;
+int esp = 0;
 %}
 
 %code requires {
@@ -90,9 +90,13 @@ header:
      ENDLINE REPEAT OPERATION {
                  if ($3.val_type == INT_TYPE) {
                              if ($3.val_int > 0) {
-                                print_list(list, list_size, number_list, number_size, float_list, float_size,  "$t-esp02");
+                                char special[50]; // Adjust size as needed for longer strings
+
+                                    // Use snprintf to safely concatenate
+                                snprintf(special, sizeof(special), "$t-esp0%d", ++esp+1);
+                                print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
                                 $$.linea = lines;
-                                fprintf(file_ca3, "%d : $t-esp01 := 0\n", lines++);
+                                fprintf(file_ca3, "%d : $t-esp0%d := 0\n", lines++, esp++);
                                 list_size = 0;
                                 number_size = 0;
                                 float_size = 0;
@@ -113,8 +117,8 @@ header:
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
                     delta = yylineno - $1.linea;
-                    fprintf(file_ca3, "%d : t-esp01 := t-esp01 ADDI 1\n", lines++);
-                    fprintf(file_ca3, "%d : if t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
+                    fprintf(file_ca3, "%d : $t-esp01 := t-esp01 ADDI 1\n", lines++);
+                    fprintf(file_ca3, "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
                 }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
@@ -150,7 +154,8 @@ expressio:
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
                       }
-                        print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
+
+                      print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
 
                       list_size = 0;
                       number_size = 0;
@@ -431,6 +436,8 @@ OPERATION:
 
             add_to_float_list(result_list, &result_size, (float)$$.val_int);
         }
+            generate_power_logic(&power, &lines);
+
     }
     | OPERATION MINUS OPERATION2 {
         if (($1.val_type == INT_TYPE || $1.val_type == FLOAT_TYPE) &&
@@ -459,6 +466,8 @@ OPERATION:
                 add_to_float_list(result_list, &result_size,(float)$$.val_int);
 
             }
+            generate_power_logic(&power, &lines);
+
         } else {
             fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
             YYABORT;
@@ -498,6 +507,7 @@ OPERATION2:
 
 
             }
+            generate_power_logic(&power, &lines);
         } else {
             fprintf(stderr, "Error: Both operands must be numbers (int or float) in line %d\n", yylineno);
             YYABORT;
@@ -591,8 +601,29 @@ OPERATION3:
                         // Both operands are integers
                         $$.val_type = INT_TYPE;
                         $$.val_int = pow($1.val_int,$3.val_int);
+                        char special[50];
+                        snprintf(special, sizeof(special), "$t-esp0%d", esp+2);
+                        fprintf(file_ca3, "%d : $t-esp0%d := %d\n", lines++, esp+2, $3.val_int);
+                        print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
+                        snprintf(special, sizeof(special), "$t-esp0%d", ++esp+1);
+                        print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
+                        fprintf(file_ca3, "%d : $t-esp0%d := 0\n", lines++, esp++);
+                        add_three_address_code(list, &list_size, $1.val_int, $1.val_int, "MULI",  NULL, NULL);
+                        snprintf(special, sizeof(special), "$t%d", list_size-1);
+                        print_list(list, list_size, number_list, number_size, float_list, float_size, special);
+                        list_size = 0;
+                        number_size = 0;
+                        float_size = 0;
+                        id_size = 0;
+                        result_size = 0;
+                        power = yylineno;
+                        add_to_float_list(result_list, &result_size,(float)$$.val_int);
+
                     }
+
+
         }
+
     | OPERATION4
 ;
 OPERATION4:
