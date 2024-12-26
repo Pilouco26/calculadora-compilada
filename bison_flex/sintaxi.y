@@ -270,12 +270,16 @@ expressio:
                        // fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
                         $1.val_type = INT_TYPE;
                         $1.val_int = (int)$1.val_int;
-                        //call_put(list, &list_size, 0, (int)$1.val_int, 1);
+                        call_put(list, &list_size, 0, (int)$1.val_int, 0);
+                        print_list(list, list_size, number_list, number_size, float_list, float_size, " ");
+
+
                     } else if ($1.val_type == FLOAT_TYPE) {
                         fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
                         $1.val_type = FLOAT_TYPE;
                         $1.val_float = $1.val_float;
                         call_put(list, &list_size, 0, $1.val_float, 1);
+                        print_list(list, list_size, number_list, number_size, float_list, float_size, " ");
 
                     } else if ($1.val_type == STRING_TYPE) {
                         fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);

@@ -1,9 +1,5 @@
 1 : START
-2 : $t-esp02 := 5
-3 : $t-esp01 := 0
-4 : $t0 := 3 MULI 3
-5 : $t-esp01 := t-esp01 ADDI 1
-6 : if $t-esp01 LTI $t-esp02 GO TO 2 
-7 : $t0 := 6 ADDI $t0 
-8 : i := $t1 ADDI 7
-9 : HALT
+2 : i := 0 ADDI 2
+3 : $t0 := 7 ADDI 5
+4 : CALL PUT, $t0
+5 : HALT

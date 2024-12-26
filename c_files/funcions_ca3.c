@@ -216,8 +216,7 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
     for (int i = 0; i < size; i++) {
       	four_ac = false;
         if (strcmp(list[i].val_op, "CALL") == 0) {
-            // Add logic for CALL
-            // fprintf(file_ca3, "CALL PUT, %d\n", list[i].val_info2.val_int);
+            fprintf(file_ca3, "%d : CALL PUTF, $t%d\n",lines++, temporal_aux-2);
         } else {
             if (size == 1 || size == i + 1) {
                 if(strcmp(list[i].val_info.id_name, id_name) == 0 || strcmp(list[i].val_info2.id_name, id_name) == 0) {
@@ -270,8 +269,7 @@ void print_list_array(three_address_code list[], int size, int number_list[], in
     for (int i = 0; i < size; i++) {
       	four_ac = false;
         if (strcmp(list[i].val_op, "CALL") == 0) {
-            // Add logic for CALL
-            // fprintf(file_ca3, "CALL PUT, %d\n", list[i].val_info2.val_int);
+          	fprintf(file_ca3, "CALL PUT, %d\n", list[i].val_info2.val_int);
         } else {
             if (size == 1 || size == i + 1) {
                 if(strcmp(list[i].val_info.id_name, id_name) == 0 || strcmp(list[i].val_info2.id_name, id_name) == 0) {
@@ -476,10 +474,10 @@ void call_put(three_address_code list[], int *list_size, float value_float, int 
         three_address_code change;
         change.val_info.val_int = -1;
         change.val_info2.val_int = value_int;
-        change.type_op = 'F';
+        change.type_op = 'I';
         change.val_type_list = INT_TYPE;
     	change.val_info.val_type = INT_TYPE;
-        change.val_op = "CALL PUT, ";
+        change.val_op = "CALL";
         list[*list_size] = change;
     	(*list_size)++;
     }

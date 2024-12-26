@@ -1,2 +1,2 @@
-ID: i (int) pren per valor: 256
+ID: i (int) pren per valor: 2
 End of input reached.
