@@ -555,10 +555,13 @@ void close_file_ca3(FILE *file_ca3) {
     }
 }
 void generate_if_statement(int val1, int val3, const char *op) {
-     if(ifmode == 1){
-            int current_line = lines +2;
-            fprintf(file_ca3, "%d : GOTO %d\n", lines++, current_line);
-     }
-    fprintf(file_ca3, "%d : IF %d %s %d GOTO %d\n", lines, val1, op, val3, lines + 2);
+    char buffer[200];
+    // Create the string for the IF statement
+    snprintf(buffer, sizeof(buffer), "%d : IF %d %s %d GOTO %d\n", lines, val1, op, val3, lines + 2);
+
+    // Append the string to the current line in program_lines
+    strcat(program_lines[lines], buffer);
+
+    // Increment lines after appending
     lines++;
 }

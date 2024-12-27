@@ -32,6 +32,7 @@ int esp = 0;
 int ifmode = 0;
 int index_iterative = 0;
 char program_lines[200][200];
+int size_if = 0;
 %}
 
 %code requires {
@@ -123,9 +124,12 @@ header:
      }
 
 if_header:  IF OPERATION_BOOLEAN THEN {
-            $$.linea = lines;
-            ifmode = 1;
-            fprintf(file_ca3, "%d : GOTO ____\n", lines++);
+                $$.linea = lines;
+                ifmode = 1;
+                char buffer[200];  // Buffer to hold the formatted output
+                lines++;
+                //snprintf(buffer, sizeof(buffer), "%d : GOTO ____\n", lines);
+                //strcat(program_lines[lines], buffer);  // Append to program_lines
            }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
@@ -135,8 +139,10 @@ expressio:
                 }
                 | if_header ENDLINE expressio_list FI {
                     ifmode = 0;
-
-                    //MAKE HERE THE PRINT, AND GO BACK TO $1.linea AND PRINT GOTO
+                    char buffer[200];  // Buffer to hold the formatted output
+                    int current_line = lines;
+                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line);
+                    strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                     }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
@@ -146,34 +152,30 @@ expressio:
                               fprintf(stderr, "Error: Type mismatch for ID '%s' in line %d.\n", $1.lexema, yylineno);
                           }
                       }
-                      if ($3.val_type == INT_TYPE) {
-                          fprintf(yyout, "ID: %s (int) pren per valor: %d\n", $1.lexema, (int)$3.val_int);
-                          $$.val_type = INT_TYPE;
-                          $$.val_int = (int)$3.val_int;
-                          $1.id_val.val_type = INT_TYPE;
-                          $1.id_val.val_int = $3.val_int;
-                          if(list_size == 0){
+                        char buffer[200];  // Buffer to hold the formatted output
 
-                              fprintf(file_ca3, "%d : %s := %d\n", lines++, $1.lexema, $$.val_int);
-                          }
-                      } else if ($3.val_type == FLOAT_TYPE) {
-                          fprintf(yyout, "else if float");
-                          fprintf(yyout, "ID: %s (real) pren per valor: %f\n", $1.lexema, $3.val_float);
-                          $$.val_type = FLOAT_TYPE;
-                          $$.val_float = $3.val_float;
-                          $1.id_val.val_type = FLOAT_TYPE;
-                          $1.id_val.val_float = $3.val_float;
-                          if(list_size == 0){
-                                fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
-                          }
-                      } else {
-                          fprintf(yyout, "ID: %s (string) pren per valor: %s\n", $1.lexema, $3.val_string);
-                          $$.val_type = STRING_TYPE;
-                          $$.val_string = $3.val_string;
-                          $1.id_val.val_type = STRING_TYPE;
-                          $1.id_val.val_string = $3.val_string;
-                      }
+                        // If the type is INT_TYPE
+                        if ($3.val_type == INT_TYPE) {
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, (int)$3.val_int);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
+                        }
+                        // If the type is FLOAT_TYPE
+                        else if ($3.val_type == FLOAT_TYPE) {
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, $1.lexema, $3.val_float);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
+                        }
+                        // For STRING_TYPE
+                        else {
+                            strcat(program_lines[lines], buffer);  // Append to program_lines
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %s\n", lines, $1.lexema, $3.val_string);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
+                        }
+
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
+                      size_if = list_size;
                       list_size = 0;
                       number_size = 0;
                       result_size = 0;

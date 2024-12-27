@@ -1,10 +1,10 @@
 1 : START
 2 : IF 5 EQ 4 GOTO 4
-3 : GOTO ____
-4 : GOTO 6
-5 : IF 4 EQ 4 GOTO 7
-6 : GOTO ____
-7 : i := 4
+3 : GOTO 10
+4 : IF 4 EQ 4 GOTO 6
+5 : GOTO 10
+6 : i := 4
+7 : j := 21
 8 : $t0 := 6 ADDI 7
 9 : j := $t0 ADDI 8
 10 : HALT
