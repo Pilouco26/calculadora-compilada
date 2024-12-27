@@ -1,1 +1,3 @@
 ID: i (int) pren per valor: 4
+ID: j (int) pren per valor: 21
+End of input reached.

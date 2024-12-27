@@ -1,12 +1,9 @@
 --(end of buffer or a NUL)
---accepting rule at line 162 ("")
---accepting rule at line 160 ("
-")
 --accepting rule at line 43 ("if")
 --accepting rule at line 162 (" ")
 --accepting rule at line 26 ("5")
 --accepting rule at line 162 (" ")
---accepting rule at line 147 (">")
+--accepting rule at line 151 ("=")
 --accepting rule at line 162 (" ")
 --accepting rule at line 26 ("4")
 --accepting rule at line 162 (" ")
@@ -14,10 +11,67 @@
 --accepting rule at line 162 ("")
 --accepting rule at line 160 ("
 ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 43 ("if")
+--accepting rule at line 162 (" ")
+--accepting rule at line 26 ("4")
+--accepting rule at line 162 (" ")
+--accepting rule at line 151 ("=")
+--accepting rule at line 162 (" ")
+--accepting rule at line 26 ("4")
+--accepting rule at line 162 (" ")
+--accepting rule at line 42 ("then")
+--accepting rule at line 162 ("")
+--accepting rule at line 160 ("
+")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
 --accepting rule at line 111 ("i")
+--accepting rule at line 162 (" ")
 --accepting rule at line 135 (":=")
 --accepting rule at line 162 (" ")
 --accepting rule at line 26 ("4")
+--accepting rule at line 162 ("")
+--accepting rule at line 160 ("
+")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 111 ("j")
+--accepting rule at line 162 (" ")
+--accepting rule at line 135 (":=")
+--accepting rule at line 162 (" ")
+--accepting rule at line 26 ("6")
+--accepting rule at line 162 (" ")
+--accepting rule at line 138 ("+")
+--accepting rule at line 162 (" ")
+--accepting rule at line 26 ("7")
+--accepting rule at line 162 (" ")
+--accepting rule at line 138 ("+")
+ values 6, 7, 13--accepting rule at line 162 (" ")
+--accepting rule at line 26 ("8")
+--accepting rule at line 162 ("")
+--accepting rule at line 160 ("
+")
+ values 13, 8, 21--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 162 (" ")
+--accepting rule at line 41 ("fi")
 --accepting rule at line 162 ("")
 --accepting rule at line 160 ("
 ")
@@ -27,6 +81,4 @@
 ")
 --(end of buffer or a NUL)
 --EOF (start condition 0)
-Error: syntax error , in line 5
-hola2, 2 less_equal 
-ERROR
+The compilation has been successful

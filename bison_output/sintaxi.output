@@ -17,10 +17,10 @@ Grammar
 
     4 header: ENDLINE REPEAT OPERATION
 
-    5 if_header: ENDLINE IF OPERATION_BOOLEAN THEN
+    5 if_header: IF OPERATION_BOOLEAN THEN
 
     6 expressio: header DO ENDLINE expressio_list DONE ENDLINE
-    7          | if_header ENDLINE expressio_list FI ENDLINE
+    7          | if_header ENDLINE expressio_list FI
     8          | ID ASSIGN OPERATION
     9          | ID ASSIGN OPERATION MODE
    10          | ID ASSIGN OPERATION_BOOLEAN
@@ -115,7 +115,7 @@ Terminals, with rules where they appear
     CLOSED_PARENTHESIS <sense_valor> (290) 30 36 43
     OPEN_PARENTHESIS <sense_valor> (291) 30 36 43
     ASSIGN <sense_valor> (292) 8 9 10 11 15 16
-    ENDLINE <sense_valor> (293) 2 3 4 5 6 7
+    ENDLINE <sense_valor> (293) 2 3 4 6 7
     SEMICOLON <sense_valor> (294)
     GREATER_THAN <sense_valor> (295) 50
     GREATER_EQUAL <sense_valor> (296) 49
@@ -182,29 +182,30 @@ State 0
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
-    ENDLINE           shift, and go to state 16
+    IF                shift, and go to state 8
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
+    ENDLINE           shift, and go to state 17
 
-    programa            go to state 17
-    expressio_list      go to state 18
-    header              go to state 19
-    if_header           go to state 20
-    expressio           go to state 21
-    OPERATION           go to state 22
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 26
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
+    programa            go to state 18
+    expressio_list      go to state 19
+    header              go to state 20
+    if_header           go to state 21
+    expressio           go to state 22
+    OPERATION           go to state 23
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 27
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
 State 1
@@ -244,8 +245,8 @@ State 5
    16          | ID • OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION
    34 OPERATION4: ID •
 
-    OPENED_CLAUSE  shift, and go to state 30
-    ASSIGN         shift, and go to state 31
+    OPENED_CLAUSE  shift, and go to state 31
+    ASSIGN         shift, and go to state 32
 
     $default  reduce using rule 34 (OPERATION4)
 
@@ -255,7 +256,7 @@ State 6
    11 expressio: ID_BOOL • ASSIGN OPERATION_BOOLEAN
    45 OPERATION_BOOLEAN3: ID_BOOL •
 
-    ASSIGN  shift, and go to state 32
+    ASSIGN  shift, and go to state 33
 
     $default  reduce using rule 45 (OPERATION_BOOLEAN3)
 
@@ -269,12 +270,42 @@ State 7
 
 State 8
 
-   30 OPERATION4: SUBSTR • OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+    5 if_header: IF • OPERATION_BOOLEAN THEN
 
-    OPEN_PARENTHESIS  shift, and go to state 33
+    INTEGER           shift, and go to state 1
+    FALSE             shift, and go to state 2
+    TRUE              shift, and go to state 3
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 34
+    ID_BOOL           shift, and go to state 35
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
+
+    OPERATION           go to state 36
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 37
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
 State 9
+
+   30 OPERATION4: SUBSTR • OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+
+    OPEN_PARENTHESIS  shift, and go to state 38
+
+
+State 10
 
    29 OPERATION4: LEN • OPERATION4
 
@@ -282,18 +313,18 @@ State 9
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION4  go to state 36
+    OPERATION4  go to state 40
 
 
-State 10
+State 11
 
    26 OPERATION4: SIN • OPERATION4
 
@@ -301,18 +332,18 @@ State 10
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION4  go to state 37
+    OPERATION4  go to state 41
 
 
-State 11
+State 12
 
    27 OPERATION4: COS • OPERATION4
 
@@ -320,18 +351,18 @@ State 11
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION4  go to state 38
+    OPERATION4  go to state 42
 
 
-State 12
+State 13
 
    28 OPERATION4: TAN • OPERATION4
 
@@ -339,18 +370,18 @@ State 12
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION4  go to state 39
+    OPERATION4  go to state 43
 
 
-State 13
+State 14
 
    42 OPERATION_BOOLEAN2: NOT • OPERATION_BOOLEAN2
 
@@ -359,33 +390,33 @@ State 13
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
-    ID_BOOL           shift, and go to state 40
+    ID_BOOL           shift, and go to state 35
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
 
-    OPERATION           go to state 41
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN2  go to state 42
-    OPERATION_BOOLEAN3  go to state 29
-
-
-State 14
-
-   35 OPERATION4: MINUS • ID
-
-    ID  shift, and go to state 43
+    OPERATION           go to state 36
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN2  go to state 44
+    OPERATION_BOOLEAN3  go to state 30
 
 
 State 15
+
+   35 OPERATION4: MINUS • ID
+
+    ID  shift, and go to state 45
+
+
+State 16
 
    36 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
    43 OPERATION_BOOLEAN3: OPEN_PARENTHESIS • OPERATION_BOOLEAN CLOSED_PARENTHESIS
@@ -395,73 +426,71 @@ State 15
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
-    ID_BOOL           shift, and go to state 40
+    ID_BOOL           shift, and go to state 35
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
 
-    OPERATION           go to state 44
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 45
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
-
-
-State 16
-
-    4 header: ENDLINE • REPEAT OPERATION
-    5 if_header: ENDLINE • IF OPERATION_BOOLEAN THEN
-
-    IF      shift, and go to state 46
-    REPEAT  shift, and go to state 47
+    OPERATION           go to state 46
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 47
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
 State 17
 
-    0 $accept: programa • $end
+    4 header: ENDLINE • REPEAT OPERATION
 
-    $end  shift, and go to state 48
+    REPEAT  shift, and go to state 48
 
 
 State 18
+
+    0 $accept: programa • $end
+
+    $end  shift, and go to state 49
+
+
+State 19
 
     1 programa: expressio_list •
 
     $default  reduce using rule 1 (programa)
 
 
-State 19
+State 20
 
     6 expressio: header • DO ENDLINE expressio_list DONE ENDLINE
 
-    DO  shift, and go to state 49
-
-
-State 20
-
-    7 expressio: if_header • ENDLINE expressio_list FI ENDLINE
-
-    ENDLINE  shift, and go to state 50
+    DO  shift, and go to state 50
 
 
 State 21
 
-    2 expressio_list: expressio • ENDLINE
-    3               | expressio • ENDLINE expressio_list
+    7 expressio: if_header • ENDLINE expressio_list FI
 
     ENDLINE  shift, and go to state 51
 
 
 State 22
+
+    2 expressio_list: expressio • ENDLINE
+    3               | expressio • ENDLINE expressio_list
+
+    ENDLINE  shift, and go to state 52
+
+
+State 23
 
    12 expressio: OPERATION • MODE
    13          | OPERATION •
@@ -474,85 +503,85 @@ State 22
    51                   | OPERATION • LESS_THAN OPERATION
    52                   | OPERATION • LESS_EQUAL OPERATION
 
-    MODE           shift, and go to state 52
-    PLUS           shift, and go to state 53
-    MINUS          shift, and go to state 54
-    GREATER_THAN   shift, and go to state 55
-    GREATER_EQUAL  shift, and go to state 56
-    LESS_THAN      shift, and go to state 57
-    LESS_EQUAL     shift, and go to state 58
-    EQUAL          shift, and go to state 59
-    NOT_EQUAL      shift, and go to state 60
+    MODE           shift, and go to state 53
+    PLUS           shift, and go to state 54
+    MINUS          shift, and go to state 55
+    GREATER_THAN   shift, and go to state 56
+    GREATER_EQUAL  shift, and go to state 57
+    LESS_THAN      shift, and go to state 58
+    LESS_EQUAL     shift, and go to state 59
+    EQUAL          shift, and go to state 60
+    NOT_EQUAL      shift, and go to state 61
 
     $default  reduce using rule 13 (expressio)
 
 
-State 23
+State 24
 
    19 OPERATION: OPERATION2 •
    20 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
    21           | OPERATION2 • DIVIDE OPERATION3
    22           | OPERATION2 • MOD OPERATION3
 
-    MULTIPLY  shift, and go to state 61
-    DIVIDE    shift, and go to state 62
-    MOD       shift, and go to state 63
+    MULTIPLY  shift, and go to state 62
+    DIVIDE    shift, and go to state 63
+    MOD       shift, and go to state 64
 
     $default  reduce using rule 19 (OPERATION)
 
 
-State 24
+State 25
 
    23 OPERATION2: OPERATION3 •
 
     $default  reduce using rule 23 (OPERATION2)
 
 
-State 25
+State 26
 
    24 OPERATION3: OPERATION4 • POWER OPERATION3
    25           | OPERATION4 •
 
-    POWER  shift, and go to state 64
+    POWER  shift, and go to state 65
 
     $default  reduce using rule 25 (OPERATION3)
 
 
-State 26
+State 27
 
    14 expressio: OPERATION_BOOLEAN •
    37 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
 
-    OR  shift, and go to state 65
+    OR  shift, and go to state 66
 
     $default  reduce using rule 14 (expressio)
 
 
-State 27
+State 28
 
    38 OPERATION_BOOLEAN: OPERATION_BOOLEAN1 •
    40 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 • AND OPERATION_BOOLEAN2
 
-    AND  shift, and go to state 66
+    AND  shift, and go to state 67
 
     $default  reduce using rule 38 (OPERATION_BOOLEAN)
 
 
-State 28
+State 29
 
    39 OPERATION_BOOLEAN1: OPERATION_BOOLEAN2 •
 
     $default  reduce using rule 39 (OPERATION_BOOLEAN1)
 
 
-State 29
+State 30
 
    41 OPERATION_BOOLEAN2: OPERATION_BOOLEAN3 •
 
     $default  reduce using rule 41 (OPERATION_BOOLEAN2)
 
 
-State 30
+State 31
 
    16 expressio: ID OPENED_CLAUSE • OPERATION CLOSED_CLAUSE ASSIGN OPERATION
 
@@ -560,21 +589,21 @@ State 30
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 67
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 68
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 31
+State 32
 
     8 expressio: ID ASSIGN • OPERATION
     9          | ID ASSIGN • OPERATION MODE
@@ -585,29 +614,29 @@ State 31
     FALSE             shift, and go to state 2
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
-    ID                shift, and go to state 68
-    ID_BOOL           shift, and go to state 40
+    ID                shift, and go to state 69
+    ID_BOOL           shift, and go to state 35
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
 
-    OPERATION           go to state 69
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 70
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
+    OPERATION           go to state 70
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 71
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
-State 32
+State 33
 
    11 expressio: ID_BOOL ASSIGN • OPERATION_BOOLEAN
 
@@ -616,44 +645,25 @@ State 32
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
-    ID_BOOL           shift, and go to state 40
+    ID_BOOL           shift, and go to state 35
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
 
-    OPERATION           go to state 41
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 71
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
-
-
-State 33
-
-   30 OPERATION4: SUBSTR OPEN_PARENTHESIS • OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
-
-    INTEGER           shift, and go to state 1
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 34
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
-
-    OPERATION4  go to state 72
+    OPERATION           go to state 36
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 72
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
 State 34
@@ -665,62 +675,12 @@ State 34
 
 State 35
 
-   36 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
-
-    INTEGER           shift, and go to state 1
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 34
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
-
-    OPERATION   go to state 73
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
-
-
-State 36
-
-   29 OPERATION4: LEN OPERATION4 •
-
-    $default  reduce using rule 29 (OPERATION4)
-
-
-State 37
-
-   26 OPERATION4: SIN OPERATION4 •
-
-    $default  reduce using rule 26 (OPERATION4)
-
-
-State 38
-
-   27 OPERATION4: COS OPERATION4 •
-
-    $default  reduce using rule 27 (OPERATION4)
-
-
-State 39
-
-   28 OPERATION4: TAN OPERATION4 •
-
-    $default  reduce using rule 28 (OPERATION4)
-
-
-State 40
-
    45 OPERATION_BOOLEAN3: ID_BOOL •
 
     $default  reduce using rule 45 (OPERATION_BOOLEAN3)
 
 
-State 41
+State 36
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
@@ -731,31 +691,109 @@ State 41
    51                   | OPERATION • LESS_THAN OPERATION
    52                   | OPERATION • LESS_EQUAL OPERATION
 
-    PLUS           shift, and go to state 53
-    MINUS          shift, and go to state 54
-    GREATER_THAN   shift, and go to state 55
-    GREATER_EQUAL  shift, and go to state 56
-    LESS_THAN      shift, and go to state 57
-    LESS_EQUAL     shift, and go to state 58
-    EQUAL          shift, and go to state 59
-    NOT_EQUAL      shift, and go to state 60
+    PLUS           shift, and go to state 54
+    MINUS          shift, and go to state 55
+    GREATER_THAN   shift, and go to state 56
+    GREATER_EQUAL  shift, and go to state 57
+    LESS_THAN      shift, and go to state 58
+    LESS_EQUAL     shift, and go to state 59
+    EQUAL          shift, and go to state 60
+    NOT_EQUAL      shift, and go to state 61
+
+
+State 37
+
+    5 if_header: IF OPERATION_BOOLEAN • THEN
+   37 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
+
+    THEN  shift, and go to state 73
+    OR    shift, and go to state 66
+
+
+State 38
+
+   30 OPERATION4: SUBSTR OPEN_PARENTHESIS • OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS
+
+    INTEGER           shift, and go to state 1
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 34
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
+
+    OPERATION4  go to state 74
+
+
+State 39
+
+   36 OPERATION4: OPEN_PARENTHESIS • OPERATION CLOSED_PARENTHESIS
+
+    INTEGER           shift, and go to state 1
+    FLOAT             shift, and go to state 4
+    ID                shift, and go to state 34
+    STRING            shift, and go to state 7
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
+
+    OPERATION   go to state 75
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
+
+
+State 40
+
+   29 OPERATION4: LEN OPERATION4 •
+
+    $default  reduce using rule 29 (OPERATION4)
+
+
+State 41
+
+   26 OPERATION4: SIN OPERATION4 •
+
+    $default  reduce using rule 26 (OPERATION4)
 
 
 State 42
+
+   27 OPERATION4: COS OPERATION4 •
+
+    $default  reduce using rule 27 (OPERATION4)
+
+
+State 43
+
+   28 OPERATION4: TAN OPERATION4 •
+
+    $default  reduce using rule 28 (OPERATION4)
+
+
+State 44
 
    42 OPERATION_BOOLEAN2: NOT OPERATION_BOOLEAN2 •
 
     $default  reduce using rule 42 (OPERATION_BOOLEAN2)
 
 
-State 43
+State 45
 
    35 OPERATION4: MINUS ID •
 
     $default  reduce using rule 35 (OPERATION4)
 
 
-State 44
+State 46
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
@@ -767,57 +805,27 @@ State 44
    51                   | OPERATION • LESS_THAN OPERATION
    52                   | OPERATION • LESS_EQUAL OPERATION
 
-    PLUS                shift, and go to state 53
-    MINUS               shift, and go to state 54
-    CLOSED_PARENTHESIS  shift, and go to state 74
-    GREATER_THAN        shift, and go to state 55
-    GREATER_EQUAL       shift, and go to state 56
-    LESS_THAN           shift, and go to state 57
-    LESS_EQUAL          shift, and go to state 58
-    EQUAL               shift, and go to state 59
-    NOT_EQUAL           shift, and go to state 60
+    PLUS                shift, and go to state 54
+    MINUS               shift, and go to state 55
+    CLOSED_PARENTHESIS  shift, and go to state 76
+    GREATER_THAN        shift, and go to state 56
+    GREATER_EQUAL       shift, and go to state 57
+    LESS_THAN           shift, and go to state 58
+    LESS_EQUAL          shift, and go to state 59
+    EQUAL               shift, and go to state 60
+    NOT_EQUAL           shift, and go to state 61
 
 
-State 45
+State 47
 
    37 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
    43 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN • CLOSED_PARENTHESIS
 
-    OR                  shift, and go to state 65
-    CLOSED_PARENTHESIS  shift, and go to state 75
+    OR                  shift, and go to state 66
+    CLOSED_PARENTHESIS  shift, and go to state 77
 
 
-State 46
-
-    5 if_header: ENDLINE IF • OPERATION_BOOLEAN THEN
-
-    INTEGER           shift, and go to state 1
-    FALSE             shift, and go to state 2
-    TRUE              shift, and go to state 3
-    FLOAT             shift, and go to state 4
-    ID                shift, and go to state 34
-    ID_BOOL           shift, and go to state 40
-    STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
-
-    OPERATION           go to state 41
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 76
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
-
-
-State 47
+State 48
 
     4 header: ENDLINE REPEAT • OPERATION
 
@@ -825,37 +833,37 @@ State 47
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 77
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 78
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 48
+State 49
 
     0 $accept: programa $end •
 
     $default  accept
 
 
-State 49
+State 50
 
     6 expressio: header DO • ENDLINE expressio_list DONE ENDLINE
 
-    ENDLINE  shift, and go to state 78
+    ENDLINE  shift, and go to state 79
 
 
-State 50
+State 51
 
-    7 expressio: if_header ENDLINE • expressio_list FI ENDLINE
+    7 expressio: if_header ENDLINE • expressio_list FI
 
     INTEGER           shift, and go to state 1
     FALSE             shift, and go to state 2
@@ -864,31 +872,32 @@ State 50
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
-    ENDLINE           shift, and go to state 16
+    IF                shift, and go to state 8
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
+    ENDLINE           shift, and go to state 17
 
-    expressio_list      go to state 79
-    header              go to state 19
-    if_header           go to state 20
-    expressio           go to state 21
-    OPERATION           go to state 22
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 26
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
+    expressio_list      go to state 80
+    header              go to state 20
+    if_header           go to state 21
+    expressio           go to state 22
+    OPERATION           go to state 23
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 27
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
-State 51
+State 52
 
     2 expressio_list: expressio ENDLINE •
     3               | expressio ENDLINE • expressio_list
@@ -900,40 +909,41 @@ State 51
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
-    ENDLINE           shift, and go to state 16
+    IF                shift, and go to state 8
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
+    ENDLINE           shift, and go to state 17
 
     $default  reduce using rule 2 (expressio_list)
 
-    expressio_list      go to state 80
-    header              go to state 19
-    if_header           go to state 20
-    expressio           go to state 21
-    OPERATION           go to state 22
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 26
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
+    expressio_list      go to state 81
+    header              go to state 20
+    if_header           go to state 21
+    expressio           go to state 22
+    OPERATION           go to state 23
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 27
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
-State 52
+State 53
 
    12 expressio: OPERATION MODE •
 
     $default  reduce using rule 12 (expressio)
 
 
-State 53
+State 54
 
    17 OPERATION: OPERATION PLUS • OPERATION2
 
@@ -941,20 +951,20 @@ State 53
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION2  go to state 81
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION2  go to state 82
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 54
+State 55
 
    18 OPERATION: OPERATION MINUS • OPERATION2
 
@@ -962,20 +972,20 @@ State 54
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION2  go to state 82
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION2  go to state 83
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 55
+State 56
 
    50 OPERATION_BOOLEAN3: OPERATION GREATER_THAN • OPERATION
 
@@ -983,21 +993,21 @@ State 55
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 83
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 84
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 56
+State 57
 
    49 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL • OPERATION
 
@@ -1005,21 +1015,21 @@ State 56
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 84
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 85
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 57
+State 58
 
    51 OPERATION_BOOLEAN3: OPERATION LESS_THAN • OPERATION
 
@@ -1027,21 +1037,21 @@ State 57
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 85
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 86
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 58
+State 59
 
    52 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL • OPERATION
 
@@ -1049,21 +1059,21 @@ State 58
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 86
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 87
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 59
+State 60
 
    47 OPERATION_BOOLEAN3: OPERATION EQUAL • OPERATION
 
@@ -1071,21 +1081,21 @@ State 59
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 87
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 88
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 60
+State 61
 
    48 OPERATION_BOOLEAN3: OPERATION NOT_EQUAL • OPERATION
 
@@ -1093,21 +1103,21 @@ State 60
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 88
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 89
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 61
+State 62
 
    20 OPERATION2: OPERATION2 MULTIPLY • OPERATION3
 
@@ -1115,19 +1125,19 @@ State 61
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION3  go to state 89
-    OPERATION4  go to state 25
+    OPERATION3  go to state 90
+    OPERATION4  go to state 26
 
 
-State 62
+State 63
 
    21 OPERATION2: OPERATION2 DIVIDE • OPERATION3
 
@@ -1135,19 +1145,19 @@ State 62
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION3  go to state 90
-    OPERATION4  go to state 25
+    OPERATION3  go to state 91
+    OPERATION4  go to state 26
 
 
-State 63
+State 64
 
    22 OPERATION2: OPERATION2 MOD • OPERATION3
 
@@ -1155,19 +1165,19 @@ State 63
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION3  go to state 91
-    OPERATION4  go to state 25
+    OPERATION3  go to state 92
+    OPERATION4  go to state 26
 
 
-State 64
+State 65
 
    24 OPERATION3: OPERATION4 POWER • OPERATION3
 
@@ -1175,19 +1185,19 @@ State 64
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION3  go to state 92
-    OPERATION4  go to state 25
+    OPERATION3  go to state 93
+    OPERATION4  go to state 26
 
 
-State 65
+State 66
 
    37 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR • OPERATION_BOOLEAN1
 
@@ -1196,27 +1206,27 @@ State 65
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
-    ID_BOOL           shift, and go to state 40
+    ID_BOOL           shift, and go to state 35
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
 
-    OPERATION           go to state 41
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN1  go to state 93
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
+    OPERATION           go to state 36
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN1  go to state 94
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
-State 66
+State 67
 
    40 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND • OPERATION_BOOLEAN2
 
@@ -1225,47 +1235,47 @@ State 66
     TRUE              shift, and go to state 3
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
-    ID_BOOL           shift, and go to state 40
+    ID_BOOL           shift, and go to state 35
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
 
-    OPERATION           go to state 41
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN2  go to state 94
-    OPERATION_BOOLEAN3  go to state 29
+    OPERATION           go to state 36
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN2  go to state 95
+    OPERATION_BOOLEAN3  go to state 30
 
 
-State 67
+State 68
 
    16 expressio: ID OPENED_CLAUSE OPERATION • CLOSED_CLAUSE ASSIGN OPERATION
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
 
-    CLOSED_CLAUSE  shift, and go to state 95
-    PLUS           shift, and go to state 53
-    MINUS          shift, and go to state 54
+    CLOSED_CLAUSE  shift, and go to state 96
+    PLUS           shift, and go to state 54
+    MINUS          shift, and go to state 55
 
 
-State 68
+State 69
 
    15 expressio: ID ASSIGN ID • OPENED_CLAUSE OPERATION CLOSED_CLAUSE
    34 OPERATION4: ID •
 
-    OPENED_CLAUSE  shift, and go to state 96
+    OPENED_CLAUSE  shift, and go to state 97
 
     $default  reduce using rule 34 (OPERATION4)
 
 
-State 69
+State 70
 
     8 expressio: ID ASSIGN OPERATION •
     9          | ID ASSIGN OPERATION • MODE
@@ -1278,40 +1288,47 @@ State 69
    51                   | OPERATION • LESS_THAN OPERATION
    52                   | OPERATION • LESS_EQUAL OPERATION
 
-    MODE           shift, and go to state 97
-    PLUS           shift, and go to state 53
-    MINUS          shift, and go to state 54
-    GREATER_THAN   shift, and go to state 55
-    GREATER_EQUAL  shift, and go to state 56
-    LESS_THAN      shift, and go to state 57
-    LESS_EQUAL     shift, and go to state 58
-    EQUAL          shift, and go to state 59
-    NOT_EQUAL      shift, and go to state 60
+    MODE           shift, and go to state 98
+    PLUS           shift, and go to state 54
+    MINUS          shift, and go to state 55
+    GREATER_THAN   shift, and go to state 56
+    GREATER_EQUAL  shift, and go to state 57
+    LESS_THAN      shift, and go to state 58
+    LESS_EQUAL     shift, and go to state 59
+    EQUAL          shift, and go to state 60
+    NOT_EQUAL      shift, and go to state 61
 
     $default  reduce using rule 8 (expressio)
 
 
-State 70
+State 71
 
    10 expressio: ID ASSIGN OPERATION_BOOLEAN •
    37 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
 
-    OR  shift, and go to state 65
+    OR  shift, and go to state 66
 
     $default  reduce using rule 10 (expressio)
 
 
-State 71
+State 72
 
    11 expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN •
    37 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
 
-    OR  shift, and go to state 65
+    OR  shift, and go to state 66
 
     $default  reduce using rule 11 (expressio)
 
 
-State 72
+State 73
+
+    5 if_header: IF OPERATION_BOOLEAN THEN •
+
+    $default  reduce using rule 5 (if_header)
+
+
+State 74
 
    30 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 • OPERATION4 OPERATION4 CLOSED_PARENTHESIS
 
@@ -1319,64 +1336,55 @@ State 72
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION4  go to state 98
+    OPERATION4  go to state 99
 
 
-State 73
+State 75
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
    36 OPERATION4: OPEN_PARENTHESIS OPERATION • CLOSED_PARENTHESIS
 
-    PLUS                shift, and go to state 53
-    MINUS               shift, and go to state 54
-    CLOSED_PARENTHESIS  shift, and go to state 74
+    PLUS                shift, and go to state 54
+    MINUS               shift, and go to state 55
+    CLOSED_PARENTHESIS  shift, and go to state 76
 
 
-State 74
+State 76
 
    36 OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS •
 
     $default  reduce using rule 36 (OPERATION4)
 
 
-State 75
+State 77
 
    43 OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS •
 
     $default  reduce using rule 43 (OPERATION_BOOLEAN3)
 
 
-State 76
-
-    5 if_header: ENDLINE IF OPERATION_BOOLEAN • THEN
-   37 OPERATION_BOOLEAN: OPERATION_BOOLEAN • OR OPERATION_BOOLEAN1
-
-    THEN  shift, and go to state 99
-    OR    shift, and go to state 65
-
-
-State 77
+State 78
 
     4 header: ENDLINE REPEAT OPERATION •
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
     $default  reduce using rule 4 (header)
 
 
-State 78
+State 79
 
     6 expressio: header DO ENDLINE • expressio_list DONE ENDLINE
 
@@ -1387,197 +1395,198 @@ State 78
     ID                shift, and go to state 5
     ID_BOOL           shift, and go to state 6
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    NOT               shift, and go to state 13
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 15
-    ENDLINE           shift, and go to state 16
+    IF                shift, and go to state 8
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    NOT               shift, and go to state 14
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 16
+    ENDLINE           shift, and go to state 17
 
     expressio_list      go to state 100
-    header              go to state 19
-    if_header           go to state 20
-    expressio           go to state 21
-    OPERATION           go to state 22
-    OPERATION2          go to state 23
-    OPERATION3          go to state 24
-    OPERATION4          go to state 25
-    OPERATION_BOOLEAN   go to state 26
-    OPERATION_BOOLEAN1  go to state 27
-    OPERATION_BOOLEAN2  go to state 28
-    OPERATION_BOOLEAN3  go to state 29
+    header              go to state 20
+    if_header           go to state 21
+    expressio           go to state 22
+    OPERATION           go to state 23
+    OPERATION2          go to state 24
+    OPERATION3          go to state 25
+    OPERATION4          go to state 26
+    OPERATION_BOOLEAN   go to state 27
+    OPERATION_BOOLEAN1  go to state 28
+    OPERATION_BOOLEAN2  go to state 29
+    OPERATION_BOOLEAN3  go to state 30
 
 
-State 79
+State 80
 
-    7 expressio: if_header ENDLINE expressio_list • FI ENDLINE
+    7 expressio: if_header ENDLINE expressio_list • FI
 
     FI  shift, and go to state 101
 
 
-State 80
+State 81
 
     3 expressio_list: expressio ENDLINE expressio_list •
 
     $default  reduce using rule 3 (expressio_list)
 
 
-State 81
+State 82
 
    17 OPERATION: OPERATION PLUS OPERATION2 •
    20 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
    21           | OPERATION2 • DIVIDE OPERATION3
    22           | OPERATION2 • MOD OPERATION3
 
-    MULTIPLY  shift, and go to state 61
-    DIVIDE    shift, and go to state 62
-    MOD       shift, and go to state 63
+    MULTIPLY  shift, and go to state 62
+    DIVIDE    shift, and go to state 63
+    MOD       shift, and go to state 64
 
     $default  reduce using rule 17 (OPERATION)
 
 
-State 82
+State 83
 
    18 OPERATION: OPERATION MINUS OPERATION2 •
    20 OPERATION2: OPERATION2 • MULTIPLY OPERATION3
    21           | OPERATION2 • DIVIDE OPERATION3
    22           | OPERATION2 • MOD OPERATION3
 
-    MULTIPLY  shift, and go to state 61
-    DIVIDE    shift, and go to state 62
-    MOD       shift, and go to state 63
+    MULTIPLY  shift, and go to state 62
+    DIVIDE    shift, and go to state 63
+    MOD       shift, and go to state 64
 
     $default  reduce using rule 18 (OPERATION)
-
-
-State 83
-
-   17 OPERATION: OPERATION • PLUS OPERATION2
-   18          | OPERATION • MINUS OPERATION2
-   50 OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION •
-
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
-
-    $default  reduce using rule 50 (OPERATION_BOOLEAN3)
 
 
 State 84
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
-   49 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION •
+   50 OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION •
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
-    $default  reduce using rule 49 (OPERATION_BOOLEAN3)
+    $default  reduce using rule 50 (OPERATION_BOOLEAN3)
 
 
 State 85
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
-   51 OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION •
+   49 OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION •
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
-    $default  reduce using rule 51 (OPERATION_BOOLEAN3)
+    $default  reduce using rule 49 (OPERATION_BOOLEAN3)
 
 
 State 86
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
-   52 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION •
+   51 OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION •
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
-    $default  reduce using rule 52 (OPERATION_BOOLEAN3)
+    $default  reduce using rule 51 (OPERATION_BOOLEAN3)
 
 
 State 87
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
-   47 OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION •
+   52 OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION •
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
-    $default  reduce using rule 47 (OPERATION_BOOLEAN3)
+    $default  reduce using rule 52 (OPERATION_BOOLEAN3)
 
 
 State 88
 
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
+   47 OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION •
+
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
+
+    $default  reduce using rule 47 (OPERATION_BOOLEAN3)
+
+
+State 89
+
+   17 OPERATION: OPERATION • PLUS OPERATION2
+   18          | OPERATION • MINUS OPERATION2
    48 OPERATION_BOOLEAN3: OPERATION NOT_EQUAL OPERATION •
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
     $default  reduce using rule 48 (OPERATION_BOOLEAN3)
 
 
-State 89
+State 90
 
    20 OPERATION2: OPERATION2 MULTIPLY OPERATION3 •
 
     $default  reduce using rule 20 (OPERATION2)
 
 
-State 90
+State 91
 
    21 OPERATION2: OPERATION2 DIVIDE OPERATION3 •
 
     $default  reduce using rule 21 (OPERATION2)
 
 
-State 91
+State 92
 
    22 OPERATION2: OPERATION2 MOD OPERATION3 •
 
     $default  reduce using rule 22 (OPERATION2)
 
 
-State 92
+State 93
 
    24 OPERATION3: OPERATION4 POWER OPERATION3 •
 
     $default  reduce using rule 24 (OPERATION3)
 
 
-State 93
+State 94
 
    37 OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1 •
    40 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 • AND OPERATION_BOOLEAN2
 
-    AND  shift, and go to state 66
+    AND  shift, and go to state 67
 
     $default  reduce using rule 37 (OPERATION_BOOLEAN)
 
 
-State 94
+State 95
 
    40 OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2 •
 
     $default  reduce using rule 40 (OPERATION_BOOLEAN1)
 
 
-State 95
+State 96
 
    16 expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE • ASSIGN OPERATION
 
     ASSIGN  shift, and go to state 102
 
 
-State 96
+State 97
 
    15 expressio: ID ASSIGN ID OPENED_CLAUSE • OPERATION CLOSED_CLAUSE
 
@@ -1585,28 +1594,28 @@ State 96
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
     OPERATION   go to state 103
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
-State 97
+State 98
 
     9 expressio: ID ASSIGN OPERATION MODE •
 
     $default  reduce using rule 9 (expressio)
 
 
-State 98
+State 99
 
    30 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 • OPERATION4 CLOSED_PARENTHESIS
 
@@ -1614,22 +1623,15 @@ State 98
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
     OPERATION4  go to state 104
-
-
-State 99
-
-    5 if_header: ENDLINE IF OPERATION_BOOLEAN THEN •
-
-    $default  reduce using rule 5 (if_header)
 
 
 State 100
@@ -1641,9 +1643,9 @@ State 100
 
 State 101
 
-    7 expressio: if_header ENDLINE expressio_list FI • ENDLINE
+    7 expressio: if_header ENDLINE expressio_list FI •
 
-    ENDLINE  shift, and go to state 106
+    $default  reduce using rule 7 (expressio)
 
 
 State 102
@@ -1654,18 +1656,18 @@ State 102
     FLOAT             shift, and go to state 4
     ID                shift, and go to state 34
     STRING            shift, and go to state 7
-    SUBSTR            shift, and go to state 8
-    LEN               shift, and go to state 9
-    SIN               shift, and go to state 10
-    COS               shift, and go to state 11
-    TAN               shift, and go to state 12
-    MINUS             shift, and go to state 14
-    OPEN_PARENTHESIS  shift, and go to state 35
+    SUBSTR            shift, and go to state 9
+    LEN               shift, and go to state 10
+    SIN               shift, and go to state 11
+    COS               shift, and go to state 12
+    TAN               shift, and go to state 13
+    MINUS             shift, and go to state 15
+    OPEN_PARENTHESIS  shift, and go to state 39
 
-    OPERATION   go to state 107
-    OPERATION2  go to state 23
-    OPERATION3  go to state 24
-    OPERATION4  go to state 25
+    OPERATION   go to state 106
+    OPERATION2  go to state 24
+    OPERATION3  go to state 25
+    OPERATION4  go to state 26
 
 
 State 103
@@ -1674,59 +1676,52 @@ State 103
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
 
-    CLOSED_CLAUSE  shift, and go to state 108
-    PLUS           shift, and go to state 53
-    MINUS          shift, and go to state 54
+    CLOSED_CLAUSE  shift, and go to state 107
+    PLUS           shift, and go to state 54
+    MINUS          shift, and go to state 55
 
 
 State 104
 
    30 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 • CLOSED_PARENTHESIS
 
-    CLOSED_PARENTHESIS  shift, and go to state 109
+    CLOSED_PARENTHESIS  shift, and go to state 108
 
 
 State 105
 
     6 expressio: header DO ENDLINE expressio_list DONE • ENDLINE
 
-    ENDLINE  shift, and go to state 110
+    ENDLINE  shift, and go to state 109
 
 
 State 106
-
-    7 expressio: if_header ENDLINE expressio_list FI ENDLINE •
-
-    $default  reduce using rule 7 (expressio)
-
-
-State 107
 
    16 expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION •
    17 OPERATION: OPERATION • PLUS OPERATION2
    18          | OPERATION • MINUS OPERATION2
 
-    PLUS   shift, and go to state 53
-    MINUS  shift, and go to state 54
+    PLUS   shift, and go to state 54
+    MINUS  shift, and go to state 55
 
     $default  reduce using rule 16 (expressio)
 
 
-State 108
+State 107
 
    15 expressio: ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE •
 
     $default  reduce using rule 15 (expressio)
 
 
-State 109
+State 108
 
    30 OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS •
 
     $default  reduce using rule 30 (OPERATION4)
 
 
-State 110
+State 109
 
     6 expressio: header DO ENDLINE expressio_list DONE ENDLINE •
 

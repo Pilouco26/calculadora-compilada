@@ -377,8 +377,41 @@ void add_three_address_code(three_address_code list[], int *list_size, int value
 
     (*list_size)++;
 }
+void add_three_address_code_bool(three_address_code list[], int *list_size, int value1, int value2, char* op, char* id1, char * id2) {
+    three_address_code integer;
 
+    integer.val_type_list = INT_TYPE;
+    integer.val_info.val_type = INT_TYPE;
+    integer.val_op = op;
+    integer.type_op = 'B';
 
+    if (id1 == NULL) {
+        integer.val_info.val_int = value1;
+        integer.val_info.id_name = "NULL";
+        integer.val_info.id_name_copy = NULL;
+
+    } else {
+        integer.val_info.val_int = value1;
+        integer.val_info.id_name = strdup(id1);
+        integer.val_info.id_name_copy = strdup(id1);
+    }
+
+    if (id2 == NULL) {
+        integer.val_info2.val_int = value2;
+        integer.val_info2.id_name = "NULL";
+        integer.val_info2.id_name_copy = NULL;
+
+    } else {
+        integer.val_info2.val_int = value2;
+        integer.val_info2.id_name = strdup(id2);
+        integer.val_info2.id_name_copy = strdup(id2);
+    }
+
+    integer.val_type_list = OPERAND_TYPE;
+    list[*list_size] = integer;
+
+    (*list_size)++;
+}
 
 void add_three_address_code_float(three_address_code list[], int *list_size, float value1, float value2, char* op, char* id1, char * id2, int conversion1, int conversion2) {
     three_address_code real;
@@ -504,4 +537,8 @@ void close_file_ca3(FILE *file_ca3) {
         fprintf(file_ca3, "%d : HALT\n", lines++);
         fclose(file_ca3);
     }
+}
+void generate_if_statement(int val1, int val3, const char *op) {
+    fprintf(file_ca3, "%d : IF %d %s %d GOTO %d\n", lines, val1, op, val3, lines + 2);
+    lines++;
 }

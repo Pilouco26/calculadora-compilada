@@ -29,6 +29,8 @@ int id_size=0;
 int result_size = 0;
 bool mode_assign = false;
 int esp = 0;
+int iterative_count_line_array [] ;
+int index_iterative = 0;
 %}
 
 %code requires {
@@ -114,10 +116,10 @@ header:
                  }
      }
 
-if_header: ENDLINE IF OPERATION_BOOLEAN THEN{
-            fprintf("IF ")
+if_header:  IF OPERATION_BOOLEAN THEN {
             $$.linea = lines;
-            fprintf(file_ca3, "HEADER\n");
+            fprintf(file_ca3, "%d : GOTO _____\n", lines++);
+
            }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
@@ -125,8 +127,7 @@ expressio:
                     fprintf(file_ca3, "%d : $t-esp01 := t-esp01 ADDI 1\n", lines++);
                     fprintf(file_ca3, "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
                 }
-                | if_header ENDLINE expressio_list FI ENDLINE {
-                    fprintf(file_ca3, "fi\n");
+                | if_header ENDLINE expressio_list FI {
                 }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
@@ -821,6 +822,7 @@ OPERATION_BOOLEAN:
                                 if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
                                 $$.val_bool = $1.val_bool || $3.val_bool;
                                 }
+
     }
     | OPERATION_BOOLEAN1
 ;
@@ -882,7 +884,10 @@ OPERATION_BOOLEAN3:
                          $$.val_bool = $1.val_float == $3.val_float;
                      } else {
                          $$.val_bool = $1.val_int == $3.val_int;
+                         generate_if_statement($1.val_int, $3.val_int, "EQ");
+
                      }
+
          }
     | OPERATION NOT_EQUAL OPERATION {
                          $$.val_type = BOOL_TYPE;
@@ -897,6 +902,8 @@ OPERATION_BOOLEAN3:
                          } else {
                              $$.val_bool = $1.val_int != $3.val_int;
                          }
+                         generate_if_statement($1.val_int, $3.val_int, "NE");
+
          }
     | OPERATION GREATER_EQUAL OPERATION {
                                              $$.val_type = BOOL_TYPE;
@@ -910,6 +917,7 @@ OPERATION_BOOLEAN3:
                                                  $$.val_bool = $1.val_float >= $3.val_float;
                                              } else {
                                                  $$.val_bool = $1.val_int >= $3.val_int;
+
                                              }
          }
     | OPERATION GREATER_THAN OPERATION {
@@ -928,6 +936,8 @@ OPERATION_BOOLEAN3:
                              } else {
                                  $$.val_bool = $1.val_int > $3.val_int;
                              }
+                             generate_if_statement($1.val_int, $3.val_int, "NE");
+
          }
     | OPERATION LESS_THAN OPERATION {
                                  $$.val_type = BOOL_TYPE;

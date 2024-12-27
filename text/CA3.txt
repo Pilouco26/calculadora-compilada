@@ -1,5 +1,9 @@
 1 : START
-HEADER
-2 : i := 4
-fi
-3 : HALT
+2 : IF 5 EQ 4 GOTO 4
+3 : GOTO _____
+4 : IF 4 EQ 4 GOTO 6
+5 : GOTO _____
+6 : i := 4
+7 : $t0 := 6 ADDI 7
+8 : j := $t0 ADDI 8
+9 : HALT
