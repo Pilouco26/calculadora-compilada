@@ -20,6 +20,8 @@ extern int comptador;
 extern int delta;
 extern int ifmode;
 extern bool mode_assign;
+extern char program_lines[200][200];
+
 FILE *file_ca3 = NULL; // Global variable for the file
 
 
@@ -102,55 +104,6 @@ void update_id_name_to_null(three_address_code list[], int size, const char *las
     }
 }
 
-
-void handle_integer_operation(three_address_code *item, int i, char *id_name, int number_list[], int *number_size, float result_list[], int *result_size, bool four_ac, int temporal_aux) {
-    if (strcmp(item->val_info.id_name, "NULL") != 0) {
-        fprintf(file_ca3, "%s ", item->val_info.id_name);
-		strcpy(item->val_info.id_name, "NULL");
-    } else if (!is_number_in_list(number_list, number_size, item->val_info.val_int)) {
-        int temporal = is_result_in_list(result_list, result_size, (float)item->val_info.val_int);
-        if (temporal != -1) {
-            fprintf(file_ca3, "$t%d ", temporal);
-        } else {
-           if(item->val_info.id_name_copy != NULL){
-           		fprintf(file_ca3, "%s ", item->val_info.id_name_copy);
-        	}
-            else
-            	fprintf(file_ca3, "%d ", item->val_info.val_int);
-        }
-    } else {
-        	fprintf(file_ca3, "%d ", item->val_info.val_int);
-    }
-
-    fprintf(file_ca3, "%s ", item->val_op);
-
-    if (strcmp(item->val_info2.id_name, "NULL") != 0) {
-        fprintf(file_ca3, "%s \n", item->val_info2.id_name);
-        strcpy(item->val_info2.id_name, "NULL");
-    } else if (!is_number_in_list(number_list, number_size, item->val_info2.val_int)) {
-        int temporal = is_result_in_list(result_list, result_size, (float)item->val_info2.val_int);
-        if (temporal != -1 && strcmp(item->val_op, "IDF") != 0) {
-            fprintf(file_ca3, "$t%d \n", temporal);
-        } else {
-            if(item->val_info2.id_name_copy != NULL){
-           		fprintf(file_ca3, "%s\n", item->val_info2.id_name_copy);
-        	}
-            else
-            	fprintf(file_ca3, "%d\n", item->val_info2.val_int);
-        }
-    } else {
-        fprintf(file_ca3, "%d\n", item->val_info2.val_int);
-    }
-
-    if(four_ac){
-      if(item->val_info.id_name != NULL){
-      	fprintf(file_ca3, "%d : %s := $t%d \n", lines++, item->val_info.id_name_copy,  temporal_aux);
-      }
-      else
-      	fprintf(file_ca3, "%d : %s := $t%d \n", lines++, item->val_info2.id_name_copy,  temporal_aux);
-    }
-}
-
 void process_val_info(three_address_code *item, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size) {
     if(strcmp(item->val_info.id_name, "NULL") != 0) {
         fprintf(file_ca3, "%s ", item->val_info.id_name);
@@ -202,7 +155,6 @@ void process_val_info2(three_address_code *item, int number_list[], int number_s
     fprintf(stderr, "final process_val_info2 \n");
 
 }
-
 void handle_float_operation(three_address_code *item, int i, char *id_name, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size, bool four_ac, int temporal_aux) {
     process_val_info(item, number_list, number_size, float_list, float_size, result_list, result_size);
     fprintf(stderr, "handle_float_operation \n");
@@ -211,31 +163,93 @@ void handle_float_operation(three_address_code *item, int i, char *id_name, int 
     process_val_info2(item, number_list, number_size, float_list, float_size, result_list, result_size, four_ac, temporal_aux);
 }
 
+void handle_integer_operation(three_address_code *item, int i, char *id_name, int number_list[], int *number_size, float result_list[], int *result_size, bool four_ac, int temporal_aux) {
+    char buffer[200];
+    if (strcmp(item->val_info.id_name, "NULL") != 0) {
+        snprintf(buffer, sizeof(buffer), "%s ", item->val_info.id_name);
+        strcpy(item->val_info.id_name, "NULL");
+    } else if (!is_number_in_list(number_list, number_size, item->val_info.val_int)) {
+        int temporal = is_result_in_list(result_list, result_size, (float)item->val_info.val_int);
+        if (temporal != -1) {
+            snprintf(buffer, sizeof(buffer), "$t%d ", temporal);
+        } else {
+            if (item->val_info.id_name_copy != NULL) {
+                snprintf(buffer, sizeof(buffer), "%s ", item->val_info.id_name_copy);
+            } else {
+                snprintf(buffer, sizeof(buffer), "%d ", item->val_info.val_int);
+            }
+        }
+    } else {
+        snprintf(buffer, sizeof(buffer), "%d ", item->val_info.val_int);
+    }
+
+    strcat(program_lines[lines], buffer);  // Append to the current line
+
+    snprintf(buffer, sizeof(buffer), "%s ", item->val_op);
+    strcat(program_lines[lines], buffer);  // Append to the current line
+
+    if (strcmp(item->val_info2.id_name, "NULL") != 0) {
+        snprintf(buffer, sizeof(buffer), "%s\n", item->val_info2.id_name);
+        strcpy(item->val_info2.id_name, "NULL");
+    } else if (!is_number_in_list(number_list, number_size, item->val_info2.val_int)) {
+        int temporal = is_result_in_list(result_list, result_size, (float)item->val_info2.val_int);
+        if (temporal != -1 && strcmp(item->val_op, "IDF") != 0) {
+            snprintf(buffer, sizeof(buffer), "$t%d \n", temporal);
+        } else {
+            if (item->val_info2.id_name_copy != NULL) {
+                snprintf(buffer, sizeof(buffer), "%s\n", item->val_info2.id_name_copy);
+            } else {
+                snprintf(buffer, sizeof(buffer), "%d\n", item->val_info2.val_int);
+            }
+        }
+    } else {
+        snprintf(buffer, sizeof(buffer), "%d\n", item->val_info2.val_int);
+    }
+
+    strcat(program_lines[lines], buffer);  // Append to the current line
+
+    if (four_ac) {
+        if (item->val_info.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : %s := $t%d \n", lines++, item->val_info.id_name_copy, temporal_aux);
+        } else {
+            snprintf(buffer, sizeof(buffer), "%d : %s := $t%d \n", lines++, item->val_info2.id_name_copy, temporal_aux);
+        }
+        strcat(program_lines[lines], buffer);  // Append to the current line
+    }
+}
+
 void print_list(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size, char *id_name) {
-    int temporal_aux = result_size+1;
+    int temporal_aux = result_size + 1;
     bool four_ac = false;
 
     for (int i = 0; i < size; i++) {
-      	four_ac = false;
+        four_ac = false;
         if (strcmp(list[i].val_op, "CALL") == 0) {
-            fprintf(file_ca3, "%d : CALL PUTF, $t%d\n",lines++, temporal_aux-2);
+            char buffer[200];
+            snprintf(buffer, sizeof(buffer), "%d : CALL PUTF, $t%d\n", lines++, temporal_aux - 2);
+            strcat(program_lines[lines], buffer);  // Append to the current line
         } else {
             if (size == 1 || size == i + 1) {
-                if(strcmp(list[i].val_info.id_name, id_name) == 0 || strcmp(list[i].val_info2.id_name, id_name) == 0) {
-                  fprintf(file_ca3, "%d : $t%d := ", lines++, temporal_aux);
-                  four_ac = true;
-
+                if (strcmp(list[i].val_info.id_name, id_name) == 0 || strcmp(list[i].val_info2.id_name, id_name) == 0) {
+                    char buffer[200];
+                    snprintf(buffer, sizeof(buffer), "%d : $t%d := ", lines++, temporal_aux);
+                    strcat(program_lines[lines], buffer);  // Append to the current line
+                    four_ac = true;
+                } else {
+                    char buffer[200];
+                    snprintf(buffer, sizeof(buffer), "%d : %s := ", lines++, id_name);
+                    strcat(program_lines[lines], buffer);  // Append to the current line
                 }
-                else
-              		fprintf(file_ca3, "%d : %s := ", lines++, id_name);
-
             } else {
-                fprintf(file_ca3, "%d : $t%d := ", lines++, i);
+                char buffer[200];
+                snprintf(buffer, sizeof(buffer), "%d : $t%d := ", lines++, i);
+                strcat(program_lines[lines], buffer);  // Append to the current line
             }
-            char last_id[256];  // Adjust MAX_SIZE to fit your needs
-            char last_id2[256];  // Adjust MAX_SIZE to fit your needs
-            bool null = process_id_name(last_id, list[i].val_info.id_name);  // Use the new function to process the id_name
-            bool null2 = process_id_name(last_id2, list[i].val_info2.id_name);  // Use the new function to process the id_name
+
+            char last_id[256];
+            char last_id2[256];
+            bool null = process_id_name(last_id, list[i].val_info.id_name);
+            bool null2 = process_id_name(last_id2, list[i].val_info2.id_name);
             if (list[i].type_op == 'I') {
                 handle_integer_operation(&list[i], i, id_name, number_list, &number_size, result_list, &result_size, four_ac, temporal_aux);
                 if (!null) {
@@ -248,10 +262,9 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
                         update_id_name_to_null(list, size, last_id, last_id2);
                     }
                 }
-
             } else if (list[i].type_op == 'F') {
                 handle_float_operation(&list[i], i, id_name, number_list, number_size, float_list, &float_size, result_list, &result_size, four_ac, temporal_aux);
-                 if (!null) {
+                if (!null) {
                     if (strcmp(list[i].val_info.id_name, "NULL") == 0) {
                         update_id_name_to_null(list, size, last_id, last_id2);
                     }
@@ -265,6 +278,7 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
         }
     }
 }
+
 void print_list_array(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size, char *id_name, char *pos_id, float result_val_float, char *result_id) {
     int temporal_aux = result_size+1;
     bool four_ac = false;

@@ -30,8 +30,8 @@ int result_size = 0;
 bool mode_assign = false;
 int esp = 0;
 int ifmode = 0;
-int iterative_count_line_array [] ;
 int index_iterative = 0;
+char program_lines[200][200];
 %}
 
 %code requires {
@@ -81,6 +81,11 @@ int index_iterative = 0;
 
 programa : expressio_list {
              fprintf(yyout, "End of input reached.\n");
+             for (int i = 0; i < 200; i++) {
+                     if (program_lines[i][0] != '\0') {  // Check if the line is not empty
+                         fprintf(file_ca3, "%s", program_lines[i]);
+                     }
+                 }
            }
 
 expressio_list:
@@ -120,6 +125,7 @@ header:
 if_header:  IF OPERATION_BOOLEAN THEN {
             $$.linea = lines;
             ifmode = 1;
+            fprintf(file_ca3, "%d : GOTO ____\n", lines++);
            }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
@@ -129,7 +135,9 @@ expressio:
                 }
                 | if_header ENDLINE expressio_list FI {
                     ifmode = 0;
-                }
+
+                    //MAKE HERE THE PRINT, AND GO BACK TO $1.linea AND PRINT GOTO
+                    }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
@@ -145,9 +153,7 @@ expressio:
                           $1.id_val.val_type = INT_TYPE;
                           $1.id_val.val_int = $3.val_int;
                           if(list_size == 0){
-                              int current_line = lines++;
-                              int gotos = current_line + 2;
-                              fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
+
                               fprintf(file_ca3, "%d : %s := %d\n", lines++, $1.lexema, $$.val_int);
                           }
                       } else if ($3.val_type == FLOAT_TYPE) {
@@ -158,9 +164,6 @@ expressio:
                           $1.id_val.val_type = FLOAT_TYPE;
                           $1.id_val.val_float = $3.val_float;
                           if(list_size == 0){
-                                int current_line = lines++;
-                                int gotos = current_line + 2;
-                                fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
                                 fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
                           }
                       } else {
@@ -169,11 +172,6 @@ expressio:
                           $$.val_string = $3.val_string;
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
-                      }
-                      if(ifmode == 1){
-                                int current_line = lines++;
-                                int gotos = current_line + list_size+1;
-                                fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
                       }
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
