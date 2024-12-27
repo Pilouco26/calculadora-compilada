@@ -98,10 +98,11 @@ int id_size=0;
 int result_size = 0;
 bool mode_assign = false;
 int esp = 0;
+int ifmode = 0;
 int iterative_count_line_array [] ;
 int index_iterative = 0;
 
-#line 105 "bison_output/sintaxi.tab.c"
+#line 106 "bison_output/sintaxi.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -580,12 +581,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    81,    81,    86,    87,    92,   119,   125,   130,   132,
-     175,   204,   215,   230,   272,   298,   305,   326,   377,   454,
-     488,   492,   528,   581,   597,   601,   639,   642,   651,   660,
-     677,   687,   733,   740,   746,   750,   776,   801,   820,   827,
-     830,   831,   839,   840,   847,   855,   859,   871,   875,   892,
-     908,   923,   942,   956
+       0,    82,    82,    87,    88,    93,   120,   125,   130,   133,
+     186,   215,   226,   241,   283,   309,   316,   337,   388,   465,
+     499,   503,   539,   592,   608,   612,   650,   653,   662,   671,
+     688,   698,   744,   751,   757,   761,   787,   812,   831,   838,
+     841,   842,   850,   851,   858,   866,   870,   882,   886,   903,
+     919,   934,   953,   967
 };
 #endif
 
@@ -1233,15 +1234,15 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* programa: expressio_list  */
-#line 81 "bison_flex/sintaxi.y"
+#line 82 "bison_flex/sintaxi.y"
                           {
              fprintf(yyout, "End of input reached.\n");
            }
-#line 1241 "bison_output/sintaxi.tab.c"
+#line 1242 "bison_output/sintaxi.tab.c"
     break;
 
   case 5: /* header: ENDLINE REPEAT OPERATION  */
-#line 92 "bison_flex/sintaxi.y"
+#line 93 "bison_flex/sintaxi.y"
                               {
                  if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
                              if ((yyvsp[0].expr_val).val_int > 0) {
@@ -1268,15 +1269,14 @@ yyreduce:
                      fprintf(stderr, "Error: Invalid type for repeat count\n");
                  }
      }
-#line 1272 "bison_output/sintaxi.tab.c"
+#line 1273 "bison_output/sintaxi.tab.c"
     break;
 
   case 6: /* if_header: IF OPERATION_BOOLEAN THEN  */
-#line 119 "bison_flex/sintaxi.y"
+#line 120 "bison_flex/sintaxi.y"
                                       {
             (yyval.header).linea = lines;
-            fprintf(file_ca3, "%d : GOTO _____\n", lines++);
-
+            ifmode = 1;
            }
 #line 1282 "bison_output/sintaxi.tab.c"
     break;
@@ -1294,12 +1294,13 @@ yyreduce:
   case 8: /* expressio: if_header ENDLINE expressio_list FI  */
 #line 130 "bison_flex/sintaxi.y"
                                                       {
+                    ifmode = 0;
                 }
-#line 1299 "bison_output/sintaxi.tab.c"
+#line 1300 "bison_output/sintaxi.tab.c"
     break;
 
   case 9: /* expressio: ID ASSIGN OPERATION  */
-#line 132 "bison_flex/sintaxi.y"
+#line 133 "bison_flex/sintaxi.y"
                                       {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup((yyvsp[-2].ident).lexema, &existing_value);
@@ -1315,6 +1316,9 @@ yyreduce:
                           (yyvsp[-2].ident).id_val.val_type = INT_TYPE;
                           (yyvsp[-2].ident).id_val.val_int = (yyvsp[0].expr_val).val_int;
                           if(list_size == 0){
+                              int current_line = lines++;
+                              int gotos = current_line + 2;
+                              fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
                               fprintf(file_ca3, "%d : %s := %d\n", lines++, (yyvsp[-2].ident).lexema, (yyval.expr_val).val_int);
                           }
                       } else if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
@@ -1325,6 +1329,9 @@ yyreduce:
                           (yyvsp[-2].ident).id_val.val_type = FLOAT_TYPE;
                           (yyvsp[-2].ident).id_val.val_float = (yyvsp[0].expr_val).val_float;
                           if(list_size == 0){
+                                int current_line = lines++;
+                                int gotos = current_line + 2;
+                                fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
                                 fprintf(file_ca3, "%d : %s := %f\n", lines++, (yyvsp[-2].ident).lexema, (yyval.expr_val).val_float);
                           }
                       } else {
@@ -1334,7 +1341,11 @@ yyreduce:
                           (yyvsp[-2].ident).id_val.val_type = STRING_TYPE;
                           (yyvsp[-2].ident).id_val.val_string = (yyvsp[0].expr_val).val_string;
                       }
-
+                      if(ifmode == 1){
+                                int current_line = lines++;
+                                int gotos = current_line + list_size+1;
+                                fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
+                      }
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  (yyvsp[-2].ident).lexema);
                       list_size = 0;
                       number_size = 0;
@@ -1343,11 +1354,11 @@ yyreduce:
                       id_size = 0;
                       sym_enter((yyvsp[-2].ident).lexema, &(yyvsp[0].expr_val));
                   }
-#line 1347 "bison_output/sintaxi.tab.c"
+#line 1358 "bison_output/sintaxi.tab.c"
     break;
 
   case 10: /* expressio: ID ASSIGN OPERATION MODE  */
-#line 175 "bison_flex/sintaxi.y"
+#line 186 "bison_flex/sintaxi.y"
                                            {
                 if ((yyvsp[-1].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1377,11 +1388,11 @@ yyreduce:
                                  fprintf(stderr, "Mode only supported in INTEGER, error declared in line %d\n", yylineno);
                               }
                 }
-#line 1381 "bison_output/sintaxi.tab.c"
+#line 1392 "bison_output/sintaxi.tab.c"
     break;
 
   case 11: /* expressio: ID ASSIGN OPERATION_BOOLEAN  */
-#line 204 "bison_flex/sintaxi.y"
+#line 215 "bison_flex/sintaxi.y"
                                               {
                             fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool ? "true" : "false");
                             fprintf(stderr, "ID: %s (bool) pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool ? "true" : "false");
@@ -1393,11 +1404,11 @@ yyreduce:
                             sym_enter((yyvsp[-2].ident).lexema, &value_to_store);
 
                 }
-#line 1397 "bison_output/sintaxi.tab.c"
+#line 1408 "bison_output/sintaxi.tab.c"
     break;
 
   case 12: /* expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN  */
-#line 215 "bison_flex/sintaxi.y"
+#line 226 "bison_flex/sintaxi.y"
                                                    {
                 if ((yyvsp[0].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1413,11 +1424,11 @@ yyreduce:
 
 
                 }
-#line 1417 "bison_output/sintaxi.tab.c"
+#line 1428 "bison_output/sintaxi.tab.c"
     break;
 
   case 13: /* expressio: OPERATION MODE  */
-#line 230 "bison_flex/sintaxi.y"
+#line 241 "bison_flex/sintaxi.y"
                                  {
                 if ((yyvsp[-1].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1460,11 +1471,11 @@ yyreduce:
                                        (yyval.expr_val).val_string = (yyvsp[-1].expr_val).val_string;
                                        }
                 }
-#line 1464 "bison_output/sintaxi.tab.c"
+#line 1475 "bison_output/sintaxi.tab.c"
     break;
 
   case 14: /* expressio: OPERATION  */
-#line 272 "bison_flex/sintaxi.y"
+#line 283 "bison_flex/sintaxi.y"
                             {
                     if ((yyvsp[0].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1491,11 +1502,11 @@ yyreduce:
                         (yyval.expr_val).val_string = (yyvsp[0].expr_val).val_string;
                     }
                 }
-#line 1495 "bison_output/sintaxi.tab.c"
+#line 1506 "bison_output/sintaxi.tab.c"
     break;
 
   case 15: /* expressio: OPERATION_BOOLEAN  */
-#line 298 "bison_flex/sintaxi.y"
+#line 309 "bison_flex/sintaxi.y"
                                     {
                             if((yyvsp[0].expr_val).val_type == BOOL_TYPE){
                                 fprintf(yyout, " (bool) pren per valor: %s\n", (yyvsp[0].expr_val).val_bool ? "true" : "false");
@@ -1503,11 +1514,11 @@ yyreduce:
                                 (yyval.expr_val).val_bool = (yyvsp[0].expr_val).val_bool;
                             }
                 }
-#line 1507 "bison_output/sintaxi.tab.c"
+#line 1518 "bison_output/sintaxi.tab.c"
     break;
 
   case 16: /* expressio: ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE  */
-#line 305 "bison_flex/sintaxi.y"
+#line 316 "bison_flex/sintaxi.y"
                                                                      {
                      mode_assign = true;
                      if((yyvsp[-1].expr_val).id_name != NULL)
@@ -1529,11 +1540,11 @@ yyreduce:
                         mode_assign = false;
 
                  }
-#line 1533 "bison_output/sintaxi.tab.c"
+#line 1544 "bison_output/sintaxi.tab.c"
     break;
 
   case 17: /* expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION  */
-#line 326 "bison_flex/sintaxi.y"
+#line 337 "bison_flex/sintaxi.y"
                                                                             {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup((yyvsp[-5].ident).lexema, &existing_value);
@@ -1577,11 +1588,11 @@ yyreduce:
                       float_size = 0;
                       id_size = 0;
                 }
-#line 1581 "bison_output/sintaxi.tab.c"
+#line 1592 "bison_output/sintaxi.tab.c"
     break;
 
   case 18: /* OPERATION: OPERATION PLUS OPERATION2  */
-#line 377 "bison_flex/sintaxi.y"
+#line 388 "bison_flex/sintaxi.y"
                               {
         char* result;
         if ((yyvsp[-2].expr_val).val_type == STRING_TYPE || (yyvsp[0].expr_val).val_type == STRING_TYPE) {
@@ -1659,11 +1670,11 @@ yyreduce:
             generate_power_logic(&power, &lines);
 
     }
-#line 1663 "bison_output/sintaxi.tab.c"
+#line 1674 "bison_output/sintaxi.tab.c"
     break;
 
   case 19: /* OPERATION: OPERATION MINUS OPERATION2  */
-#line 454 "bison_flex/sintaxi.y"
+#line 465 "bison_flex/sintaxi.y"
                                  {
         if (((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[-2].expr_val).val_type == FLOAT_TYPE) &&
             ((yyvsp[0].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE)) {
@@ -1698,11 +1709,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1702 "bison_output/sintaxi.tab.c"
+#line 1713 "bison_output/sintaxi.tab.c"
     break;
 
   case 21: /* OPERATION2: OPERATION2 MULTIPLY OPERATION3  */
-#line 492 "bison_flex/sintaxi.y"
+#line 503 "bison_flex/sintaxi.y"
                                     {
         if (((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[-2].expr_val).val_type == FLOAT_TYPE) &&
             ((yyvsp[0].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE)) {
@@ -1739,11 +1750,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1743 "bison_output/sintaxi.tab.c"
+#line 1754 "bison_output/sintaxi.tab.c"
     break;
 
   case 22: /* OPERATION2: OPERATION2 DIVIDE OPERATION3  */
-#line 528 "bison_flex/sintaxi.y"
+#line 539 "bison_flex/sintaxi.y"
                                    {
         if (((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[-2].expr_val).val_type == FLOAT_TYPE) &&
             ((yyvsp[0].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE)) {
@@ -1797,11 +1808,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1801 "bison_output/sintaxi.tab.c"
+#line 1812 "bison_output/sintaxi.tab.c"
     break;
 
   case 23: /* OPERATION2: OPERATION2 MOD OPERATION3  */
-#line 581 "bison_flex/sintaxi.y"
+#line 592 "bison_flex/sintaxi.y"
                                 {
     //NOMES PER INT
             if ((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == INT_TYPE) {
@@ -1818,11 +1829,11 @@ yyreduce:
                 fprintf(stderr, "Error: Modulus is not made by integers as expected in line %d\n", yylineno-1);
             }
         }
-#line 1822 "bison_output/sintaxi.tab.c"
+#line 1833 "bison_output/sintaxi.tab.c"
     break;
 
   case 25: /* OPERATION3: OPERATION4 POWER OPERATION3  */
-#line 601 "bison_flex/sintaxi.y"
+#line 612 "bison_flex/sintaxi.y"
                                 {
             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
                         if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
@@ -1860,11 +1871,11 @@ yyreduce:
 
 
         }
-#line 1864 "bison_output/sintaxi.tab.c"
+#line 1875 "bison_output/sintaxi.tab.c"
     break;
 
   case 27: /* OPERATION4: SIN OPERATION4  */
-#line 642 "bison_flex/sintaxi.y"
+#line 653 "bison_flex/sintaxi.y"
                     {
         if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             (yyval.expr_val).val_type = FLOAT_TYPE;
@@ -1874,11 +1885,11 @@ yyreduce:
             (yyval.expr_val).val_float = sin((yyvsp[0].expr_val).val_int);
         }
     }
-#line 1878 "bison_output/sintaxi.tab.c"
+#line 1889 "bison_output/sintaxi.tab.c"
     break;
 
   case 28: /* OPERATION4: COS OPERATION4  */
-#line 651 "bison_flex/sintaxi.y"
+#line 662 "bison_flex/sintaxi.y"
                      {
         if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             (yyval.expr_val).val_type = FLOAT_TYPE;
@@ -1888,11 +1899,11 @@ yyreduce:
             (yyval.expr_val).val_float = cos((yyvsp[0].expr_val).val_int);
         }
     }
-#line 1892 "bison_output/sintaxi.tab.c"
+#line 1903 "bison_output/sintaxi.tab.c"
     break;
 
   case 29: /* OPERATION4: TAN OPERATION4  */
-#line 660 "bison_flex/sintaxi.y"
+#line 671 "bison_flex/sintaxi.y"
                      {
         if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             if (fmod((yyvsp[0].expr_val).val_float, M_PI) == M_PI / 2) {
@@ -1910,11 +1921,11 @@ yyreduce:
             (yyval.expr_val).val_float = tan((yyvsp[0].expr_val).val_int);
         }
     }
-#line 1914 "bison_output/sintaxi.tab.c"
+#line 1925 "bison_output/sintaxi.tab.c"
     break;
 
   case 30: /* OPERATION4: LEN OPERATION4  */
-#line 677 "bison_flex/sintaxi.y"
+#line 688 "bison_flex/sintaxi.y"
                      {
         if ((yyvsp[0].expr_val).val_type == STRING_TYPE) {
             (yyval.expr_val).val_int = strlen((yyvsp[0].expr_val).val_string);
@@ -1924,11 +1935,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1928 "bison_output/sintaxi.tab.c"
+#line 1939 "bison_output/sintaxi.tab.c"
     break;
 
   case 31: /* OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS  */
-#line 687 "bison_flex/sintaxi.y"
+#line 698 "bison_flex/sintaxi.y"
                                                                               {
     // OPERATION4 $2 is the string input
     // OPERATION4 $3 is the starting index
@@ -1974,11 +1985,11 @@ yyreduce:
         exit(1);
     }
 }
-#line 1978 "bison_output/sintaxi.tab.c"
+#line 1989 "bison_output/sintaxi.tab.c"
     break;
 
   case 32: /* OPERATION4: INTEGER  */
-#line 733 "bison_flex/sintaxi.y"
+#line 744 "bison_flex/sintaxi.y"
               {
             number_list[number_size] = (yyvsp[0].enter);
             number_size++;
@@ -1986,31 +1997,31 @@ yyreduce:
             (yyval.expr_val).val_int = (yyvsp[0].enter);
 
         }
-#line 1990 "bison_output/sintaxi.tab.c"
+#line 2001 "bison_output/sintaxi.tab.c"
     break;
 
   case 33: /* OPERATION4: FLOAT  */
-#line 740 "bison_flex/sintaxi.y"
+#line 751 "bison_flex/sintaxi.y"
             {
             fprintf(yyout, "float");
             add_to_float_list(float_list, &float_size, (yyvsp[0].real));
             (yyval.expr_val).val_type = FLOAT_TYPE;
             (yyval.expr_val).val_float = (yyvsp[0].real);
         }
-#line 2001 "bison_output/sintaxi.tab.c"
+#line 2012 "bison_output/sintaxi.tab.c"
     break;
 
   case 34: /* OPERATION4: STRING  */
-#line 746 "bison_flex/sintaxi.y"
+#line 757 "bison_flex/sintaxi.y"
              {
                 (yyval.expr_val).val_type = STRING_TYPE;
                 (yyval.expr_val).val_string = (yyvsp[0].cadena);
         }
-#line 2010 "bison_output/sintaxi.tab.c"
+#line 2021 "bison_output/sintaxi.tab.c"
     break;
 
   case 35: /* OPERATION4: ID  */
-#line 750 "bison_flex/sintaxi.y"
+#line 761 "bison_flex/sintaxi.y"
          {
             sym_value_type value;
             int lookup_result;
@@ -2037,11 +2048,11 @@ yyreduce:
                 exit(EXIT_FAILURE);  // Exit the program
             }
         }
-#line 2041 "bison_output/sintaxi.tab.c"
+#line 2052 "bison_output/sintaxi.tab.c"
     break;
 
   case 36: /* OPERATION4: MINUS ID  */
-#line 776 "bison_flex/sintaxi.y"
+#line 787 "bison_flex/sintaxi.y"
                {
         sym_value_type value;
         int lookup_result;
@@ -2067,11 +2078,11 @@ yyreduce:
         }
 
     }
-#line 2071 "bison_output/sintaxi.tab.c"
+#line 2082 "bison_output/sintaxi.tab.c"
     break;
 
   case 37: /* OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS  */
-#line 801 "bison_flex/sintaxi.y"
+#line 812 "bison_flex/sintaxi.y"
                                                     {
         (yyval.expr_val).val_type = (yyvsp[-1].expr_val).val_type;
 
@@ -2088,11 +2099,11 @@ yyreduce:
             (yyval.expr_val).val_string = strdup((yyvsp[-1].expr_val).val_string);  // Duplicate the string to avoid pointer issues
         }
     }
-#line 2092 "bison_output/sintaxi.tab.c"
+#line 2103 "bison_output/sintaxi.tab.c"
     break;
 
   case 38: /* OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1  */
-#line 820 "bison_flex/sintaxi.y"
+#line 831 "bison_flex/sintaxi.y"
                                            {
                                 (yyval.expr_val).val_type = BOOL_TYPE;
                                 if ((yyvsp[-2].expr_val).val_type == BOOL_TYPE && (yyvsp[0].expr_val).val_type == BOOL_TYPE) {
@@ -2100,11 +2111,11 @@ yyreduce:
                                 }
 
     }
-#line 2104 "bison_output/sintaxi.tab.c"
+#line 2115 "bison_output/sintaxi.tab.c"
     break;
 
   case 41: /* OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2  */
-#line 831 "bison_flex/sintaxi.y"
+#line 842 "bison_flex/sintaxi.y"
                                                {
             (yyval.expr_val).val_type = BOOL_TYPE;
             if ((yyvsp[-2].expr_val).val_type == BOOL_TYPE && (yyvsp[0].expr_val).val_type == BOOL_TYPE) {
@@ -2112,22 +2123,22 @@ yyreduce:
             }
 
     }
-#line 2116 "bison_output/sintaxi.tab.c"
+#line 2127 "bison_output/sintaxi.tab.c"
     break;
 
   case 43: /* OPERATION_BOOLEAN2: NOT OPERATION_BOOLEAN2  */
-#line 840 "bison_flex/sintaxi.y"
+#line 851 "bison_flex/sintaxi.y"
                             {
             (yyval.expr_val).val_type = BOOL_TYPE;
             if ((yyvsp[0].expr_val).val_type == BOOL_TYPE) {
                 (yyval.expr_val).val_bool = !(yyvsp[0].expr_val).val_bool;
             }
     }
-#line 2127 "bison_output/sintaxi.tab.c"
+#line 2138 "bison_output/sintaxi.tab.c"
     break;
 
   case 44: /* OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS  */
-#line 847 "bison_flex/sintaxi.y"
+#line 858 "bison_flex/sintaxi.y"
                                                           {
             (yyval.expr_val).val_type = (yyvsp[-1].expr_val).val_type;
             if ((yyvsp[-1].expr_val).val_type == BOOL_TYPE) {
@@ -2136,20 +2147,20 @@ yyreduce:
                 (yyval.expr_val).val_bool = (yyvsp[-1].expr_val).val_bool;
             }
         }
-#line 2140 "bison_output/sintaxi.tab.c"
+#line 2151 "bison_output/sintaxi.tab.c"
     break;
 
   case 45: /* OPERATION_BOOLEAN3: TRUE  */
-#line 855 "bison_flex/sintaxi.y"
+#line 866 "bison_flex/sintaxi.y"
            {
             (yyval.expr_val).val_type = BOOL_TYPE;
             (yyval.expr_val).val_bool = true;  // Use bool `true` instead of string "true"
         }
-#line 2149 "bison_output/sintaxi.tab.c"
+#line 2160 "bison_output/sintaxi.tab.c"
     break;
 
   case 46: /* OPERATION_BOOLEAN3: ID_BOOL  */
-#line 859 "bison_flex/sintaxi.y"
+#line 870 "bison_flex/sintaxi.y"
               {
         sym_value_type value;
         int lookup_result;
@@ -2162,20 +2173,20 @@ yyreduce:
         else {
         }
     }
-#line 2166 "bison_output/sintaxi.tab.c"
+#line 2177 "bison_output/sintaxi.tab.c"
     break;
 
   case 47: /* OPERATION_BOOLEAN3: FALSE  */
-#line 871 "bison_flex/sintaxi.y"
+#line 882 "bison_flex/sintaxi.y"
             {
             (yyval.expr_val).val_type = BOOL_TYPE;
             (yyval.expr_val).val_bool = false;  // Use bool `false` instead of string "false"
      }
-#line 2175 "bison_output/sintaxi.tab.c"
+#line 2186 "bison_output/sintaxi.tab.c"
     break;
 
   case 48: /* OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION  */
-#line 875 "bison_flex/sintaxi.y"
+#line 886 "bison_flex/sintaxi.y"
                                 {
                      (yyval.expr_val).val_type = BOOL_TYPE;
                      if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
@@ -2193,11 +2204,11 @@ yyreduce:
                      }
 
          }
-#line 2197 "bison_output/sintaxi.tab.c"
+#line 2208 "bison_output/sintaxi.tab.c"
     break;
 
   case 49: /* OPERATION_BOOLEAN3: OPERATION NOT_EQUAL OPERATION  */
-#line 892 "bison_flex/sintaxi.y"
+#line 903 "bison_flex/sintaxi.y"
                                     {
                          (yyval.expr_val).val_type = BOOL_TYPE;
                          if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
@@ -2214,11 +2225,11 @@ yyreduce:
                          generate_if_statement((yyvsp[-2].expr_val).val_int, (yyvsp[0].expr_val).val_int, "NE");
 
          }
-#line 2218 "bison_output/sintaxi.tab.c"
+#line 2229 "bison_output/sintaxi.tab.c"
     break;
 
   case 50: /* OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION  */
-#line 908 "bison_flex/sintaxi.y"
+#line 919 "bison_flex/sintaxi.y"
                                         {
                                              (yyval.expr_val).val_type = BOOL_TYPE;
                                              if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
@@ -2234,11 +2245,11 @@ yyreduce:
 
                                              }
          }
-#line 2238 "bison_output/sintaxi.tab.c"
+#line 2249 "bison_output/sintaxi.tab.c"
     break;
 
   case 51: /* OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION  */
-#line 923 "bison_flex/sintaxi.y"
+#line 934 "bison_flex/sintaxi.y"
                                        {
     printf("hola");
     printf("%d, %d less_equal \n", (yyvsp[-2].expr_val).val_type, (yyvsp[-2].expr_val).val_type);
@@ -2258,11 +2269,11 @@ yyreduce:
                              generate_if_statement((yyvsp[-2].expr_val).val_int, (yyvsp[0].expr_val).val_int, "NE");
 
          }
-#line 2262 "bison_output/sintaxi.tab.c"
+#line 2273 "bison_output/sintaxi.tab.c"
     break;
 
   case 52: /* OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION  */
-#line 942 "bison_flex/sintaxi.y"
+#line 953 "bison_flex/sintaxi.y"
                                     {
                                  (yyval.expr_val).val_type = BOOL_TYPE;
                                  if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
@@ -2277,11 +2288,11 @@ yyreduce:
                                      (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int < (yyvsp[0].expr_val).val_int;
                                  }
          }
-#line 2281 "bison_output/sintaxi.tab.c"
+#line 2292 "bison_output/sintaxi.tab.c"
     break;
 
   case 53: /* OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION  */
-#line 956 "bison_flex/sintaxi.y"
+#line 967 "bison_flex/sintaxi.y"
                                      {
     printf("%d, %d less_equal \n", (yyvsp[-2].expr_val).val_type, (yyvsp[-2].expr_val).val_type);
 
@@ -2298,11 +2309,11 @@ yyreduce:
                                          (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int <= (yyvsp[0].expr_val).val_int;
                                      }
     }
-#line 2302 "bison_output/sintaxi.tab.c"
+#line 2313 "bison_output/sintaxi.tab.c"
     break;
 
 
-#line 2306 "bison_output/sintaxi.tab.c"
+#line 2317 "bison_output/sintaxi.tab.c"
 
       default: break;
     }
@@ -2495,6 +2506,6 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 973 "bison_flex/sintaxi.y"
+#line 984 "bison_flex/sintaxi.y"
 
 

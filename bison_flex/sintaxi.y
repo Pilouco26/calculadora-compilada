@@ -29,6 +29,7 @@ int id_size=0;
 int result_size = 0;
 bool mode_assign = false;
 int esp = 0;
+int ifmode = 0;
 int iterative_count_line_array [] ;
 int index_iterative = 0;
 %}
@@ -118,8 +119,7 @@ header:
 
 if_header:  IF OPERATION_BOOLEAN THEN {
             $$.linea = lines;
-            fprintf(file_ca3, "%d : GOTO _____\n", lines++);
-
+            ifmode = 1;
            }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
@@ -128,6 +128,7 @@ expressio:
                     fprintf(file_ca3, "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
                 }
                 | if_header ENDLINE expressio_list FI {
+                    ifmode = 0;
                 }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
@@ -144,6 +145,9 @@ expressio:
                           $1.id_val.val_type = INT_TYPE;
                           $1.id_val.val_int = $3.val_int;
                           if(list_size == 0){
+                              int current_line = lines++;
+                              int gotos = current_line + 2;
+                              fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
                               fprintf(file_ca3, "%d : %s := %d\n", lines++, $1.lexema, $$.val_int);
                           }
                       } else if ($3.val_type == FLOAT_TYPE) {
@@ -154,6 +158,9 @@ expressio:
                           $1.id_val.val_type = FLOAT_TYPE;
                           $1.id_val.val_float = $3.val_float;
                           if(list_size == 0){
+                                int current_line = lines++;
+                                int gotos = current_line + 2;
+                                fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
                                 fprintf(file_ca3, "%d : %s := %f\n", lines++, $1.lexema, $$.val_float);
                           }
                       } else {
@@ -163,7 +170,11 @@ expressio:
                           $1.id_val.val_type = STRING_TYPE;
                           $1.id_val.val_string = $3.val_string;
                       }
-
+                      if(ifmode == 1){
+                                int current_line = lines++;
+                                int gotos = current_line + list_size+1;
+                                fprintf(file_ca3, "%d : GOTO %d\n", current_line, gotos);
+                      }
                       print_list(list, list_size, number_list, number_size, float_list, float_size,  $1.lexema);
                       list_size = 0;
                       number_size = 0;

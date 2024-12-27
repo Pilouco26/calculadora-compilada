@@ -18,6 +18,7 @@ extern int result_size;
 extern int list_size;
 extern int comptador;
 extern int delta;
+extern int ifmode;
 extern bool mode_assign;
 FILE *file_ca3 = NULL; // Global variable for the file
 
@@ -213,6 +214,7 @@ void handle_float_operation(three_address_code *item, int i, char *id_name, int 
 void print_list(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size, char *id_name) {
     int temporal_aux = result_size+1;
     bool four_ac = false;
+
     for (int i = 0; i < size; i++) {
       	four_ac = false;
         if (strcmp(list[i].val_op, "CALL") == 0) {
@@ -539,6 +541,10 @@ void close_file_ca3(FILE *file_ca3) {
     }
 }
 void generate_if_statement(int val1, int val3, const char *op) {
+     if(ifmode == 1){
+            int current_line = lines +2;
+            fprintf(file_ca3, "%d : GOTO %d\n", lines++, current_line);
+     }
     fprintf(file_ca3, "%d : IF %d %s %d GOTO %d\n", lines, val1, op, val3, lines + 2);
     lines++;
 }
