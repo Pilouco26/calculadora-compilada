@@ -77,6 +77,7 @@ typedef struct{
   int contador;
   int linea;
   int end;
+  char *lexema;
 } heading;
 
 char *type_to_str(data_type val_type);

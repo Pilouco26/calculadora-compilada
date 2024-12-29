@@ -71,11 +71,11 @@ int size_if = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> UNTIL WHILE ELSE IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> FOR IN UNTIL WHILE ELSE IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
-%type <header> header if_header else_header while_header do_header
+%type <header> header if_header else_header while_header do_header for_header
 %token <header> REPEAT
 
 %start programa
@@ -103,19 +103,12 @@ header:
                  if ($3.val_type == INT_TYPE) {
                              if ($3.val_int > 0) {
                                 char special[50]; // Adjust size as needed for longer strings
-
-                                    // Use snprintf to safely concatenate
                                 snprintf(special, sizeof(special), "$t-esp0%d", ++esp+1);
                                 print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
                                 $$.linea = lines;
                                 char buffer[200];  // Buffer to hold the formatted output
-
-                                // Formatting the string using snprintf
                                 snprintf(buffer, sizeof(buffer), "%d : $t-esp0%d := 0\n", lines++, esp++);
-
-                                // Appending the formatted string to the appropriate program line
                                 strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
-
                                 list_size = 0;
                                 number_size = 0;
                                 float_size = 0;
@@ -132,7 +125,9 @@ header:
                      fprintf(stderr, "Error: Invalid type for repeat count\n");
                  }
      }
-
+for_header:  FOR ID IN INTEGER DO {
+            $$.lexema = $2.lexema;
+           }
 if_header:  IF OPERATION_BOOLEAN THEN {
                 $$.linea = lines;
                 ifmode = 1;
@@ -173,9 +168,15 @@ expressio:
                     int current_line = lines;
                     snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line);
                     strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
-                    }
+                }
                 | do_header expressio_list UNTIL OPERATION_BOOLEAN {
                     do_mode = 0;
+                }
+                | for_header ENDLINE expressio_list DONE {
+                    char buffer[200];  // Buffer to hold the formatted output
+                    snprintf(buffer, sizeof(buffer), "%d : %s := %s + 1\n", lines++, $1.lexema, $1.lexema);
+                    strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
+                    lines++;
                 }
                 | while_header ENDLINE expressio_list DONE {
                     while_mode = 0;
@@ -706,8 +707,7 @@ OPERATION4:
             YYABORT;
         }
     }
-
-| SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS {
+    | SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS {
     // OPERATION4 $2 is the string input
     // OPERATION4 $3 is the starting index
     // OPERATION4 $4 is the length of the substring
@@ -752,7 +752,6 @@ OPERATION4:
         exit(1);
     }
 }
-
     | INTEGER {
             number_list[number_size] = $1;
             number_size++;

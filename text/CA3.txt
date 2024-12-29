@@ -1,9 +1,5 @@
 1 : START
-2 : IF 7 NE 5 GOTO 4
-3 : GOTO 9
-4 : $t0 := IDF 7.000000
-5 : $t1 := $t0 ADDF 7.200000
-6 : $t2 := IDF 7.000000
-7 : m := $t1 ADDF $t2 
-8 : GOTO 2
-9 : HALT
+2 : i := 4
+3 : m := 0
+4 : i := i + 1
+6 : HALT

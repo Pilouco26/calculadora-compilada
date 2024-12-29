@@ -70,45 +70,47 @@ extern int yydebug;
     ID = 263,                      /* ID  */
     ID_BOOL = 264,                 /* ID_BOOL  */
     STRING = 265,                  /* STRING  */
-    UNTIL = 266,                   /* UNTIL  */
-    WHILE = 267,                   /* WHILE  */
-    ELSE = 268,                    /* ELSE  */
-    IF = 269,                      /* IF  */
-    THEN = 270,                    /* THEN  */
-    FI = 271,                      /* FI  */
-    EXTRALINE = 272,               /* EXTRALINE  */
-    DO = 273,                      /* DO  */
-    DONE = 274,                    /* DONE  */
-    OPENED_CLAUSE = 275,           /* OPENED_CLAUSE  */
-    CLOSED_CLAUSE = 276,           /* CLOSED_CLAUSE  */
-    COMMENT = 277,                 /* COMMENT  */
-    SUBSTR = 278,                  /* SUBSTR  */
-    COMMA = 279,                   /* COMMA  */
-    LEN = 280,                     /* LEN  */
-    SIN = 281,                     /* SIN  */
-    COS = 282,                     /* COS  */
-    TAN = 283,                     /* TAN  */
-    AND = 284,                     /* AND  */
-    OR = 285,                      /* OR  */
-    NOT = 286,                     /* NOT  */
-    PLUS = 287,                    /* PLUS  */
-    MINUS = 288,                   /* MINUS  */
-    MULTIPLY = 289,                /* MULTIPLY  */
-    DIVIDE = 290,                  /* DIVIDE  */
-    MOD = 291,                     /* MOD  */
-    POWER = 292,                   /* POWER  */
-    CLOSED_PARENTHESIS = 293,      /* CLOSED_PARENTHESIS  */
-    OPEN_PARENTHESIS = 294,        /* OPEN_PARENTHESIS  */
-    ASSIGN = 295,                  /* ASSIGN  */
-    ENDLINE = 296,                 /* ENDLINE  */
-    SEMICOLON = 297,               /* SEMICOLON  */
-    GREATER_THAN = 298,            /* GREATER_THAN  */
-    GREATER_EQUAL = 299,           /* GREATER_EQUAL  */
-    LESS_THAN = 300,               /* LESS_THAN  */
-    LESS_EQUAL = 301,              /* LESS_EQUAL  */
-    EQUAL = 302,                   /* EQUAL  */
-    NOT_EQUAL = 303,               /* NOT_EQUAL  */
-    REPEAT = 304                   /* REPEAT  */
+    FOR = 266,                     /* FOR  */
+    IN = 267,                      /* IN  */
+    UNTIL = 268,                   /* UNTIL  */
+    WHILE = 269,                   /* WHILE  */
+    ELSE = 270,                    /* ELSE  */
+    IF = 271,                      /* IF  */
+    THEN = 272,                    /* THEN  */
+    FI = 273,                      /* FI  */
+    EXTRALINE = 274,               /* EXTRALINE  */
+    DO = 275,                      /* DO  */
+    DONE = 276,                    /* DONE  */
+    OPENED_CLAUSE = 277,           /* OPENED_CLAUSE  */
+    CLOSED_CLAUSE = 278,           /* CLOSED_CLAUSE  */
+    COMMENT = 279,                 /* COMMENT  */
+    SUBSTR = 280,                  /* SUBSTR  */
+    COMMA = 281,                   /* COMMA  */
+    LEN = 282,                     /* LEN  */
+    SIN = 283,                     /* SIN  */
+    COS = 284,                     /* COS  */
+    TAN = 285,                     /* TAN  */
+    AND = 286,                     /* AND  */
+    OR = 287,                      /* OR  */
+    NOT = 288,                     /* NOT  */
+    PLUS = 289,                    /* PLUS  */
+    MINUS = 290,                   /* MINUS  */
+    MULTIPLY = 291,                /* MULTIPLY  */
+    DIVIDE = 292,                  /* DIVIDE  */
+    MOD = 293,                     /* MOD  */
+    POWER = 294,                   /* POWER  */
+    CLOSED_PARENTHESIS = 295,      /* CLOSED_PARENTHESIS  */
+    OPEN_PARENTHESIS = 296,        /* OPEN_PARENTHESIS  */
+    ASSIGN = 297,                  /* ASSIGN  */
+    ENDLINE = 298,                 /* ENDLINE  */
+    SEMICOLON = 299,               /* SEMICOLON  */
+    GREATER_THAN = 300,            /* GREATER_THAN  */
+    GREATER_EQUAL = 301,           /* GREATER_EQUAL  */
+    LESS_THAN = 302,               /* LESS_THAN  */
+    LESS_EQUAL = 303,              /* LESS_EQUAL  */
+    EQUAL = 304,                   /* EQUAL  */
+    NOT_EQUAL = 305,               /* NOT_EQUAL  */
+    REPEAT = 306                   /* REPEAT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -138,7 +140,7 @@ union YYSTYPE
     expression_list expr_list;
     heading header;
 
-#line 142 "bison_output/sintaxi.tab.h"
+#line 144 "bison_output/sintaxi.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

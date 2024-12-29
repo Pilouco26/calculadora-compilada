@@ -42,6 +42,8 @@ sign    [+-]?
 "else"                    { return ELSE; }
 "while"                   { return WHILE; }
 "until"                   { return UNTIL; }
+"for"                   { return FOR; }
+"in"                   { return IN; }
 "["                    { return OPENED_CLAUSE; }
 "]"                    { return CLOSED_CLAUSE; }
 
