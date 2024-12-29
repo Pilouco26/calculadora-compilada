@@ -1,10 +1,6 @@
 1 : START
-2 : IF 5 EQ 4 GOTO 4
-3 : GOTO 10
-4 : IF 4 EQ 4 GOTO 6
-5 : GOTO 10
-6 : i := 4
-7 : j := 21
-8 : $t0 := 6 ADDI 7
-9 : j := $t0 ADDI 8
-10 : HALT
+2 : $t0 := IDF 5.000000
+3 : $t1 := 7.200000 MULF 5.000000
+4 : $t2 := IDF 8.000000
+5 : m := $t1 ADDF 8.000000
+6 : HALT

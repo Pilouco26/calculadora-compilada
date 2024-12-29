@@ -105,7 +105,14 @@ header:
                                 snprintf(special, sizeof(special), "$t-esp0%d", ++esp+1);
                                 print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
                                 $$.linea = lines;
-                                fprintf(file_ca3, "%d : $t-esp0%d := 0\n", lines++, esp++);
+                                char buffer[200];  // Buffer to hold the formatted output
+
+                                // Formatting the string using snprintf
+                                snprintf(buffer, sizeof(buffer), "%d : $t-esp0%d := 0\n", lines++, esp++);
+
+                                // Appending the formatted string to the appropriate program line
+                                strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
+
                                 list_size = 0;
                                 number_size = 0;
                                 float_size = 0;
@@ -126,16 +133,17 @@ header:
 if_header:  IF OPERATION_BOOLEAN THEN {
                 $$.linea = lines;
                 ifmode = 1;
-                char buffer[200];  // Buffer to hold the formatted output
                 lines++;
-                //snprintf(buffer, sizeof(buffer), "%d : GOTO ____\n", lines);
-                //strcat(program_lines[lines], buffer);  // Append to program_lines
            }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
                     delta = yylineno - $1.linea;
-                    fprintf(file_ca3, "%d : $t-esp01 := t-esp01 ADDI 1\n", lines++);
-                    fprintf(file_ca3, "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n",lines++, $1.linea+1);
+                    char buffer[200];  // Buffer to hold the formatted output
+                    snprintf(buffer, sizeof(buffer), "%d : $t-esp01 := t-esp01 ADDI 1\n", lines++);
+                    strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
+                    snprintf(buffer, sizeof(buffer), "%d : if $t-esp01 LTI $t-esp02 GO TO %d \n", lines++, $1.linea + 1);
+                    strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
+
                 }
                 | if_header ENDLINE expressio_list FI {
                     ifmode = 0;
@@ -156,15 +164,15 @@ expressio:
 
                         // If the type is INT_TYPE
                         if ($3.val_type == INT_TYPE) {
-                            snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, (int)$3.val_int);
-                            strcat(program_lines[lines], buffer);  // Append the assignment statement
-                            lines++;  // Increment the line counter
+                            //snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, (int)$3.val_int);
+                            //strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            //lines++;  // Increment the line counter
                         }
                         // If the type is FLOAT_TYPE
                         else if ($3.val_type == FLOAT_TYPE) {
-                            snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, $1.lexema, $3.val_float);
-                            strcat(program_lines[lines], buffer);  // Append the assignment statement
-                            lines++;  // Increment the line counter
+                            //snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, $1.lexema, $3.val_float);
+                            //strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            //lines++;  // Increment the line counter
                         }
                         // For STRING_TYPE
                         else {
@@ -386,51 +394,7 @@ expressio:
 
 OPERATION:
     OPERATION PLUS OPERATION2 {
-        char* result;
-        if ($1.val_type == STRING_TYPE || $3.val_type == STRING_TYPE) {
-
-            // Convert the first operand to string if it's an integer or float
-            if ($1.val_type == INT_TYPE) {
-                char int_str[12]; // Buffer to hold the string representation of the integer
-                sprintf(int_str, "%d", $1.val_int); // Convert int to string
-                $1.val_string = strdup(int_str); // Allocate memory for the string
-                $1.val_type = STRING_TYPE; // Treat it as a string from now on
-            } else if ($1.val_type == FLOAT_TYPE) {
-                char float_str[20]; // Buffer to hold the string representation of the float
-                sprintf(float_str, "%.6f", $1.val_float); // Convert float to string
-                $1.val_string = strdup(float_str); // Allocate memory for the string
-                $1.val_type = STRING_TYPE; // Treat it as a string from now on
-            }
-
-            // Convert the second operand to string if it's an integer or float
-            if ($3.val_type == INT_TYPE) {
-                char int_str[12]; // Buffer to hold the string representation of the integer
-                sprintf(int_str, "%d", $3.val_int); // Convert int to string
-                $3.val_string = strdup(int_str); // Allocate memory for the string
-                $3.val_type = STRING_TYPE; // Treat it as a string from now on
-            } else if ($3.val_type == FLOAT_TYPE) {
-                char float_str[20]; // Buffer to hold the string representation of the float
-                sprintf(float_str, "%.6f", $3.val_float); // Convert float to string
-                $3.val_string = strdup(float_str); // Allocate memory for the string
-                $3.val_type = STRING_TYPE; // Treat it as a string from now on
-            }
-
-            // Now, concatenate the two string operands
-            result = (char*) malloc(strlen($1.val_string) + strlen($3.val_string) + 1);
-            if (!result) {
-                fprintf(stderr, "Error: Memory allocation failed\n");
-                exit(1);
-            }
-
-            // Perform the concatenation
-            strcpy(result, $1.val_string);
-            strcat(result, $3.val_string);
-
-            // Set the result
-            $$.val_type = STRING_TYPE;
-            $$.val_string = result;
-
-        } else if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+        if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
             // Handle float addition
             if ($1.val_type == INT_TYPE) {
                 $1.val_float = (float) $1.val_int; // Convert int to float
@@ -448,7 +412,7 @@ OPERATION:
             $$.val_type = FLOAT_TYPE;
             $$.val_float = $1.val_float + $3.val_float;
             add_three_address_code_float(list, &list_size, $1.val_float, $3.val_float, "ADDF", $1.id_name, $3.id_name, $1.type_conversion, $3.type_conversion);
-            add_to_float_list(result_list, &result_size,$$.val_float);
+            add_to_float_list(result_list, &result_size, $$.val_float);
 
 
         } else {
@@ -626,11 +590,22 @@ OPERATION3:
                         $$.val_int = pow($1.val_int,$3.val_int);
                         char special[50];
                         snprintf(special, sizeof(special), "$t-esp0%d", esp+2);
-                        fprintf(file_ca3, "%d : $t-esp0%d := %d\n", lines++, esp+2, $3.val_int);
+                        char buffer[200];  // Buffer to hold the formatted output
+
+                        // Formatting the string using snprintf
+                        snprintf(buffer, sizeof(buffer), "%d : $t-esp0%d := %d\n", lines++, esp + 2, $3.val_int);
+
+                        // Appending the formatted string to the appropriate program line
+                        strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
+
                         print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
                         snprintf(special, sizeof(special), "$t-esp0%d", ++esp+1);
                         print_list(list, list_size, number_list, number_size, float_list, float_size,  special);
-                        fprintf(file_ca3, "%d : $t-esp0%d := 0\n", lines++, esp++);
+                        // Formatting the string using snprintf
+                        snprintf(buffer, sizeof(buffer), "%d : $t-esp0%d := 0\n", lines++, esp++);
+
+                        // Appending the formatted string to the appropriate program line
+                        strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
                         add_three_address_code(list, &list_size, $1.val_int, $1.val_int, "MULI",  NULL, NULL);
                         snprintf(special, sizeof(special), "$t%d", list_size-1);
                         print_list(list, list_size, number_list, number_size, float_list, float_size, special);
