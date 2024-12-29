@@ -21,7 +21,9 @@ extern int delta;
 extern int ifmode;
 extern bool mode_assign;
 extern char program_lines[200][200];
-
+int last_temporal = -1;
+float last_transformation = -1.0;
+char *last_op = "X";
 FILE *file_ca3 = NULL; // Global variable for the file
 
 
@@ -116,7 +118,7 @@ void process_val_info(three_address_code *item, int number_list[], int number_si
         if (temporal != -1 && !is_number_in_list_without_retrieving(number_list, number_size, (int)item->val_info.val_float)) {
             snprintf(buffer, sizeof(buffer), "$t%d ", temporal);
         } else {
-            if (item->val_info.id_name_copy != NULL) {
+            if (strcmp(item->val_info.id_name, "NULL") != 0) {
                 snprintf(buffer, sizeof(buffer), "%s ", item->val_info.id_name_copy);
             } else {
                 snprintf(buffer, sizeof(buffer), "%f ", item->val_info.val_float);
@@ -166,16 +168,26 @@ void process_val_info2(three_address_code *item, int number_list[], int number_s
 
 void handle_float_operation(three_address_code *item, int i, char *id_name, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size, bool four_ac, int temporal_aux) {
     char buffer[200];
-
-    // Process the first value info
-    process_val_info(item, number_list, number_size, float_list, float_size, result_list, result_size);
+	if(strcmp(last_op, "IDF") == 0 && last_transformation == item->val_info.val_float){
+      snprintf(buffer, sizeof(buffer), "$t%d ", last_temporal);
+      strcat(program_lines[lines], buffer);  // Append to the current line
+    }
+    else
+    	process_val_info(item, number_list, number_size, float_list, float_size, result_list, result_size);
 
     // Append the operation
     snprintf(buffer, sizeof(buffer), "%s ", item->val_op);
     strcat(program_lines[lines], buffer);  // Append to the current line
-
     // Process the second value info
-    process_val_info2(item, number_list, number_size, float_list, float_size, result_list, result_size, four_ac, temporal_aux);
+    if(strcmp(last_op, "IDF") == 0 && last_transformation == item->val_info2.val_float){
+      snprintf(buffer, sizeof(buffer), "$t%d \n", last_temporal);
+      strcat(program_lines[lines], buffer);  // Append to the current line
+    }
+    else
+    	process_val_info2(item, number_list, number_size, float_list, float_size, result_list, result_size, four_ac, temporal_aux);
+    last_op = item->val_op;
+	if(strcmp("IDF", item->val_op) == 0) last_transformation = item->val_info2.val_float;
+
 }
 
 
@@ -260,6 +272,7 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
                 char buffer[200];
                 snprintf(buffer, sizeof(buffer), "%d : $t%d := ", lines++, i);
                 strcat(program_lines[lines], buffer);  // Append to the current line
+
             }
 
             char last_id[256];
@@ -290,8 +303,11 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
                         update_id_name_to_null(list, size, last_id, last_id2);
                     }
                 }
+                fprintf(file_ca3, "last temporal %d\n", last_temporal);
             }
         }
+                        last_temporal = i;
+
     }
 }
 void print_list_array(three_address_code list[], int size, int number_list[], int number_size, float float_list[], int float_size, char *id_name, char *pos_id, float result_val_float, char *result_id) {

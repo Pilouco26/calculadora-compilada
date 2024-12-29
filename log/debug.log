@@ -1,53 +1,17 @@
 --(end of buffer or a NUL)
---accepting rule at line 113 ("loop")
---accepting rule at line 164 (" ")
---accepting rule at line 137 (":=")
---accepting rule at line 164 (" ")
---accepting rule at line 65 ("true")
---accepting rule at line 164 ("")
---accepting rule at line 162 ("
-")
---accepting rule at line 45 ("while")
---accepting rule at line 164 (" ")
---accepting rule at line 113 ("loop")
---accepting rule at line 164 (" ")
---accepting rule at line 39 ("do")
---accepting rule at line 164 ("")
---accepting rule at line 162 ("
-")
 --accepting rule at line 113 ("m")
 --accepting rule at line 164 (" ")
 --accepting rule at line 137 (":=")
 --accepting rule at line 164 (" ")
---accepting rule at line 26 ("0")
---accepting rule at line 164 ("")
---accepting rule at line 162 ("
-")
---accepting rule at line 43 ("if")
+--accepting rule at line 26 ("7")
 --accepting rule at line 164 (" ")
---accepting rule at line 26 ("4")
+--accepting rule at line 140 ("+")
 --accepting rule at line 164 (" ")
---accepting rule at line 153 ("=")
+--accepting rule at line 52 ("7.2")
 --accepting rule at line 164 (" ")
---accepting rule at line 26 ("5")
+--accepting rule at line 140 ("+")
 --accepting rule at line 164 (" ")
---accepting rule at line 42 ("then")
---accepting rule at line 164 ("")
---accepting rule at line 162 ("
-")
---accepting rule at line 113 ("i")
---accepting rule at line 164 (" ")
---accepting rule at line 137 (":=")
---accepting rule at line 164 (" ")
---accepting rule at line 26 ("45")
---accepting rule at line 164 ("")
---accepting rule at line 162 ("
-")
---accepting rule at line 41 ("fi")
---accepting rule at line 164 ("")
---accepting rule at line 162 ("
-")
---accepting rule at line 40 ("done")
+--accepting rule at line 26 ("7")
 --accepting rule at line 164 ("")
 --accepting rule at line 162 ("
 ")
