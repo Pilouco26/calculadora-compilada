@@ -593,14 +593,50 @@ void close_file_ca3(FILE *file_ca3) {
         fclose(file_ca3);
     }
 }
-void generate_if_statement(int val1, int val3, const char *op) {
+void generate_if_statement(value_info val1, value_info val3, const char *op, int integer) {
     char buffer[200];
-    // Create the string for the IF statement
-    snprintf(buffer, sizeof(buffer), "%d : IF %d %s %d GOTO %d\n", lines, val1, op, val3, lines + 2);
+
+    if (integer == 1) {
+
+        if (val1.id_name != NULL && val3.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %s GOTO %d\n", lines, val1.id_name, op, val3.id_name, lines + 2);
+        } else if (val1.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %d GOTO %d\n", lines, val1.id_name, op, val3.val_int, lines + 2);
+        } else if (val3.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : IF %d %s %s GOTO %d\n", lines, val1.val_int, op, val3.id_name, lines + 2);
+        } else {
+            snprintf(buffer, sizeof(buffer), "%d : IF %d %s %d GOTO %d\n", lines, val1.val_int, op, val3.val_int, lines + 2);
+        }
+
+    } else {
+
+        if (val1.id_name != NULL && val3.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %s GOTO %d\n", lines, val1.id_name, op, val3.id_name, lines + 2);
+        } else if (val1.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %f GOTO %d\n", lines, val1.id_name, op, val3.val_float, lines + 2);
+        } else if (val3.id_name != NULL) {
+            snprintf(buffer, sizeof(buffer), "%d : IF %f %s %s GOTO %d\n", lines, val1.val_float, op, val3.id_name, lines + 2);
+        } else {
+            snprintf(buffer, sizeof(buffer), "%d : IF %f %s %f GOTO %d\n", lines, val1.val_float, op, val3.val_float, lines + 2);
+        }
+
+    }
 
     // Append the string to the current line in program_lines
     strcat(program_lines[lines], buffer);
 
     // Increment lines after appending
     lines++;
+}
+void generate_if_statement_simple(int val1, int val3, const char *op) {
+
+  char buffer[200];
+
+    snprintf(buffer, sizeof(buffer), "%d : IF %d %s %d GOTO %d\n", lines, val1, op, val3, lines + 2);
+    // Append the string to the current line in program_lines
+    strcat(program_lines[lines], buffer);
+
+    // Increment lines after appending
+    lines++;
+
 }

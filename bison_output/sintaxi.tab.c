@@ -99,11 +99,12 @@ int result_size = 0;
 bool mode_assign = false;
 int esp = 0;
 int ifmode = 0;
+int while_mode = 0;
 int index_iterative = 0;
 char program_lines[200][200];
 int size_if = 0;
 
-#line 107 "bison_output/sintaxi.tab.c"
+#line 108 "bison_output/sintaxi.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -142,56 +143,60 @@ enum yysymbol_kind_t
   YYSYMBOL_ID = 8,                         /* ID  */
   YYSYMBOL_ID_BOOL = 9,                    /* ID_BOOL  */
   YYSYMBOL_STRING = 10,                    /* STRING  */
-  YYSYMBOL_IF = 11,                        /* IF  */
-  YYSYMBOL_THEN = 12,                      /* THEN  */
-  YYSYMBOL_FI = 13,                        /* FI  */
-  YYSYMBOL_EXTRALINE = 14,                 /* EXTRALINE  */
-  YYSYMBOL_DO = 15,                        /* DO  */
-  YYSYMBOL_DONE = 16,                      /* DONE  */
-  YYSYMBOL_OPENED_CLAUSE = 17,             /* OPENED_CLAUSE  */
-  YYSYMBOL_CLOSED_CLAUSE = 18,             /* CLOSED_CLAUSE  */
-  YYSYMBOL_COMMENT = 19,                   /* COMMENT  */
-  YYSYMBOL_SUBSTR = 20,                    /* SUBSTR  */
-  YYSYMBOL_COMMA = 21,                     /* COMMA  */
-  YYSYMBOL_LEN = 22,                       /* LEN  */
-  YYSYMBOL_SIN = 23,                       /* SIN  */
-  YYSYMBOL_COS = 24,                       /* COS  */
-  YYSYMBOL_TAN = 25,                       /* TAN  */
-  YYSYMBOL_AND = 26,                       /* AND  */
-  YYSYMBOL_OR = 27,                        /* OR  */
-  YYSYMBOL_NOT = 28,                       /* NOT  */
-  YYSYMBOL_PLUS = 29,                      /* PLUS  */
-  YYSYMBOL_MINUS = 30,                     /* MINUS  */
-  YYSYMBOL_MULTIPLY = 31,                  /* MULTIPLY  */
-  YYSYMBOL_DIVIDE = 32,                    /* DIVIDE  */
-  YYSYMBOL_MOD = 33,                       /* MOD  */
-  YYSYMBOL_POWER = 34,                     /* POWER  */
-  YYSYMBOL_CLOSED_PARENTHESIS = 35,        /* CLOSED_PARENTHESIS  */
-  YYSYMBOL_OPEN_PARENTHESIS = 36,          /* OPEN_PARENTHESIS  */
-  YYSYMBOL_ASSIGN = 37,                    /* ASSIGN  */
-  YYSYMBOL_ENDLINE = 38,                   /* ENDLINE  */
-  YYSYMBOL_SEMICOLON = 39,                 /* SEMICOLON  */
-  YYSYMBOL_GREATER_THAN = 40,              /* GREATER_THAN  */
-  YYSYMBOL_GREATER_EQUAL = 41,             /* GREATER_EQUAL  */
-  YYSYMBOL_LESS_THAN = 42,                 /* LESS_THAN  */
-  YYSYMBOL_LESS_EQUAL = 43,                /* LESS_EQUAL  */
-  YYSYMBOL_EQUAL = 44,                     /* EQUAL  */
-  YYSYMBOL_NOT_EQUAL = 45,                 /* NOT_EQUAL  */
-  YYSYMBOL_REPEAT = 46,                    /* REPEAT  */
-  YYSYMBOL_YYACCEPT = 47,                  /* $accept  */
-  YYSYMBOL_programa = 48,                  /* programa  */
-  YYSYMBOL_expressio_list = 49,            /* expressio_list  */
-  YYSYMBOL_header = 50,                    /* header  */
-  YYSYMBOL_if_header = 51,                 /* if_header  */
-  YYSYMBOL_expressio = 52,                 /* expressio  */
-  YYSYMBOL_OPERATION = 53,                 /* OPERATION  */
-  YYSYMBOL_OPERATION2 = 54,                /* OPERATION2  */
-  YYSYMBOL_OPERATION3 = 55,                /* OPERATION3  */
-  YYSYMBOL_OPERATION4 = 56,                /* OPERATION4  */
-  YYSYMBOL_OPERATION_BOOLEAN = 57,         /* OPERATION_BOOLEAN  */
-  YYSYMBOL_OPERATION_BOOLEAN1 = 58,        /* OPERATION_BOOLEAN1  */
-  YYSYMBOL_OPERATION_BOOLEAN2 = 59,        /* OPERATION_BOOLEAN2  */
-  YYSYMBOL_OPERATION_BOOLEAN3 = 60         /* OPERATION_BOOLEAN3  */
+  YYSYMBOL_WHILE = 11,                     /* WHILE  */
+  YYSYMBOL_ELSE = 12,                      /* ELSE  */
+  YYSYMBOL_IF = 13,                        /* IF  */
+  YYSYMBOL_THEN = 14,                      /* THEN  */
+  YYSYMBOL_FI = 15,                        /* FI  */
+  YYSYMBOL_EXTRALINE = 16,                 /* EXTRALINE  */
+  YYSYMBOL_DO = 17,                        /* DO  */
+  YYSYMBOL_DONE = 18,                      /* DONE  */
+  YYSYMBOL_OPENED_CLAUSE = 19,             /* OPENED_CLAUSE  */
+  YYSYMBOL_CLOSED_CLAUSE = 20,             /* CLOSED_CLAUSE  */
+  YYSYMBOL_COMMENT = 21,                   /* COMMENT  */
+  YYSYMBOL_SUBSTR = 22,                    /* SUBSTR  */
+  YYSYMBOL_COMMA = 23,                     /* COMMA  */
+  YYSYMBOL_LEN = 24,                       /* LEN  */
+  YYSYMBOL_SIN = 25,                       /* SIN  */
+  YYSYMBOL_COS = 26,                       /* COS  */
+  YYSYMBOL_TAN = 27,                       /* TAN  */
+  YYSYMBOL_AND = 28,                       /* AND  */
+  YYSYMBOL_OR = 29,                        /* OR  */
+  YYSYMBOL_NOT = 30,                       /* NOT  */
+  YYSYMBOL_PLUS = 31,                      /* PLUS  */
+  YYSYMBOL_MINUS = 32,                     /* MINUS  */
+  YYSYMBOL_MULTIPLY = 33,                  /* MULTIPLY  */
+  YYSYMBOL_DIVIDE = 34,                    /* DIVIDE  */
+  YYSYMBOL_MOD = 35,                       /* MOD  */
+  YYSYMBOL_POWER = 36,                     /* POWER  */
+  YYSYMBOL_CLOSED_PARENTHESIS = 37,        /* CLOSED_PARENTHESIS  */
+  YYSYMBOL_OPEN_PARENTHESIS = 38,          /* OPEN_PARENTHESIS  */
+  YYSYMBOL_ASSIGN = 39,                    /* ASSIGN  */
+  YYSYMBOL_ENDLINE = 40,                   /* ENDLINE  */
+  YYSYMBOL_SEMICOLON = 41,                 /* SEMICOLON  */
+  YYSYMBOL_GREATER_THAN = 42,              /* GREATER_THAN  */
+  YYSYMBOL_GREATER_EQUAL = 43,             /* GREATER_EQUAL  */
+  YYSYMBOL_LESS_THAN = 44,                 /* LESS_THAN  */
+  YYSYMBOL_LESS_EQUAL = 45,                /* LESS_EQUAL  */
+  YYSYMBOL_EQUAL = 46,                     /* EQUAL  */
+  YYSYMBOL_NOT_EQUAL = 47,                 /* NOT_EQUAL  */
+  YYSYMBOL_REPEAT = 48,                    /* REPEAT  */
+  YYSYMBOL_YYACCEPT = 49,                  /* $accept  */
+  YYSYMBOL_programa = 50,                  /* programa  */
+  YYSYMBOL_expressio_list = 51,            /* expressio_list  */
+  YYSYMBOL_header = 52,                    /* header  */
+  YYSYMBOL_if_header = 53,                 /* if_header  */
+  YYSYMBOL_while_header = 54,              /* while_header  */
+  YYSYMBOL_else_header = 55,               /* else_header  */
+  YYSYMBOL_expressio = 56,                 /* expressio  */
+  YYSYMBOL_OPERATION = 57,                 /* OPERATION  */
+  YYSYMBOL_OPERATION2 = 58,                /* OPERATION2  */
+  YYSYMBOL_OPERATION3 = 59,                /* OPERATION3  */
+  YYSYMBOL_OPERATION4 = 60,                /* OPERATION4  */
+  YYSYMBOL_OPERATION_BOOLEAN = 61,         /* OPERATION_BOOLEAN  */
+  YYSYMBOL_OPERATION_BOOLEAN1 = 62,        /* OPERATION_BOOLEAN1  */
+  YYSYMBOL_OPERATION_BOOLEAN2 = 63,        /* OPERATION_BOOLEAN2  */
+  YYSYMBOL_OPERATION_BOOLEAN3 = 64         /* OPERATION_BOOLEAN3  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -517,21 +522,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  49
+#define YYFINAL  53
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   209
+#define YYLAST   206
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  47
+#define YYNTOKENS  49
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  14
+#define YYNNTS  16
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  53
+#define YYNRULES  57
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  110
+#define YYNSTATES  122
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   301
+#define YYMAXUTOK   303
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -575,19 +580,19 @@ static const yytype_int8 yytranslate[] =
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46
+      45,    46,    47,    48
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    83,    83,    93,    94,    99,   133,   139,   148,   155,
-     194,   223,   234,   249,   291,   317,   324,   345,   396,   429,
-     463,   467,   503,   556,   572,   576,   625,   628,   637,   646,
-     663,   673,   719,   726,   732,   736,   762,   787,   806,   813,
-     816,   817,   825,   826,   833,   841,   845,   857,   861,   878,
-     894,   909,   928,   942
+       0,    84,    84,    94,    95,   100,   134,   139,   144,   154,
+     163,   170,   182,   189,   221,   250,   261,   276,   318,   344,
+     351,   372,   423,   456,   490,   494,   530,   583,   599,   603,
+     652,   655,   664,   673,   690,   700,   746,   753,   759,   763,
+     789,   814,   833,   840,   843,   844,   852,   853,   860,   868,
+     873,   888,   892,   910,   928,   944,   963,   979
 };
 #endif
 
@@ -604,16 +609,17 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "INTEGER", "FALSE",
-  "TRUE", "MODE", "FLOAT", "ID", "ID_BOOL", "STRING", "IF", "THEN", "FI",
-  "EXTRALINE", "DO", "DONE", "OPENED_CLAUSE", "CLOSED_CLAUSE", "COMMENT",
-  "SUBSTR", "COMMA", "LEN", "SIN", "COS", "TAN", "AND", "OR", "NOT",
-  "PLUS", "MINUS", "MULTIPLY", "DIVIDE", "MOD", "POWER",
-  "CLOSED_PARENTHESIS", "OPEN_PARENTHESIS", "ASSIGN", "ENDLINE",
+  "TRUE", "MODE", "FLOAT", "ID", "ID_BOOL", "STRING", "WHILE", "ELSE",
+  "IF", "THEN", "FI", "EXTRALINE", "DO", "DONE", "OPENED_CLAUSE",
+  "CLOSED_CLAUSE", "COMMENT", "SUBSTR", "COMMA", "LEN", "SIN", "COS",
+  "TAN", "AND", "OR", "NOT", "PLUS", "MINUS", "MULTIPLY", "DIVIDE", "MOD",
+  "POWER", "CLOSED_PARENTHESIS", "OPEN_PARENTHESIS", "ASSIGN", "ENDLINE",
   "SEMICOLON", "GREATER_THAN", "GREATER_EQUAL", "LESS_THAN", "LESS_EQUAL",
   "EQUAL", "NOT_EQUAL", "REPEAT", "$accept", "programa", "expressio_list",
-  "header", "if_header", "expressio", "OPERATION", "OPERATION2",
-  "OPERATION3", "OPERATION4", "OPERATION_BOOLEAN", "OPERATION_BOOLEAN1",
-  "OPERATION_BOOLEAN2", "OPERATION_BOOLEAN3", YY_NULLPTR
+  "header", "if_header", "while_header", "else_header", "expressio",
+  "OPERATION", "OPERATION2", "OPERATION3", "OPERATION4",
+  "OPERATION_BOOLEAN", "OPERATION_BOOLEAN1", "OPERATION_BOOLEAN2",
+  "OPERATION_BOOLEAN3", YY_NULLPTR
 };
 
 static const char *
@@ -623,7 +629,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-47)
+#define YYPACT_NINF (-44)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -637,17 +643,19 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     108,   -47,   -47,   -47,   -47,   -10,   -20,   -47,   117,   -12,
-     156,   156,   156,   156,   117,    18,   117,   -18,    38,   -47,
-      25,     5,     6,    40,    22,   -47,    11,    20,    23,   -47,
-     -47,   156,   147,   117,   -47,   -47,   164,    -4,   156,   156,
-     -47,   -47,   -47,   -47,   -47,   -47,   155,   -16,   156,   -47,
-      26,   108,   108,   -47,   156,   156,   156,   156,   156,   156,
-     156,   156,   156,   156,   156,   156,   117,   117,     7,    33,
-      65,    20,    20,   -47,   156,   -15,   -47,   -47,   -17,   108,
-      50,   -47,    22,    22,   -17,   -17,   -17,   -17,   -17,   -17,
-     -47,   -47,   -47,   -47,    23,   -47,    29,   156,   -47,   156,
-      51,   -47,   156,    12,    41,    30,   -17,   -47,   -47,   -47
+      83,   -44,   -44,   -44,   -44,    -1,   -33,   -44,   121,   121,
+     -21,   162,   162,   162,   162,   121,    15,   121,   -27,    30,
+     -44,    22,    23,    31,    37,    45,     5,    27,   -44,    53,
+      16,    25,   -44,   -44,   162,   130,   121,   -44,   -44,   132,
+      17,    -4,   162,   162,   -44,   -44,   -44,   -44,   -44,   -44,
+     159,   -13,   162,   -44,    55,    83,    83,    83,    83,   -44,
+     162,   162,   162,   162,   162,   162,   162,   162,   162,   162,
+     162,   162,   121,   121,     0,    78,    36,    16,    16,   -44,
+     -44,   162,    80,   -44,   -44,    38,    83,     7,    82,    86,
+     -44,    27,    27,    38,    38,    38,    38,    38,    38,   -44,
+     -44,   -44,   -44,    25,   -44,    65,   162,   -44,   162,    96,
+     -44,   -44,   -44,   -44,   162,     9,    79,    87,    38,   -44,
+     -44,   -44
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -655,31 +663,33 @@ static const yytype_int16 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    32,    47,    45,    33,    35,    46,    34,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     2,
-       0,     0,     0,    14,    20,    24,    26,    15,    39,    40,
-      42,     0,     0,     0,    35,    46,     0,     0,     0,     0,
-      30,    27,    28,    29,    43,    36,     0,     0,     0,     1,
-       0,     0,     3,    13,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,    35,
-       9,    11,    12,     6,     0,     0,    37,    44,     5,     0,
-       0,     4,    18,    19,    51,    50,    52,    53,    48,    49,
-      21,    22,    23,    25,    38,    41,     0,     0,    10,     0,
-       0,     8,     0,     0,     0,     0,    17,    16,    31,     7
+       0,    36,    51,    49,    37,    39,    50,    38,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       2,     0,     0,     0,     0,     0,    18,    24,    28,    30,
+      19,    43,    44,    46,     0,     0,     0,    39,    50,     0,
+       0,     0,     0,     0,    34,    31,    32,    33,    47,    40,
+       0,     0,     0,     1,     0,     0,     0,     0,     3,    17,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    39,    13,    15,    16,     7,
+       6,     0,     0,    41,    48,     5,     0,     0,     0,     0,
+       4,    22,    23,    55,    54,    56,    57,    52,    53,    25,
+      26,    27,    29,    42,    45,     0,     0,    14,     0,     0,
+       8,    10,    11,    12,     0,     0,     0,     0,    21,    20,
+      35,     9
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -47,   -47,   -46,   -47,   -47,   -47,     0,   -33,    10,    -9,
-       2,    21,    -5,   -47
+     -44,   -44,   -43,   -44,   -44,   -44,   -44,   -44,    -8,    13,
+     112,    -9,    67,    46,    -7,   -44
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,    18,    19,    20,    21,    22,    36,    24,    25,    26,
-      27,    28,    29,    30
+       0,    19,    20,    21,    22,    23,    24,    25,    26,    27,
+      28,    29,    30,    31,    32,    33
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -687,91 +697,93 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      23,    40,    41,    42,    43,    80,    81,    31,    73,    44,
-      37,    66,    54,    55,    54,    55,    46,    33,    47,    77,
-      76,    82,    83,    66,    38,    96,    45,    32,    48,    74,
-     107,    68,    70,   100,    71,    72,    54,    55,    49,    75,
-      50,    54,    55,    51,    52,    65,    53,    66,    78,    67,
-      97,    23,    23,    62,    63,    64,    84,    85,    86,    87,
-      88,    89,    95,   101,    79,    99,   102,   105,   109,    54,
-      55,    98,    90,    91,    92,    93,   108,     0,     0,    23,
-      56,    57,    58,    59,    60,    61,     0,    94,     0,     0,
-     104,     0,     0,     0,    54,    55,     0,   103,     0,     0,
-       0,     0,   106,     0,     0,    56,    57,    58,    59,    60,
-      61,     1,     2,     3,     0,     4,     5,     6,     7,     8,
-       1,     2,     3,     0,     4,    34,    35,     7,     9,     0,
-      10,    11,    12,    13,     0,     0,    14,     9,    15,    10,
-      11,    12,    13,     0,    16,    14,    17,    15,     0,     0,
-       1,     2,     3,    16,     4,    69,    35,     7,     0,     1,
-       0,     0,     0,     4,    34,     0,     7,     9,     0,    10,
-      11,    12,    13,     0,     0,    14,     9,    15,    10,    11,
-      12,    13,     0,    16,    54,    55,    15,     0,     0,     0,
-      76,     0,    39,    54,    55,    56,    57,    58,    59,    60,
-      61,     0,     0,     0,    56,    57,    58,    59,    60,    61
+      39,    39,    44,    45,    46,    47,    36,    39,    48,    50,
+      80,    59,    87,    88,    89,    90,    72,    42,    34,   110,
+     105,    52,   111,    49,    84,    72,    74,    76,    39,   119,
+      53,    60,    61,    81,    79,    82,    60,    61,    35,    54,
+      60,    61,   107,   109,    85,    72,    72,    62,    63,    64,
+      65,    66,    67,    73,    93,    94,    95,    96,    97,    98,
+      68,    69,    70,    55,    39,    39,   104,    60,    61,    60,
+      61,    56,   108,    91,    92,    40,    41,    57,    62,    63,
+      64,    65,    66,    67,    51,    58,     1,     2,     3,    71,
+       4,     5,     6,     7,     8,    86,     9,   106,   115,   116,
+     112,   113,    77,    78,   114,    10,   118,    11,    12,    13,
+      14,    60,    61,    15,   117,    16,   120,    83,   103,     0,
+       0,    17,     0,    18,     1,     2,     3,   121,     4,    37,
+      38,     7,     0,     1,     2,     3,     0,     4,    75,    38,
+       7,     0,     0,    10,     0,    11,    12,    13,    14,     0,
+       0,    15,    10,    16,    11,    12,    13,    14,     0,    17,
+      15,     0,    16,    60,    61,     1,     0,     0,    17,     4,
+      37,     0,     7,     0,    62,    63,    64,    65,    66,    67,
+      99,   100,   101,   102,    10,     0,    11,    12,    13,    14,
+      60,    61,     0,     0,    16,     0,    83,     0,     0,     0,
+      43,    62,    63,    64,    65,    66,    67
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,    10,    11,    12,    13,    51,    52,    17,    12,    14,
-       8,    27,    29,    30,    29,    30,    16,    37,    16,    35,
-      35,    54,    55,    27,    36,    18,     8,    37,    46,    38,
-      18,    31,    32,    79,    32,    33,    29,    30,     0,    39,
-      15,    29,    30,    38,    38,    34,     6,    27,    48,    26,
-      17,    51,    52,    31,    32,    33,    56,    57,    58,    59,
-      60,    61,    67,    13,    38,    74,    37,    16,    38,    29,
-      30,     6,    62,    63,    64,    65,    35,    -1,    -1,    79,
-      40,    41,    42,    43,    44,    45,    -1,    66,    -1,    -1,
-      99,    -1,    -1,    -1,    29,    30,    -1,    97,    -1,    -1,
-      -1,    -1,   102,    -1,    -1,    40,    41,    42,    43,    44,
-      45,     3,     4,     5,    -1,     7,     8,     9,    10,    11,
-       3,     4,     5,    -1,     7,     8,     9,    10,    20,    -1,
-      22,    23,    24,    25,    -1,    -1,    28,    20,    30,    22,
-      23,    24,    25,    -1,    36,    28,    38,    30,    -1,    -1,
-       3,     4,     5,    36,     7,     8,     9,    10,    -1,     3,
-      -1,    -1,    -1,     7,     8,    -1,    10,    20,    -1,    22,
-      23,    24,    25,    -1,    -1,    28,    20,    30,    22,    23,
-      24,    25,    -1,    36,    29,    30,    30,    -1,    -1,    -1,
-      35,    -1,    36,    29,    30,    40,    41,    42,    43,    44,
-      45,    -1,    -1,    -1,    40,    41,    42,    43,    44,    45
+       8,     9,    11,    12,    13,    14,    39,    15,    15,    17,
+      14,     6,    55,    56,    57,    58,    29,    38,    19,    12,
+      20,    48,    15,     8,    37,    29,    34,    35,    36,    20,
+       0,    31,    32,    42,    17,    43,    31,    32,    39,    17,
+      31,    32,     6,    86,    52,    29,    29,    42,    43,    44,
+      45,    46,    47,    28,    62,    63,    64,    65,    66,    67,
+      33,    34,    35,    40,    72,    73,    73,    31,    32,    31,
+      32,    40,    81,    60,    61,     8,     9,    40,    42,    43,
+      44,    45,    46,    47,    17,    40,     3,     4,     5,    36,
+       7,     8,     9,    10,    11,    40,    13,    19,   106,   108,
+      18,    15,    35,    36,    39,    22,   114,    24,    25,    26,
+      27,    31,    32,    30,    18,    32,    37,    37,    72,    -1,
+      -1,    38,    -1,    40,     3,     4,     5,    40,     7,     8,
+       9,    10,    -1,     3,     4,     5,    -1,     7,     8,     9,
+      10,    -1,    -1,    22,    -1,    24,    25,    26,    27,    -1,
+      -1,    30,    22,    32,    24,    25,    26,    27,    -1,    38,
+      30,    -1,    32,    31,    32,     3,    -1,    -1,    38,     7,
+       8,    -1,    10,    -1,    42,    43,    44,    45,    46,    47,
+      68,    69,    70,    71,    22,    -1,    24,    25,    26,    27,
+      31,    32,    -1,    -1,    32,    -1,    37,    -1,    -1,    -1,
+      38,    42,    43,    44,    45,    46,    47
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     5,     7,     8,     9,    10,    11,    20,
-      22,    23,    24,    25,    28,    30,    36,    38,    48,    49,
-      50,    51,    52,    53,    54,    55,    56,    57,    58,    59,
-      60,    17,    37,    37,     8,     9,    53,    57,    36,    36,
-      56,    56,    56,    56,    59,     8,    53,    57,    46,     0,
-      15,    38,    38,     6,    29,    30,    40,    41,    42,    43,
-      44,    45,    31,    32,    33,    34,    27,    26,    53,     8,
-      53,    57,    57,    12,    56,    53,    35,    35,    53,    38,
-      49,    49,    54,    54,    53,    53,    53,    53,    53,    53,
-      55,    55,    55,    55,    58,    59,    18,    17,     6,    56,
-      49,    13,    37,    53,    56,    16,    53,    18,    35,    38
+       0,     3,     4,     5,     7,     8,     9,    10,    11,    13,
+      22,    24,    25,    26,    27,    30,    32,    38,    40,    50,
+      51,    52,    53,    54,    55,    56,    57,    58,    59,    60,
+      61,    62,    63,    64,    19,    39,    39,     8,     9,    57,
+      61,    61,    38,    38,    60,    60,    60,    60,    63,     8,
+      57,    61,    48,     0,    17,    40,    40,    40,    40,     6,
+      31,    32,    42,    43,    44,    45,    46,    47,    33,    34,
+      35,    36,    29,    28,    57,     8,    57,    61,    61,    17,
+      14,    60,    57,    37,    37,    57,    40,    51,    51,    51,
+      51,    58,    58,    57,    57,    57,    57,    57,    57,    59,
+      59,    59,    59,    62,    63,    20,    19,     6,    60,    51,
+      12,    15,    18,    15,    39,    57,    60,    18,    57,    20,
+      37,    40
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    47,    48,    49,    49,    50,    51,    52,    52,    52,
-      52,    52,    52,    52,    52,    52,    52,    52,    53,    53,
-      53,    54,    54,    54,    54,    55,    55,    56,    56,    56,
-      56,    56,    56,    56,    56,    56,    56,    56,    57,    57,
-      58,    58,    59,    59,    60,    60,    60,    60,    60,    60,
-      60,    60,    60,    60
+       0,    49,    50,    51,    51,    52,    53,    54,    55,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    56,    57,    57,    57,    58,    58,    58,    58,    59,
+      59,    60,    60,    60,    60,    60,    60,    60,    60,    60,
+      60,    60,    61,    61,    62,    62,    63,    63,    64,    64,
+      64,    64,    64,    64,    64,    64,    64,    64
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     3,     3,     3,     6,     4,     3,
-       4,     3,     3,     2,     1,     1,     6,     6,     3,     3,
-       1,     3,     3,     3,     1,     3,     1,     2,     2,     2,
-       2,     6,     1,     1,     1,     1,     2,     3,     3,     1,
-       1,     3,     1,     2,     3,     1,     1,     1,     3,     3,
-       3,     3,     3,     3
+       0,     2,     1,     2,     3,     3,     3,     3,     4,     6,
+       4,     4,     4,     3,     4,     3,     3,     2,     1,     1,
+       6,     6,     3,     3,     1,     3,     3,     3,     1,     3,
+       1,     2,     2,     2,     2,     6,     1,     1,     1,     1,
+       2,     3,     3,     1,     1,     3,     1,     2,     3,     1,
+       1,     1,     3,     3,     3,     3,     3,     3
 };
 
 
@@ -1235,7 +1247,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* programa: expressio_list  */
-#line 83 "bison_flex/sintaxi.y"
+#line 84 "bison_flex/sintaxi.y"
                           {
              fprintf(yyout, "End of input reached.\n");
              for (int i = 0; i < 200; i++) {
@@ -1244,11 +1256,11 @@ yyreduce:
                      }
                  }
            }
-#line 1248 "bison_output/sintaxi.tab.c"
+#line 1260 "bison_output/sintaxi.tab.c"
     break;
 
   case 5: /* header: ENDLINE REPEAT OPERATION  */
-#line 99 "bison_flex/sintaxi.y"
+#line 100 "bison_flex/sintaxi.y"
                               {
                  if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
                              if ((yyvsp[0].expr_val).val_int > 0) {
@@ -1282,21 +1294,45 @@ yyreduce:
                      fprintf(stderr, "Error: Invalid type for repeat count\n");
                  }
      }
-#line 1286 "bison_output/sintaxi.tab.c"
+#line 1298 "bison_output/sintaxi.tab.c"
     break;
 
   case 6: /* if_header: IF OPERATION_BOOLEAN THEN  */
-#line 133 "bison_flex/sintaxi.y"
+#line 134 "bison_flex/sintaxi.y"
                                       {
                 (yyval.header).linea = lines;
                 ifmode = 1;
                 lines++;
            }
-#line 1296 "bison_output/sintaxi.tab.c"
+#line 1308 "bison_output/sintaxi.tab.c"
     break;
 
-  case 7: /* expressio: header DO ENDLINE expressio_list DONE ENDLINE  */
+  case 7: /* while_header: WHILE OPERATION_BOOLEAN DO  */
 #line 139 "bison_flex/sintaxi.y"
+                                          {
+                (yyval.header).linea = lines;
+                while_mode = 1;
+                lines++;
+           }
+#line 1318 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 8: /* else_header: if_header ENDLINE expressio_list ELSE  */
+#line 144 "bison_flex/sintaxi.y"
+                                                   {
+                 ifmode = 0;
+                 char buffer[200];  // Buffer to hold the formatted output
+                 int current_line = lines;
+                 (yyval.header).linea = current_line;
+                 snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", (yyvsp[-3].header).linea, current_line+1); //tenir en compte el goto
+                 strcat(program_lines[(yyvsp[-3].header).linea], buffer);  // Append to program_lines[$1.linia]
+                 lines++;
+              }
+#line 1332 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 9: /* expressio: header DO ENDLINE expressio_list DONE ENDLINE  */
+#line 154 "bison_flex/sintaxi.y"
                                                              {
                     delta = yylineno - (yyvsp[-5].header).linea;
                     char buffer[200];  // Buffer to hold the formatted output
@@ -1306,11 +1342,11 @@ yyreduce:
                     strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
 
                 }
-#line 1310 "bison_output/sintaxi.tab.c"
+#line 1346 "bison_output/sintaxi.tab.c"
     break;
 
-  case 8: /* expressio: if_header ENDLINE expressio_list FI  */
-#line 148 "bison_flex/sintaxi.y"
+  case 10: /* expressio: if_header ENDLINE expressio_list FI  */
+#line 163 "bison_flex/sintaxi.y"
                                                       {
                     ifmode = 0;
                     char buffer[200];  // Buffer to hold the formatted output
@@ -1318,11 +1354,40 @@ yyreduce:
                     snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", (yyvsp[-3].header).linea, current_line);
                     strcat(program_lines[(yyvsp[-3].header).linea], buffer);  // Append to program_lines[$1.linia]
                     }
-#line 1322 "bison_output/sintaxi.tab.c"
+#line 1358 "bison_output/sintaxi.tab.c"
     break;
 
-  case 9: /* expressio: ID ASSIGN OPERATION  */
-#line 155 "bison_flex/sintaxi.y"
+  case 11: /* expressio: while_header ENDLINE expressio_list DONE  */
+#line 170 "bison_flex/sintaxi.y"
+                                                           {
+                    while_mode = 0;
+                    char buffer[200];  // Buffer to hold the formatted output
+                    int current_line = lines;
+                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", (yyvsp[-3].header).linea, current_line+1);
+                    strcat(program_lines[(yyvsp[-3].header).linea], buffer);  // Append to program_lines[$1.linia]
+                    current_line = lines;
+                    char buffer2[200];  // Buffer to hold the formatted output
+                    snprintf(buffer2, sizeof(buffer2), "%d : GOTO %d\n", current_line, (yyvsp[-3].header).linea-1);
+                    strcat(program_lines[current_line], buffer2);  // Append to program_lines[$1.linia]
+                    lines++;
+                }
+#line 1375 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 12: /* expressio: else_header ENDLINE expressio_list FI  */
+#line 182 "bison_flex/sintaxi.y"
+                                                        {
+                    ifmode = 0;
+                    char buffer[200];  // Buffer to hold the formatted output
+                    int current_line = lines;
+                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", (yyvsp[-3].header).linea, current_line);
+                    strcat(program_lines[(yyvsp[-3].header).linea], buffer);  // Append to program_lines[$1.linia]
+                 }
+#line 1387 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 13: /* expressio: ID ASSIGN OPERATION  */
+#line 189 "bison_flex/sintaxi.y"
                                       {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup((yyvsp[-2].ident).lexema, &existing_value);
@@ -1334,21 +1399,14 @@ yyreduce:
                         char buffer[200];  // Buffer to hold the formatted output
 
                         // If the type is INT_TYPE
-                        if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                            //snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, (int)$3.val_int);
-                            //strcat(program_lines[lines], buffer);  // Append the assignment statement
-                            //lines++;  // Increment the line counter
+                        if ((yyvsp[0].expr_val).val_type == INT_TYPE && list_size == 0) {
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, (yyvsp[-2].ident).lexema, (int)(yyvsp[0].expr_val).val_int);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
                         }
                         // If the type is FLOAT_TYPE
-                        else if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                            //snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, $1.lexema, $3.val_float);
-                            //strcat(program_lines[lines], buffer);  // Append the assignment statement
-                            //lines++;  // Increment the line counter
-                        }
-                        // For STRING_TYPE
-                        else {
-                            strcat(program_lines[lines], buffer);  // Append to program_lines
-                            snprintf(buffer, sizeof(buffer), "%d : %s := %s\n", lines, (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_string);
+                        else if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE && list_size == 0) {
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_float);
                             strcat(program_lines[lines], buffer);  // Append the assignment statement
                             lines++;  // Increment the line counter
                         }
@@ -1362,11 +1420,11 @@ yyreduce:
                       id_size = 0;
                       sym_enter((yyvsp[-2].ident).lexema, &(yyvsp[0].expr_val));
                   }
-#line 1366 "bison_output/sintaxi.tab.c"
+#line 1424 "bison_output/sintaxi.tab.c"
     break;
 
-  case 10: /* expressio: ID ASSIGN OPERATION MODE  */
-#line 194 "bison_flex/sintaxi.y"
+  case 14: /* expressio: ID ASSIGN OPERATION MODE  */
+#line 221 "bison_flex/sintaxi.y"
                                            {
                 if ((yyvsp[-1].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1396,27 +1454,27 @@ yyreduce:
                                  fprintf(stderr, "Mode only supported in INTEGER, error declared in line %d\n", yylineno);
                               }
                 }
-#line 1400 "bison_output/sintaxi.tab.c"
+#line 1458 "bison_output/sintaxi.tab.c"
     break;
 
-  case 11: /* expressio: ID ASSIGN OPERATION_BOOLEAN  */
-#line 223 "bison_flex/sintaxi.y"
+  case 15: /* expressio: ID ASSIGN OPERATION_BOOLEAN  */
+#line 250 "bison_flex/sintaxi.y"
                                               {
-                            fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool ? "true" : "false");
-                            fprintf(stderr, "ID: %s (bool) pren per valor: %s\n", (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool ? "true" : "false");
                             sym_value_type value_to_store;
                             value_to_store.val_type = (yyvsp[0].expr_val).val_type;
                             value_to_store.val_bool = (yyvsp[0].expr_val).val_bool; // Assuming $3 is a boolean
                             // Check if the symbol already exists, if not, initialize a new entry
-
                             sym_enter((yyvsp[-2].ident).lexema, &value_to_store);
-
+                            char buffer[200];  // Buffer to hold the formatted output
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, (yyvsp[-2].ident).lexema, (yyvsp[0].expr_val).val_bool);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
                 }
-#line 1416 "bison_output/sintaxi.tab.c"
+#line 1474 "bison_output/sintaxi.tab.c"
     break;
 
-  case 12: /* expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN  */
-#line 234 "bison_flex/sintaxi.y"
+  case 16: /* expressio: ID_BOOL ASSIGN OPERATION_BOOLEAN  */
+#line 261 "bison_flex/sintaxi.y"
                                                    {
                 if ((yyvsp[0].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1432,11 +1490,11 @@ yyreduce:
 
 
                 }
-#line 1436 "bison_output/sintaxi.tab.c"
+#line 1494 "bison_output/sintaxi.tab.c"
     break;
 
-  case 13: /* expressio: OPERATION MODE  */
-#line 249 "bison_flex/sintaxi.y"
+  case 17: /* expressio: OPERATION MODE  */
+#line 276 "bison_flex/sintaxi.y"
                                  {
                 if ((yyvsp[-1].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1479,11 +1537,11 @@ yyreduce:
                                        (yyval.expr_val).val_string = (yyvsp[-1].expr_val).val_string;
                                        }
                 }
-#line 1483 "bison_output/sintaxi.tab.c"
+#line 1541 "bison_output/sintaxi.tab.c"
     break;
 
-  case 14: /* expressio: OPERATION  */
-#line 291 "bison_flex/sintaxi.y"
+  case 18: /* expressio: OPERATION  */
+#line 318 "bison_flex/sintaxi.y"
                             {
                     if ((yyvsp[0].expr_val).val_type == UNKNOWN_TYPE) {
                         fprintf(stderr, "Error: ID is not declared in line %d\n", yylineno);
@@ -1510,11 +1568,11 @@ yyreduce:
                         (yyval.expr_val).val_string = (yyvsp[0].expr_val).val_string;
                     }
                 }
-#line 1514 "bison_output/sintaxi.tab.c"
+#line 1572 "bison_output/sintaxi.tab.c"
     break;
 
-  case 15: /* expressio: OPERATION_BOOLEAN  */
-#line 317 "bison_flex/sintaxi.y"
+  case 19: /* expressio: OPERATION_BOOLEAN  */
+#line 344 "bison_flex/sintaxi.y"
                                     {
                             if((yyvsp[0].expr_val).val_type == BOOL_TYPE){
                                 fprintf(yyout, " (bool) pren per valor: %s\n", (yyvsp[0].expr_val).val_bool ? "true" : "false");
@@ -1522,11 +1580,11 @@ yyreduce:
                                 (yyval.expr_val).val_bool = (yyvsp[0].expr_val).val_bool;
                             }
                 }
-#line 1526 "bison_output/sintaxi.tab.c"
+#line 1584 "bison_output/sintaxi.tab.c"
     break;
 
-  case 16: /* expressio: ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE  */
-#line 324 "bison_flex/sintaxi.y"
+  case 20: /* expressio: ID ASSIGN ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE  */
+#line 351 "bison_flex/sintaxi.y"
                                                                      {
                      mode_assign = true;
                      if((yyvsp[-1].expr_val).id_name != NULL)
@@ -1548,11 +1606,11 @@ yyreduce:
                         mode_assign = false;
 
                  }
-#line 1552 "bison_output/sintaxi.tab.c"
+#line 1610 "bison_output/sintaxi.tab.c"
     break;
 
-  case 17: /* expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION  */
-#line 345 "bison_flex/sintaxi.y"
+  case 21: /* expressio: ID OPENED_CLAUSE OPERATION CLOSED_CLAUSE ASSIGN OPERATION  */
+#line 372 "bison_flex/sintaxi.y"
                                                                             {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup((yyvsp[-5].ident).lexema, &existing_value);
@@ -1596,11 +1654,11 @@ yyreduce:
                       float_size = 0;
                       id_size = 0;
                 }
-#line 1600 "bison_output/sintaxi.tab.c"
+#line 1658 "bison_output/sintaxi.tab.c"
     break;
 
-  case 18: /* OPERATION: OPERATION PLUS OPERATION2  */
-#line 396 "bison_flex/sintaxi.y"
+  case 22: /* OPERATION: OPERATION PLUS OPERATION2  */
+#line 423 "bison_flex/sintaxi.y"
                               {
         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             // Handle float addition
@@ -1634,11 +1692,11 @@ yyreduce:
             generate_power_logic(&power, &lines);
 
     }
-#line 1638 "bison_output/sintaxi.tab.c"
+#line 1696 "bison_output/sintaxi.tab.c"
     break;
 
-  case 19: /* OPERATION: OPERATION MINUS OPERATION2  */
-#line 429 "bison_flex/sintaxi.y"
+  case 23: /* OPERATION: OPERATION MINUS OPERATION2  */
+#line 456 "bison_flex/sintaxi.y"
                                  {
         if (((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[-2].expr_val).val_type == FLOAT_TYPE) &&
             ((yyvsp[0].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE)) {
@@ -1673,11 +1731,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1677 "bison_output/sintaxi.tab.c"
+#line 1735 "bison_output/sintaxi.tab.c"
     break;
 
-  case 21: /* OPERATION2: OPERATION2 MULTIPLY OPERATION3  */
-#line 467 "bison_flex/sintaxi.y"
+  case 25: /* OPERATION2: OPERATION2 MULTIPLY OPERATION3  */
+#line 494 "bison_flex/sintaxi.y"
                                     {
         if (((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[-2].expr_val).val_type == FLOAT_TYPE) &&
             ((yyvsp[0].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE)) {
@@ -1714,11 +1772,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1718 "bison_output/sintaxi.tab.c"
+#line 1776 "bison_output/sintaxi.tab.c"
     break;
 
-  case 22: /* OPERATION2: OPERATION2 DIVIDE OPERATION3  */
-#line 503 "bison_flex/sintaxi.y"
+  case 26: /* OPERATION2: OPERATION2 DIVIDE OPERATION3  */
+#line 530 "bison_flex/sintaxi.y"
                                    {
         if (((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[-2].expr_val).val_type == FLOAT_TYPE) &&
             ((yyvsp[0].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE)) {
@@ -1772,11 +1830,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1776 "bison_output/sintaxi.tab.c"
+#line 1834 "bison_output/sintaxi.tab.c"
     break;
 
-  case 23: /* OPERATION2: OPERATION2 MOD OPERATION3  */
-#line 556 "bison_flex/sintaxi.y"
+  case 27: /* OPERATION2: OPERATION2 MOD OPERATION3  */
+#line 583 "bison_flex/sintaxi.y"
                                 {
     //NOMES PER INT
             if ((yyvsp[-2].expr_val).val_type == INT_TYPE || (yyvsp[0].expr_val).val_type == INT_TYPE) {
@@ -1793,11 +1851,11 @@ yyreduce:
                 fprintf(stderr, "Error: Modulus is not made by integers as expected in line %d\n", yylineno-1);
             }
         }
-#line 1797 "bison_output/sintaxi.tab.c"
+#line 1855 "bison_output/sintaxi.tab.c"
     break;
 
-  case 25: /* OPERATION3: OPERATION4 POWER OPERATION3  */
-#line 576 "bison_flex/sintaxi.y"
+  case 29: /* OPERATION3: OPERATION4 POWER OPERATION3  */
+#line 603 "bison_flex/sintaxi.y"
                                 {
             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
                         if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
@@ -1846,11 +1904,11 @@ yyreduce:
 
 
         }
-#line 1850 "bison_output/sintaxi.tab.c"
+#line 1908 "bison_output/sintaxi.tab.c"
     break;
 
-  case 27: /* OPERATION4: SIN OPERATION4  */
-#line 628 "bison_flex/sintaxi.y"
+  case 31: /* OPERATION4: SIN OPERATION4  */
+#line 655 "bison_flex/sintaxi.y"
                     {
         if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             (yyval.expr_val).val_type = FLOAT_TYPE;
@@ -1860,11 +1918,11 @@ yyreduce:
             (yyval.expr_val).val_float = sin((yyvsp[0].expr_val).val_int);
         }
     }
-#line 1864 "bison_output/sintaxi.tab.c"
+#line 1922 "bison_output/sintaxi.tab.c"
     break;
 
-  case 28: /* OPERATION4: COS OPERATION4  */
-#line 637 "bison_flex/sintaxi.y"
+  case 32: /* OPERATION4: COS OPERATION4  */
+#line 664 "bison_flex/sintaxi.y"
                      {
         if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             (yyval.expr_val).val_type = FLOAT_TYPE;
@@ -1874,11 +1932,11 @@ yyreduce:
             (yyval.expr_val).val_float = cos((yyvsp[0].expr_val).val_int);
         }
     }
-#line 1878 "bison_output/sintaxi.tab.c"
+#line 1936 "bison_output/sintaxi.tab.c"
     break;
 
-  case 29: /* OPERATION4: TAN OPERATION4  */
-#line 646 "bison_flex/sintaxi.y"
+  case 33: /* OPERATION4: TAN OPERATION4  */
+#line 673 "bison_flex/sintaxi.y"
                      {
         if ((yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
             if (fmod((yyvsp[0].expr_val).val_float, M_PI) == M_PI / 2) {
@@ -1896,11 +1954,11 @@ yyreduce:
             (yyval.expr_val).val_float = tan((yyvsp[0].expr_val).val_int);
         }
     }
-#line 1900 "bison_output/sintaxi.tab.c"
+#line 1958 "bison_output/sintaxi.tab.c"
     break;
 
-  case 30: /* OPERATION4: LEN OPERATION4  */
-#line 663 "bison_flex/sintaxi.y"
+  case 34: /* OPERATION4: LEN OPERATION4  */
+#line 690 "bison_flex/sintaxi.y"
                      {
         if ((yyvsp[0].expr_val).val_type == STRING_TYPE) {
             (yyval.expr_val).val_int = strlen((yyvsp[0].expr_val).val_string);
@@ -1910,11 +1968,11 @@ yyreduce:
             YYABORT;
         }
     }
-#line 1914 "bison_output/sintaxi.tab.c"
+#line 1972 "bison_output/sintaxi.tab.c"
     break;
 
-  case 31: /* OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS  */
-#line 673 "bison_flex/sintaxi.y"
+  case 35: /* OPERATION4: SUBSTR OPEN_PARENTHESIS OPERATION4 OPERATION4 OPERATION4 CLOSED_PARENTHESIS  */
+#line 700 "bison_flex/sintaxi.y"
                                                                               {
     // OPERATION4 $2 is the string input
     // OPERATION4 $3 is the starting index
@@ -1960,11 +2018,11 @@ yyreduce:
         exit(1);
     }
 }
-#line 1964 "bison_output/sintaxi.tab.c"
+#line 2022 "bison_output/sintaxi.tab.c"
     break;
 
-  case 32: /* OPERATION4: INTEGER  */
-#line 719 "bison_flex/sintaxi.y"
+  case 36: /* OPERATION4: INTEGER  */
+#line 746 "bison_flex/sintaxi.y"
               {
             number_list[number_size] = (yyvsp[0].enter);
             number_size++;
@@ -1972,31 +2030,31 @@ yyreduce:
             (yyval.expr_val).val_int = (yyvsp[0].enter);
 
         }
-#line 1976 "bison_output/sintaxi.tab.c"
+#line 2034 "bison_output/sintaxi.tab.c"
     break;
 
-  case 33: /* OPERATION4: FLOAT  */
-#line 726 "bison_flex/sintaxi.y"
+  case 37: /* OPERATION4: FLOAT  */
+#line 753 "bison_flex/sintaxi.y"
             {
             fprintf(yyout, "float");
             add_to_float_list(float_list, &float_size, (yyvsp[0].real));
             (yyval.expr_val).val_type = FLOAT_TYPE;
             (yyval.expr_val).val_float = (yyvsp[0].real);
         }
-#line 1987 "bison_output/sintaxi.tab.c"
+#line 2045 "bison_output/sintaxi.tab.c"
     break;
 
-  case 34: /* OPERATION4: STRING  */
-#line 732 "bison_flex/sintaxi.y"
+  case 38: /* OPERATION4: STRING  */
+#line 759 "bison_flex/sintaxi.y"
              {
                 (yyval.expr_val).val_type = STRING_TYPE;
                 (yyval.expr_val).val_string = (yyvsp[0].cadena);
         }
-#line 1996 "bison_output/sintaxi.tab.c"
+#line 2054 "bison_output/sintaxi.tab.c"
     break;
 
-  case 35: /* OPERATION4: ID  */
-#line 736 "bison_flex/sintaxi.y"
+  case 39: /* OPERATION4: ID  */
+#line 763 "bison_flex/sintaxi.y"
          {
             sym_value_type value;
             int lookup_result;
@@ -2023,11 +2081,11 @@ yyreduce:
                 exit(EXIT_FAILURE);  // Exit the program
             }
         }
-#line 2027 "bison_output/sintaxi.tab.c"
+#line 2085 "bison_output/sintaxi.tab.c"
     break;
 
-  case 36: /* OPERATION4: MINUS ID  */
-#line 762 "bison_flex/sintaxi.y"
+  case 40: /* OPERATION4: MINUS ID  */
+#line 789 "bison_flex/sintaxi.y"
                {
         sym_value_type value;
         int lookup_result;
@@ -2053,11 +2111,11 @@ yyreduce:
         }
 
     }
-#line 2057 "bison_output/sintaxi.tab.c"
+#line 2115 "bison_output/sintaxi.tab.c"
     break;
 
-  case 37: /* OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS  */
-#line 787 "bison_flex/sintaxi.y"
+  case 41: /* OPERATION4: OPEN_PARENTHESIS OPERATION CLOSED_PARENTHESIS  */
+#line 814 "bison_flex/sintaxi.y"
                                                     {
         (yyval.expr_val).val_type = (yyvsp[-1].expr_val).val_type;
 
@@ -2074,11 +2132,11 @@ yyreduce:
             (yyval.expr_val).val_string = strdup((yyvsp[-1].expr_val).val_string);  // Duplicate the string to avoid pointer issues
         }
     }
-#line 2078 "bison_output/sintaxi.tab.c"
+#line 2136 "bison_output/sintaxi.tab.c"
     break;
 
-  case 38: /* OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1  */
-#line 806 "bison_flex/sintaxi.y"
+  case 42: /* OPERATION_BOOLEAN: OPERATION_BOOLEAN OR OPERATION_BOOLEAN1  */
+#line 833 "bison_flex/sintaxi.y"
                                            {
                                 (yyval.expr_val).val_type = BOOL_TYPE;
                                 if ((yyvsp[-2].expr_val).val_type == BOOL_TYPE && (yyvsp[0].expr_val).val_type == BOOL_TYPE) {
@@ -2086,11 +2144,11 @@ yyreduce:
                                 }
 
     }
-#line 2090 "bison_output/sintaxi.tab.c"
+#line 2148 "bison_output/sintaxi.tab.c"
     break;
 
-  case 41: /* OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2  */
-#line 817 "bison_flex/sintaxi.y"
+  case 45: /* OPERATION_BOOLEAN1: OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2  */
+#line 844 "bison_flex/sintaxi.y"
                                                {
             (yyval.expr_val).val_type = BOOL_TYPE;
             if ((yyvsp[-2].expr_val).val_type == BOOL_TYPE && (yyvsp[0].expr_val).val_type == BOOL_TYPE) {
@@ -2098,22 +2156,22 @@ yyreduce:
             }
 
     }
-#line 2102 "bison_output/sintaxi.tab.c"
+#line 2160 "bison_output/sintaxi.tab.c"
     break;
 
-  case 43: /* OPERATION_BOOLEAN2: NOT OPERATION_BOOLEAN2  */
-#line 826 "bison_flex/sintaxi.y"
+  case 47: /* OPERATION_BOOLEAN2: NOT OPERATION_BOOLEAN2  */
+#line 853 "bison_flex/sintaxi.y"
                             {
             (yyval.expr_val).val_type = BOOL_TYPE;
             if ((yyvsp[0].expr_val).val_type == BOOL_TYPE) {
                 (yyval.expr_val).val_bool = !(yyvsp[0].expr_val).val_bool;
             }
     }
-#line 2113 "bison_output/sintaxi.tab.c"
+#line 2171 "bison_output/sintaxi.tab.c"
     break;
 
-  case 44: /* OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS  */
-#line 833 "bison_flex/sintaxi.y"
+  case 48: /* OPERATION_BOOLEAN3: OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS  */
+#line 860 "bison_flex/sintaxi.y"
                                                           {
             (yyval.expr_val).val_type = (yyvsp[-1].expr_val).val_type;
             if ((yyvsp[-1].expr_val).val_type == BOOL_TYPE) {
@@ -2122,20 +2180,21 @@ yyreduce:
                 (yyval.expr_val).val_bool = (yyvsp[-1].expr_val).val_bool;
             }
         }
-#line 2126 "bison_output/sintaxi.tab.c"
+#line 2184 "bison_output/sintaxi.tab.c"
     break;
 
-  case 45: /* OPERATION_BOOLEAN3: TRUE  */
-#line 841 "bison_flex/sintaxi.y"
+  case 49: /* OPERATION_BOOLEAN3: TRUE  */
+#line 868 "bison_flex/sintaxi.y"
            {
             (yyval.expr_val).val_type = BOOL_TYPE;
             (yyval.expr_val).val_bool = true;  // Use bool `true` instead of string "true"
-        }
-#line 2135 "bison_output/sintaxi.tab.c"
+
+    }
+#line 2194 "bison_output/sintaxi.tab.c"
     break;
 
-  case 46: /* OPERATION_BOOLEAN3: ID_BOOL  */
-#line 845 "bison_flex/sintaxi.y"
+  case 50: /* OPERATION_BOOLEAN3: ID_BOOL  */
+#line 873 "bison_flex/sintaxi.y"
               {
         sym_value_type value;
         int lookup_result;
@@ -2145,150 +2204,161 @@ yyreduce:
             (yyval.expr_val).val_type = value.val_type;  // Store the value for later use
             (yyval.expr_val).val_bool = value.val_bool;
         }
-        else {
-        }
+
+
+        generate_if_statement_simple((yyval.expr_val).val_bool, 1, "EQ");
+
+
     }
-#line 2152 "bison_output/sintaxi.tab.c"
+#line 2214 "bison_output/sintaxi.tab.c"
     break;
 
-  case 47: /* OPERATION_BOOLEAN3: FALSE  */
-#line 857 "bison_flex/sintaxi.y"
+  case 51: /* OPERATION_BOOLEAN3: FALSE  */
+#line 888 "bison_flex/sintaxi.y"
             {
             (yyval.expr_val).val_type = BOOL_TYPE;
             (yyval.expr_val).val_bool = false;  // Use bool `false` instead of string "false"
      }
-#line 2161 "bison_output/sintaxi.tab.c"
+#line 2223 "bison_output/sintaxi.tab.c"
     break;
 
-  case 48: /* OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION  */
-#line 861 "bison_flex/sintaxi.y"
+  case 52: /* OPERATION_BOOLEAN3: OPERATION EQUAL OPERATION  */
+#line 892 "bison_flex/sintaxi.y"
                                 {
-                     (yyval.expr_val).val_type = BOOL_TYPE;
-                     if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                         if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
-                             (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
-                         }
-                         if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                             (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
-                         }
-                         (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float == (yyvsp[0].expr_val).val_float;
-                     } else {
-                         (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int == (yyvsp[0].expr_val).val_int;
-                         generate_if_statement((yyvsp[-2].expr_val).val_int, (yyvsp[0].expr_val).val_int, "EQ");
+         (yyval.expr_val).val_type = BOOL_TYPE;
+         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+             }
+             if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+             }
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float == (yyvsp[0].expr_val).val_float;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "EQ", 0);
 
-                     }
-
-         }
-#line 2183 "bison_output/sintaxi.tab.c"
-    break;
-
-  case 49: /* OPERATION_BOOLEAN3: OPERATION NOT_EQUAL OPERATION  */
-#line 878 "bison_flex/sintaxi.y"
-                                    {
-                         (yyval.expr_val).val_type = BOOL_TYPE;
-                         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
-                                 (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
-                             }
-                             if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                                 (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
-                             }
-                             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float != (yyvsp[0].expr_val).val_float;
-                         } else {
-                             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int != (yyvsp[0].expr_val).val_int;
-                         }
-                         generate_if_statement((yyvsp[-2].expr_val).val_int, (yyvsp[0].expr_val).val_int, "NE");
+         } else {
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int == (yyvsp[0].expr_val).val_int;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "EQ", 1);
 
          }
-#line 2204 "bison_output/sintaxi.tab.c"
-    break;
-
-  case 50: /* OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION  */
-#line 894 "bison_flex/sintaxi.y"
-                                        {
-                                             (yyval.expr_val).val_type = BOOL_TYPE;
-                                             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                                                 if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
-                                                     (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
-                                                 }
-                                                 if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                                                     (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
-                                                 }
-                                                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float >= (yyvsp[0].expr_val).val_float;
-                                             } else {
-                                                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int >= (yyvsp[0].expr_val).val_int;
-
-                                             }
-         }
-#line 2224 "bison_output/sintaxi.tab.c"
-    break;
-
-  case 51: /* OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION  */
-#line 909 "bison_flex/sintaxi.y"
-                                       {
-    printf("hola");
-    printf("%d, %d less_equal \n", (yyvsp[-2].expr_val).val_type, (yyvsp[-2].expr_val).val_type);
-
-                             (yyval.expr_val).val_type = BOOL_TYPE;
-                             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                                 if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
-                                     (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
-                                 }
-                                 if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                                     (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
-                                 }
-                                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float > (yyvsp[0].expr_val).val_float;
-                             } else {
-                                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int > (yyvsp[0].expr_val).val_int;
-                             }
-                             generate_if_statement((yyvsp[-2].expr_val).val_int, (yyvsp[0].expr_val).val_int, "NE");
-
-         }
-#line 2248 "bison_output/sintaxi.tab.c"
-    break;
-
-  case 52: /* OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION  */
-#line 928 "bison_flex/sintaxi.y"
-                                    {
-                                 (yyval.expr_val).val_type = BOOL_TYPE;
-                                 if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                                     if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
-                                         (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
-                                     }
-                                     if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                                         (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
-                                     }
-                                     (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float < (yyvsp[0].expr_val).val_float;
-                                 } else {
-                                     (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int < (yyvsp[0].expr_val).val_int;
-                                 }
-         }
-#line 2267 "bison_output/sintaxi.tab.c"
-    break;
-
-  case 53: /* OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION  */
-#line 942 "bison_flex/sintaxi.y"
-                                     {
-    printf("%d, %d less_equal \n", (yyvsp[-2].expr_val).val_type, (yyvsp[-2].expr_val).val_type);
-
-                                     (yyval.expr_val).val_type = BOOL_TYPE;
-                                     if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
-                                         if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
-                                             (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
-                                         }
-                                         if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
-                                             (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
-                                         }
-                                         (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float <= (yyvsp[0].expr_val).val_float;
-                                     } else {
-                                         (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int <= (yyvsp[0].expr_val).val_int;
-                                     }
     }
-#line 2288 "bison_output/sintaxi.tab.c"
+#line 2246 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 53: /* OPERATION_BOOLEAN3: OPERATION NOT_EQUAL OPERATION  */
+#line 910 "bison_flex/sintaxi.y"
+                                    {
+             (yyval.expr_val).val_type = BOOL_TYPE;
+             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+                 if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                     (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+                 }
+                 if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                     (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+                 }
+                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float != (yyvsp[0].expr_val).val_float;
+                 generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "NE", 0);
+
+             } else {
+                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int != (yyvsp[0].expr_val).val_int;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "NE", 1);
+
+             }
+         }
+#line 2269 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 54: /* OPERATION_BOOLEAN3: OPERATION GREATER_EQUAL OPERATION  */
+#line 928 "bison_flex/sintaxi.y"
+                                        {
+             (yyval.expr_val).val_type = BOOL_TYPE;
+             if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+                 if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                     (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+                 }
+                 if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                     (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+                 }
+                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float >= (yyvsp[0].expr_val).val_float;
+             } else {
+                 (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int >= (yyvsp[0].expr_val).val_int;
+                 generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "GTE", 0);
+             }
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "GTE", 1);
+         }
+#line 2290 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 55: /* OPERATION_BOOLEAN3: OPERATION GREATER_THAN OPERATION  */
+#line 944 "bison_flex/sintaxi.y"
+                                       {
+         (yyval.expr_val).val_type = BOOL_TYPE;
+         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+             }
+             if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+             }
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float > (yyvsp[0].expr_val).val_float;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "GTF", 0);
+
+         } else {
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int > (yyvsp[0].expr_val).val_int;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "GTI", 1);
+
+         }
+
+    }
+#line 2314 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 56: /* OPERATION_BOOLEAN3: OPERATION LESS_THAN OPERATION  */
+#line 963 "bison_flex/sintaxi.y"
+                                    {
+         (yyval.expr_val).val_type = BOOL_TYPE;
+         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+             }
+             if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+             }
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float < (yyvsp[0].expr_val).val_float;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "LTF", 0);
+         } else {
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int < (yyvsp[0].expr_val).val_int;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "LTI", 1);
+         }
+    }
+#line 2335 "bison_output/sintaxi.tab.c"
+    break;
+
+  case 57: /* OPERATION_BOOLEAN3: OPERATION LESS_EQUAL OPERATION  */
+#line 979 "bison_flex/sintaxi.y"
+                                     {
+         (yyval.expr_val).val_type = BOOL_TYPE;
+         if ((yyvsp[-2].expr_val).val_type == FLOAT_TYPE || (yyvsp[0].expr_val).val_type == FLOAT_TYPE) {
+             if ((yyvsp[-2].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[-2].expr_val).val_float = (float) (yyvsp[-2].expr_val).val_int;  // Convert $1 from int to float
+             }
+             if ((yyvsp[0].expr_val).val_type == INT_TYPE) {
+                 (yyvsp[0].expr_val).val_float = (float) (yyvsp[0].expr_val).val_int;  // Convert $3 from int to float
+             }
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_float <= (yyvsp[0].expr_val).val_float;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "LTE", 0);
+         } else {
+             (yyval.expr_val).val_bool = (yyvsp[-2].expr_val).val_int <= (yyvsp[0].expr_val).val_int;
+             generate_if_statement((yyvsp[-2].expr_val), (yyvsp[0].expr_val), "LTE", 1);
+
+         }
+
+    }
+#line 2358 "bison_output/sintaxi.tab.c"
     break;
 
 
-#line 2292 "bison_output/sintaxi.tab.c"
+#line 2362 "bison_output/sintaxi.tab.c"
 
       default: break;
     }
@@ -2481,6 +2551,6 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 959 "bison_flex/sintaxi.y"
+#line 998 "bison_flex/sintaxi.y"
 
 

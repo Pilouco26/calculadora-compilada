@@ -41,6 +41,8 @@ sign    [+-]?
 "fi"                    { return FI; }
 "then"                    { return THEN; }
 "if"                    { return IF; }
+"else"                    { return ELSE; }
+"while"                    { return WHILE; }
 "["                    { return OPENED_CLAUSE; }
 "]"                    { return CLOSED_CLAUSE; }
 

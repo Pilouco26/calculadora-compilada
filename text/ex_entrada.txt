@@ -1,1 +1,7 @@
-m := 7.2 * 5 + 8
+loop := true
+while loop do
+m := 0
+if 4 = 5 then
+i := 45
+fi
+done

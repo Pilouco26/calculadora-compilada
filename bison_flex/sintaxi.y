@@ -30,6 +30,7 @@ int result_size = 0;
 bool mode_assign = false;
 int esp = 0;
 int ifmode = 0;
+int while_mode = 0;
 int index_iterative = 0;
 char program_lines[200][200];
 int size_if = 0;
@@ -68,11 +69,11 @@ int size_if = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> WHILE ELSE IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
-%type <header> header if_header
+%type <header> header if_header else_header while_header
 %token <header> REPEAT
 
 %start programa
@@ -135,6 +136,20 @@ if_header:  IF OPERATION_BOOLEAN THEN {
                 ifmode = 1;
                 lines++;
            }
+while_header:  WHILE OPERATION_BOOLEAN DO {
+                $$.linea = lines;
+                while_mode = 1;
+                lines++;
+           }
+else_header: if_header ENDLINE expressio_list ELSE {
+                 ifmode = 0;
+                 char buffer[200];  // Buffer to hold the formatted output
+                 int current_line = lines;
+                 $$.linea = current_line;
+                 snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line+1); //tenir en compte el goto
+                 strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
+                 lines++;
+              }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
                     delta = yylineno - $1.linea;
@@ -152,6 +167,25 @@ expressio:
                     snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line);
                     strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                     }
+                | while_header ENDLINE expressio_list DONE {
+                    while_mode = 0;
+                    char buffer[200];  // Buffer to hold the formatted output
+                    int current_line = lines;
+                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line+1);
+                    strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
+                    current_line = lines;
+                    char buffer2[200];  // Buffer to hold the formatted output
+                    snprintf(buffer2, sizeof(buffer2), "%d : GOTO %d\n", current_line, $1.linea-1);
+                    strcat(program_lines[current_line], buffer2);  // Append to program_lines[$1.linia]
+                    lines++;
+                }
+                | else_header ENDLINE expressio_list FI {
+                    ifmode = 0;
+                    char buffer[200];  // Buffer to hold the formatted output
+                    int current_line = lines;
+                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line);
+                    strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
+                 }
                 | ID ASSIGN OPERATION {
                       sym_value_type existing_value;
                       int lookup_result = sym_lookup($1.lexema, &existing_value);
@@ -163,21 +197,14 @@ expressio:
                         char buffer[200];  // Buffer to hold the formatted output
 
                         // If the type is INT_TYPE
-                        if ($3.val_type == INT_TYPE) {
-                            //snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, (int)$3.val_int);
-                            //strcat(program_lines[lines], buffer);  // Append the assignment statement
-                            //lines++;  // Increment the line counter
+                        if ($3.val_type == INT_TYPE && list_size == 0) {
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, (int)$3.val_int);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
                         }
                         // If the type is FLOAT_TYPE
-                        else if ($3.val_type == FLOAT_TYPE) {
-                            //snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, $1.lexema, $3.val_float);
-                            //strcat(program_lines[lines], buffer);  // Append the assignment statement
-                            //lines++;  // Increment the line counter
-                        }
-                        // For STRING_TYPE
-                        else {
-                            strcat(program_lines[lines], buffer);  // Append to program_lines
-                            snprintf(buffer, sizeof(buffer), "%d : %s := %s\n", lines, $1.lexema, $3.val_string);
+                        else if ($3.val_type == FLOAT_TYPE && list_size == 0) {
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %f\n", lines, $1.lexema, $3.val_float);
                             strcat(program_lines[lines], buffer);  // Append the assignment statement
                             lines++;  // Increment the line counter
                         }
@@ -221,15 +248,15 @@ expressio:
                               }
                 }
                 | ID ASSIGN OPERATION_BOOLEAN {
-                            fprintf(yyout, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
-                            fprintf(stderr, "ID: %s (bool) pren per valor: %s\n", $1.lexema, $3.val_bool ? "true" : "false");
                             sym_value_type value_to_store;
                             value_to_store.val_type = $3.val_type;
                             value_to_store.val_bool = $3.val_bool; // Assuming $3 is a boolean
                             // Check if the symbol already exists, if not, initialize a new entry
-
                             sym_enter($1.lexema, &value_to_store);
-
+                            char buffer[200];  // Buffer to hold the formatted output
+                            snprintf(buffer, sizeof(buffer), "%d : %s := %d\n", lines, $1.lexema, $3.val_bool);
+                            strcat(program_lines[lines], buffer);  // Append the assignment statement
+                            lines++;  // Increment the line counter
                 }
                 | ID_BOOL ASSIGN OPERATION_BOOLEAN {
                 if ($3.val_type == UNKNOWN_TYPE) {
@@ -841,7 +868,8 @@ OPERATION_BOOLEAN3:
     | TRUE {
             $$.val_type = BOOL_TYPE;
             $$.val_bool = true;  // Use bool `true` instead of string "true"
-        }
+
+    }
     | ID_BOOL {
         sym_value_type value;
         int lookup_result;
@@ -851,109 +879,120 @@ OPERATION_BOOLEAN3:
             $$.val_type = value.val_type;  // Store the value for later use
             $$.val_bool = value.val_bool;
         }
-        else {
-        }
+
+
+        generate_if_statement_simple($$.val_bool, 1, "EQ");
+
+
     }
     | FALSE {
             $$.val_type = BOOL_TYPE;
             $$.val_bool = false;  // Use bool `false` instead of string "false"
      }
     | OPERATION EQUAL OPERATION {
-                     $$.val_type = BOOL_TYPE;
-                     if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                         if ($1.val_type == INT_TYPE) {
-                             $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                         }
-                         if ($3.val_type == INT_TYPE) {
-                             $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                         }
-                         $$.val_bool = $1.val_float == $3.val_float;
-                     } else {
-                         $$.val_bool = $1.val_int == $3.val_int;
-                         generate_if_statement($1.val_int, $3.val_int, "EQ");
+         $$.val_type = BOOL_TYPE;
+         if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+             if ($1.val_type == INT_TYPE) {
+                 $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+             }
+             if ($3.val_type == INT_TYPE) {
+                 $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+             }
+             $$.val_bool = $1.val_float == $3.val_float;
+             generate_if_statement($1, $3, "EQ", 0);
 
-                     }
+         } else {
+             $$.val_bool = $1.val_int == $3.val_int;
+             generate_if_statement($1, $3, "EQ", 1);
 
          }
+    }
     | OPERATION NOT_EQUAL OPERATION {
-                         $$.val_type = BOOL_TYPE;
-                         if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                             if ($1.val_type == INT_TYPE) {
-                                 $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                             }
-                             if ($3.val_type == INT_TYPE) {
-                                 $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                             }
-                             $$.val_bool = $1.val_float != $3.val_float;
-                         } else {
-                             $$.val_bool = $1.val_int != $3.val_int;
-                         }
-                         generate_if_statement($1.val_int, $3.val_int, "NE");
+             $$.val_type = BOOL_TYPE;
+             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                 if ($1.val_type == INT_TYPE) {
+                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                 }
+                 if ($3.val_type == INT_TYPE) {
+                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                 }
+                 $$.val_bool = $1.val_float != $3.val_float;
+                 generate_if_statement($1, $3, "NE", 0);
 
+             } else {
+                 $$.val_bool = $1.val_int != $3.val_int;
+             generate_if_statement($1, $3, "NE", 1);
+
+             }
          }
     | OPERATION GREATER_EQUAL OPERATION {
-                                             $$.val_type = BOOL_TYPE;
-                                             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                                 if ($1.val_type == INT_TYPE) {
-                                                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                                 }
-                                                 if ($3.val_type == INT_TYPE) {
-                                                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                                 }
-                                                 $$.val_bool = $1.val_float >= $3.val_float;
-                                             } else {
-                                                 $$.val_bool = $1.val_int >= $3.val_int;
-
-                                             }
+             $$.val_type = BOOL_TYPE;
+             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+                 if ($1.val_type == INT_TYPE) {
+                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+                 }
+                 if ($3.val_type == INT_TYPE) {
+                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+                 }
+                 $$.val_bool = $1.val_float >= $3.val_float;
+             } else {
+                 $$.val_bool = $1.val_int >= $3.val_int;
+                 generate_if_statement($1, $3, "GTE", 0);
+             }
+             generate_if_statement($1, $3, "GTE", 1);
          }
     | OPERATION GREATER_THAN OPERATION {
-    printf("hola");
-    printf("%d, %d less_equal \n", $1.val_type, $1.val_type);
+         $$.val_type = BOOL_TYPE;
+         if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+             if ($1.val_type == INT_TYPE) {
+                 $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+             }
+             if ($3.val_type == INT_TYPE) {
+                 $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+             }
+             $$.val_bool = $1.val_float > $3.val_float;
+             generate_if_statement($1, $3, "GTF", 0);
 
-                             $$.val_type = BOOL_TYPE;
-                             if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                 if ($1.val_type == INT_TYPE) {
-                                     $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                 }
-                                 if ($3.val_type == INT_TYPE) {
-                                     $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                 }
-                                 $$.val_bool = $1.val_float > $3.val_float;
-                             } else {
-                                 $$.val_bool = $1.val_int > $3.val_int;
-                             }
-                             generate_if_statement($1.val_int, $3.val_int, "NE");
+         } else {
+             $$.val_bool = $1.val_int > $3.val_int;
+             generate_if_statement($1, $3, "GTI", 1);
 
          }
+
+    }
     | OPERATION LESS_THAN OPERATION {
-                                 $$.val_type = BOOL_TYPE;
-                                 if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                     if ($1.val_type == INT_TYPE) {
-                                         $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                     }
-                                     if ($3.val_type == INT_TYPE) {
-                                         $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                     }
-                                     $$.val_bool = $1.val_float < $3.val_float;
-                                 } else {
-                                     $$.val_bool = $1.val_int < $3.val_int;
-                                 }
+         $$.val_type = BOOL_TYPE;
+         if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+             if ($1.val_type == INT_TYPE) {
+                 $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+             }
+             if ($3.val_type == INT_TYPE) {
+                 $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+             }
+             $$.val_bool = $1.val_float < $3.val_float;
+             generate_if_statement($1, $3, "LTF", 0);
+         } else {
+             $$.val_bool = $1.val_int < $3.val_int;
+             generate_if_statement($1, $3, "LTI", 1);
          }
+    }
     | OPERATION LESS_EQUAL OPERATION {
-    printf("%d, %d less_equal \n", $1.val_type, $1.val_type);
+         $$.val_type = BOOL_TYPE;
+         if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
+             if ($1.val_type == INT_TYPE) {
+                 $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
+             }
+             if ($3.val_type == INT_TYPE) {
+                 $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
+             }
+             $$.val_bool = $1.val_float <= $3.val_float;
+             generate_if_statement($1, $3, "LTE", 0);
+         } else {
+             $$.val_bool = $1.val_int <= $3.val_int;
+             generate_if_statement($1, $3, "LTE", 1);
 
-                                     $$.val_type = BOOL_TYPE;
-                                     if ($1.val_type == FLOAT_TYPE || $3.val_type == FLOAT_TYPE) {
-                                         if ($1.val_type == INT_TYPE) {
-                                             $1.val_float = (float) $1.val_int;  // Convert $1 from int to float
-                                         }
-                                         if ($3.val_type == INT_TYPE) {
-                                             $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
-                                         }
-                                         $$.val_bool = $1.val_float <= $3.val_float;
-                                     } else {
-                                         $$.val_bool = $1.val_int <= $3.val_int;
-                                     }
+         }
+
     }
 
 %%
