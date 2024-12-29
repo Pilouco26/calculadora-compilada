@@ -31,6 +31,8 @@ bool mode_assign = false;
 int esp = 0;
 int ifmode = 0;
 int while_mode = 0;
+int do_mode = 0;
+int do_lines = 0;
 int index_iterative = 0;
 char program_lines[200][200];
 int size_if = 0;
@@ -69,11 +71,11 @@ int size_if = 0;
 %token <real> FLOAT
 %token <ident> ID ID_BOOL
 %token <cadena> STRING
-%token <sense_valor> WHILE ELSE IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
+%token <sense_valor> UNTIL WHILE ELSE IF THEN FI EXTRALINE DO DONE OPENED_CLAUSE CLOSED_CLAUSE COMMENT SUBSTR COMMA LEN SIN COS TAN AND OR NOT PLUS MINUS MULTIPLY DIVIDE MOD POWER CLOSED_PARENTHESIS OPEN_PARENTHESIS ASSIGN ENDLINE SEMICOLON GREATER_THAN GREATER_EQUAL LESS_THAN LESS_EQUAL EQUAL NOT_EQUAL
 %type <sense_valor> programa
 %type <expr_val>  expressio OPERATION OPERATION2 OPERATION3 OPERATION4 OPERATION_BOOLEAN1 OPERATION_BOOLEAN2 OPERATION_BOOLEAN3 OPERATION_BOOLEAN
 %type <expr_list> expressio_list
-%type <header> header if_header else_header while_header
+%type <header> header if_header else_header while_header do_header
 %token <header> REPEAT
 
 %start programa
@@ -150,6 +152,11 @@ else_header: if_header ENDLINE expressio_list ELSE {
                  strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                  lines++;
               }
+do_header : DO ENDLINE{
+               do_mode = 1;
+               $$.linea = lines;
+               do_lines = lines;
+            }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
                     delta = yylineno - $1.linea;
@@ -167,6 +174,9 @@ expressio:
                     snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line);
                     strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                     }
+                | do_header expressio_list UNTIL OPERATION_BOOLEAN {
+                    do_mode = 0;
+                }
                 | while_header ENDLINE expressio_list DONE {
                     while_mode = 0;
                     char buffer[200];  // Buffer to hold the formatted output
@@ -899,11 +909,18 @@ OPERATION_BOOLEAN3:
                  $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
              }
              $$.val_bool = $1.val_float == $3.val_float;
-             generate_if_statement($1, $3, "EQ", 0);
+             if(do_mode)
+                generate_if_statement($1, $3, "EQ", 0, do_lines);
+             else
+                generate_if_statement($1, $3, "EQ", 0, lines+2);
+
 
          } else {
              $$.val_bool = $1.val_int == $3.val_int;
-             generate_if_statement($1, $3, "EQ", 1);
+             if(do_mode)
+                generate_if_statement($1, $3, "EQ", 1, do_lines);
+             else
+                generate_if_statement($1, $3, "EQ", 1, lines+2);
 
          }
     }
@@ -917,11 +934,17 @@ OPERATION_BOOLEAN3:
                      $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
                  }
                  $$.val_bool = $1.val_float != $3.val_float;
-                 generate_if_statement($1, $3, "NE", 0);
+             if(do_mode)
+                generate_if_statement($1, $3, "NE", 0, do_lines);
+             else
+                generate_if_statement($1, $3, "NE", 0, lines+2);
 
              } else {
                  $$.val_bool = $1.val_int != $3.val_int;
-             generate_if_statement($1, $3, "NE", 1);
+             if(do_mode)
+                generate_if_statement($1, $3, "NE", 1, do_lines);
+             else
+                generate_if_statement($1, $3, "NE", 1, lines+2);
 
              }
          }
@@ -937,9 +960,15 @@ OPERATION_BOOLEAN3:
                  $$.val_bool = $1.val_float >= $3.val_float;
              } else {
                  $$.val_bool = $1.val_int >= $3.val_int;
-                 generate_if_statement($1, $3, "GTE", 0);
+             if(do_mode)
+                generate_if_statement($1, $3, "GTE", 0, do_lines);
+             else
+                generate_if_statement($1, $3, "GTE", 0, lines+2);
              }
-             generate_if_statement($1, $3, "GTE", 1);
+             if(do_mode)
+                generate_if_statement($1, $3, "GTE", 1, do_lines);
+             else
+                generate_if_statement($1, $3, "GTE", 1, lines+2);
          }
     | OPERATION GREATER_THAN OPERATION {
          $$.val_type = BOOL_TYPE;
@@ -951,11 +980,17 @@ OPERATION_BOOLEAN3:
                  $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
              }
              $$.val_bool = $1.val_float > $3.val_float;
-             generate_if_statement($1, $3, "GTF", 0);
+             if(do_mode)
+                generate_if_statement($1, $3, "GTF", 0, do_lines);
+             else
+                generate_if_statement($1, $3, "GTF", 0, lines+2);
 
          } else {
              $$.val_bool = $1.val_int > $3.val_int;
-             generate_if_statement($1, $3, "GTI", 1);
+             if(do_mode)
+                generate_if_statement($1, $3, "GTI", 1, do_lines);
+             else
+                generate_if_statement($1, $3, "GTI", 1, lines+2);
 
          }
 
@@ -970,10 +1005,16 @@ OPERATION_BOOLEAN3:
                  $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
              }
              $$.val_bool = $1.val_float < $3.val_float;
-             generate_if_statement($1, $3, "LTF", 0);
+             if(do_mode)
+                generate_if_statement($1, $3, "LTF", 0, do_lines);
+             else
+                generate_if_statement($1, $3, "LTF", 0, lines+2);
          } else {
              $$.val_bool = $1.val_int < $3.val_int;
-             generate_if_statement($1, $3, "LTI", 1);
+             if(do_mode)
+                generate_if_statement($1, $3, "LTI", 1, do_lines);
+             else
+                generate_if_statement($1, $3, "LTI", 1, lines+2);
          }
     }
     | OPERATION LESS_EQUAL OPERATION {
@@ -986,10 +1027,16 @@ OPERATION_BOOLEAN3:
                  $3.val_float = (float) $3.val_int;  // Convert $3 from int to float
              }
              $$.val_bool = $1.val_float <= $3.val_float;
-             generate_if_statement($1, $3, "LTE", 0);
+             if(do_mode)
+                generate_if_statement($1, $3, "LTE", 0, do_lines);
+             else
+                generate_if_statement($1, $3, "LTE", 0, lines+2);
          } else {
              $$.val_bool = $1.val_int <= $3.val_int;
-             generate_if_statement($1, $3, "LTE", 1);
+             if(do_mode)
+                generate_if_statement($1, $3, "LTE", 1, do_lines);
+             else
+                generate_if_statement($1, $3, "LTE", 1, lines+2);
 
          }
 
