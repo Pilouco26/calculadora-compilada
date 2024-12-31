@@ -1,4 +1,4 @@
-i := 4
+i := 1
 for i in 9 do
-m := 0
+nonly := 4
 done

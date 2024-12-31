@@ -126,7 +126,10 @@ header:
                  }
      }
 for_header:  FOR ID IN INTEGER DO {
-            $$.lexema = $2.lexema;
+                $$.lexema = $2.lexema;
+                $$.contador = $4;
+                $$.linea = lines;
+                lines++;
            }
 if_header:  IF OPERATION_BOOLEAN THEN {
                 $$.linea = lines;
@@ -174,9 +177,11 @@ expressio:
                 }
                 | for_header ENDLINE expressio_list DONE {
                     char buffer[200];  // Buffer to hold the formatted output
-                    snprintf(buffer, sizeof(buffer), "%d : %s := %s + 1\n", lines++, $1.lexema, $1.lexema);
+                    snprintf(buffer, sizeof(buffer), "%d : %s := %s ADDI 1\n", lines++, $1.lexema, $1.lexema);
                     strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
-                    lines++;
+                    snprintf(buffer, sizeof(buffer), "%d : IF %s GT %d GOTO %d\n", $1.linea, $1.lexema, $1.contador, lines);
+                    strcat(program_lines[$1.linea], buffer);
+
                 }
                 | while_header ENDLINE expressio_list DONE {
                     while_mode = 0;
@@ -332,22 +337,19 @@ expressio:
                         YYABORT;
                     }
                     if ($1.val_type == INT_TYPE) {
-                       // fprintf(yyout, "(int) pren per valor: %d\n", (int)$1.val_int);
                         $1.val_type = INT_TYPE;
                         $1.val_int = (int)$1.val_int;
-                        call_put(list, &list_size, 0, (int)$1.val_int, 0);
+                        call_put(list, &list_size, $1.id_name);
                         print_list(list, list_size, number_list, number_size, float_list, float_size, " ");
 
 
                     } else if ($1.val_type == FLOAT_TYPE) {
-                        fprintf(yyout, "(real) pren per valor: %f\n", $1.val_float);
                         $1.val_type = FLOAT_TYPE;
                         $1.val_float = $1.val_float;
-                        call_put(list, &list_size, 0, $1.val_float, 1);
+                        call_put(list, &list_size, $1.id_name);
                         print_list(list, list_size, number_list, number_size, float_list, float_size, " ");
 
                     } else if ($1.val_type == STRING_TYPE) {
-                        fprintf(yyout, " (string) pren per valor: %s\n", $1.val_string);
                         $$.val_type = STRING_TYPE;
                         $$.val_string = $1.val_string;
                     }

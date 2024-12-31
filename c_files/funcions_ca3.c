@@ -170,7 +170,8 @@ void process_val_info2(three_address_code *item, int number_list[], int number_s
 
 void handle_float_operation(three_address_code *item, int i, char *id_name, int number_list[], int number_size, float float_list[], int *float_size, float result_list[], int *result_size, bool four_ac, int temporal_aux) {
     char buffer[200];
-	if(strcmp(last_op, "IDF") == 0 && last_transformation == item->val_info.val_float){
+	if(strcmp(last_op, "IDF") == 0 && last_transformation == item->val_info.val_float && last_temporal == 0){
+
       snprintf(buffer, sizeof(buffer), "$t%d ", last_temporal);
       strcat(program_lines[lines], buffer);  // Append to the current line
     }
@@ -181,7 +182,7 @@ void handle_float_operation(three_address_code *item, int i, char *id_name, int 
     snprintf(buffer, sizeof(buffer), "%s ", item->val_op);
     strcat(program_lines[lines], buffer);  // Append to the current line
     // Process the second value info
-    if(strcmp(last_op, "IDF") == 0 && last_transformation == item->val_info2.val_float){
+    if(strcmp(last_op, "IDF") == 0 && last_transformation == item->val_info2.val_float  && last_temporal == 0){
       snprintf(buffer, sizeof(buffer), "$t%d \n", last_temporal);
       strcat(program_lines[lines], buffer);  // Append to the current line
     }
@@ -256,7 +257,12 @@ void print_list(three_address_code list[], int size, int number_list[], int numb
         four_ac = false;
         if (strcmp(list[i].val_op, "CALL") == 0) {
             char buffer[200];
-            snprintf(buffer, sizeof(buffer), "%d : CALL PUTF, $t%d\n", lines++, temporal_aux - 2);
+            if( temporal_aux - 2 > 0)
+            	snprintf(buffer, sizeof(buffer), "%d : PARAM $t%d\n", lines++, temporal_aux - 2);
+			else
+            	snprintf(buffer, sizeof(buffer), "%d : PARAM %s\n", lines++, list[i].val_info.id_name);
+            strcat(program_lines[lines], buffer);  // Append to the current line
+            snprintf(buffer, sizeof(buffer), "%d : CALL PUTF, 1\n", lines++);
             strcat(program_lines[lines], buffer);  // Append to the current line
         } else {
             if (size == 1 || size == i + 1) {
@@ -563,30 +569,12 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
 }
 
 
-void call_put(three_address_code list[], int *list_size, float value_float, int value_int, int op){
-    if(op == 1){
-        three_address_code change;
-        change.val_info.val_float = -1;
-        change.val_info2.val_float = value_float;
-        change.type_op = 'F';
-        change.val_type_list = FLOAT_TYPE;
-    	change.val_info.val_type = FLOAT_TYPE;
-        change.val_op = "CALL";
-        list[*list_size] = change;
-    	(*list_size)++;
-    }
-    else{
-        three_address_code change;
-        change.val_info.val_int = -1;
-        change.val_info2.val_int = value_int;
-        change.type_op = 'I';
-        change.val_type_list = INT_TYPE;
-    	change.val_info.val_type = INT_TYPE;
-        change.val_op = "CALL";
-        list[*list_size] = change;
-    	(*list_size)++;
-    }
-
+void call_put(three_address_code list[], int *list_size, char * id){
+    three_address_code change;
+    change.val_op = "CALL";
+    change.val_info.id_name = strdup(id);
+    list[*list_size] = change;
+    (*list_size)++;
 }
 
 void add_to_float_list(float float_list[], int *float_size, float value) {

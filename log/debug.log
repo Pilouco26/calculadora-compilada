@@ -3,7 +3,7 @@
 --accepting rule at line 165 (" ")
 --accepting rule at line 138 (":=")
 --accepting rule at line 165 (" ")
---accepting rule at line 26 ("4")
+--accepting rule at line 26 ("1")
 --accepting rule at line 165 ("")
 --accepting rule at line 163 ("
 ")
@@ -19,11 +19,11 @@
 --accepting rule at line 165 ("")
 --accepting rule at line 163 ("
 ")
---accepting rule at line 114 ("m")
+--accepting rule at line 114 ("nonly")
 --accepting rule at line 165 (" ")
 --accepting rule at line 138 (":=")
 --accepting rule at line 165 (" ")
---accepting rule at line 26 ("0")
+--accepting rule at line 26 ("4")
 --accepting rule at line 165 ("")
 --accepting rule at line 163 ("
 ")
