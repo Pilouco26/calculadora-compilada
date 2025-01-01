@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <ctype.h>
 #include "dades.h"
 FILE *open_file_ca3();
 void close_file_ca3();
@@ -22,4 +23,6 @@ void add_three_address_code_float(three_address_code list[], int *list_size, flo
 void generate_power_logic( int *power, int *lines);
 void generate_if_statement(value_info val1, value_info val3, const char *op, int integer, int lines);
 void generate_if_statement_simple(int val1, int val3, const char *op);
+int if_headers(int line);
+void or_if_headers(int if_statements, int line, int line_to_go);
 #endif

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include <ctype.h>
 #include "../header_files/dades.h"
 
 
@@ -20,9 +21,11 @@ extern int comptador;
 extern int delta;
 extern int ifmode;
 extern int do_mode;
+extern int or_mode;
 
 extern bool mode_assign;
 extern char program_lines[200][200];
+extern bool_op_info boolean_operation[64];
 int last_temporal = -1;
 float last_transformation = -1.0;
 char *last_op = "X";
@@ -644,4 +647,99 @@ void generate_if_statement_simple(int val1, int val3, const char *op) {
     // Increment lines after appending
     lines++;
 
+}
+int if_headers(int line) {
+    char buffer[200];  // Buffer to hold the formatted output
+    int current_line = lines;
+
+    // Append formatted GOTO statement to program_lines[line]
+    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", line, current_line);
+    strcat(program_lines[line], buffer);
+
+    int modified_value = -1;  // Default to -1 to indicate no modification happened
+
+    // Modify program_lines[line-1] to increment the last digit
+    char *line_to_modify = program_lines[line - 1];
+    int len = strlen(line_to_modify);
+
+    // Find the position of the last digit in the string
+    int i = len - 1;
+    while (i >= 0 && !isdigit(line_to_modify[i])) {
+        i--;
+    }
+
+    // If a digit was found, increment it
+    if (i >= 0) {
+        // Extract the number and increment it
+        int num_start = i;
+        while (num_start >= 0 && isdigit(line_to_modify[num_start])) {
+            num_start--;
+        }
+        num_start++;
+
+        // Extract the number as a string, convert to int, increment
+        char num_buffer[20];
+        strncpy(num_buffer, &line_to_modify[num_start], i - num_start + 1);
+        num_buffer[i - num_start + 1] = '\0';
+        int number = atoi(num_buffer) + 1;
+
+        // Replace the original number with the incremented one
+        snprintf(num_buffer, sizeof(num_buffer), "%d", number);
+        strncpy(&line_to_modify[num_start], num_buffer, strlen(num_buffer));
+
+        // Ensure the string is null-terminated if the new number is shorter
+        line_to_modify[num_start + strlen(num_buffer)] = '\0';
+
+        // Store the modified value to return
+        modified_value = number;
+    }
+
+    // Add a newline character at the end if not already present
+    if (line_to_modify[strlen(line_to_modify) - 1] != '\n') {
+        strcat(line_to_modify, "\n");
+    }
+
+    return modified_value;
+}
+void or_if_headers(int if_statements, int line, int line_to_go) {
+    char buffer[200]; // Buffer for appending lines
+
+    for (int i = 1, j = 0; i < if_statements; i++, j++) {
+        // Get the line to modify
+        char *line_to_modify = program_lines[line - i];
+        int len = strlen(line_to_modify);
+
+        if (boolean_operation[j].val_op == 0) {
+
+        } else {
+            // Find the position of the last digit in the string
+            int k = len - 1;
+            while (k >= 0 && !isdigit(line_to_modify[k])) {
+                k--;
+            }
+
+            // If a digit was found, replace it with line_to_go
+            if (k >= 0) {
+                // Find the start of the number
+                int num_start = k;
+                while (num_start >= 0 && isdigit(line_to_modify[num_start])) {
+                    num_start--;
+                }
+                num_start++;
+
+                // Replace the original number with line_to_go
+                char num_buffer[20];
+                snprintf(num_buffer, sizeof(num_buffer), "%d", line_to_go);
+                strncpy(&line_to_modify[num_start], num_buffer, strlen(num_buffer));
+
+                // Ensure the string is null-terminated if the new number is shorter
+                line_to_modify[num_start + strlen(num_buffer)] = '\0';
+            }
+
+            // Add a newline character at the end if not already present
+            if (line_to_modify[strlen(line_to_modify) - 1] != '\n') {
+                strcat(line_to_modify, "\n");
+            }
+        }
+    }
 }

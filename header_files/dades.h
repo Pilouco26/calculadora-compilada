@@ -44,6 +44,11 @@ typedef struct {
 } value_info;
 
 typedef struct {
+  int val_op;
+  int val_line;
+} bool_op_info;
+
+typedef struct {
   char *lexema;
   int length;
   int line;
