@@ -25,4 +25,7 @@ void generate_if_statement(value_info val1, value_info val3, const char *op, int
 void generate_if_statement_simple(int val1, int val3, const char *op);
 int if_headers(int line);
 void or_if_headers(int if_statements, int line, int line_to_go);
+void add_boolean_operation(bool_op_info *boolean_operation, int *size, int line, int op);
+bool already_exists(bool_op_info *boolean_operation, int size, int line);
+void modify_last_digit( int line);
 #endif

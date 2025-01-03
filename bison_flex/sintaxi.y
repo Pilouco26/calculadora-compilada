@@ -21,7 +21,8 @@ char *id_list[1024];
 int number_list[1024];
 float float_list[1024];
 float result_list[1024];
-int goto_jump [];
+int goto_jump [64];
+int goto_index = 0;
 int list_size = 0;
 int number_size = 0;
 int float_size = 0;
@@ -34,6 +35,7 @@ int while_mode = 0;
 int do_mode = 0;
 int do_lines = 0;
 int index_iterative = 0;
+int while_mode_min  = 200;
 char program_lines[200][200];
 int size_if = 0;
 int and_mode = 0;
@@ -90,10 +92,15 @@ int boolean_operation_size = 0;
 
 programa : expressio_list {
              fprintf(yyout, "End of input reached.\n");
-             for (int i = 0; i < 200; i++) {
+             for (int i = 0; i < lines; i++) {
                      if (program_lines[i][0] != '\0') {  // Check if the line is not empty
                          fprintf(file_ca3, "%s", program_lines[i]);
                      }
+             }
+             for (int i = 0; i < boolean_operation_size; i++) {
+                          fprintf(file_ca3, "%d", boolean_operation[i].val_line);
+                          fprintf(file_ca3, " %d\n", boolean_operation[i].val_op);
+
              }
 }
 
@@ -170,12 +177,9 @@ expressio:
                 }
                 | if_header ENDLINE expressio_list FI {
                     ifmode = 0;
-                    int line_to_go = if_headers($1.linea);
-                    if (or_mode) {
-                        //or_if_headers(if_statements, $1.linea, line_to_go);
-                        or_mode = 0;
-                        if_statements = 0;
-                    }
+                    int current_line = lines-1;
+                    if_headers($1.linea);
+                    modify_last_digit(current_line);
                 }
                 | do_header expressio_list UNTIL OPERATION_BOOLEAN {
                     do_mode = 0;
@@ -199,9 +203,10 @@ expressio:
                     //strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                     current_line = lines;
                     char buffer2[200];  // Buffer to hold the formatted output
-                    snprintf(buffer2, sizeof(buffer2), "%d : GOTO %d\n", current_line, $1.linea-1);
-                    strcat(program_lines[current_line], buffer2);  // Append to program_lines[$1.linia]
-                    lines++;
+                    modify_last_digit(current_line);
+                                        snprintf(buffer2, sizeof(buffer2), "%d : GOTO %d\n", current_line, while_mode_min);
+                                        strcat(program_lines[current_line], buffer2);  // Append to program_lines[$1.linia]
+                                        lines++;
                 }
                 | else_header ENDLINE expressio_list FI {
                     ifmode = 0;
@@ -854,31 +859,37 @@ OPERATION_BOOLEAN:
                                 $$.val_bool = $1.val_bool || $3.val_bool;
                                 }
                                 or_mode = 1;
-                                boolean_operation[boolean_operation_size].val_op = 1;
-                                boolean_operation[boolean_operation_size].val_line = lines-1;
-                                boolean_operation_size++;
+                                add_boolean_operation(boolean_operation, &boolean_operation_size, $1.linea-2, 1);
+                                add_boolean_operation(boolean_operation, &boolean_operation_size, $3.linea-2, 1);
+                                goto_jump [goto_index++] = lines;
     }
-    | OPERATION_BOOLEAN1
+    | OPERATION_BOOLEAN1 {  $$.linea = $1.linea;
+    }
 ;
 OPERATION_BOOLEAN1:
-    OPERATION_BOOLEAN2
+    OPERATION_BOOLEAN2{
+            $$.linea = $1.linea;
+    }
     | OPERATION_BOOLEAN1 AND OPERATION_BOOLEAN2{
             $$.val_type = BOOL_TYPE;
             if ($1.val_type == BOOL_TYPE && $3.val_type == BOOL_TYPE) {
                 $$.val_bool = $1.val_bool && $3.val_bool;
             }
-            boolean_operation[boolean_operation_size].val_op = 0;
-            boolean_operation[boolean_operation_size].val_line = lines-1;
-            boolean_operation_size++;
-
+            add_boolean_operation(boolean_operation, &boolean_operation_size, $1.linea-2, 0);
+            add_boolean_operation(boolean_operation, &boolean_operation_size, $3.linea-2, 0);
+            goto_jump [goto_index++] = lines;
     }
 OPERATION_BOOLEAN2:
-    OPERATION_BOOLEAN3
+    OPERATION_BOOLEAN3{
+            $$.linea = $1.linea;
+    }
     | NOT OPERATION_BOOLEAN2{
             $$.val_type = BOOL_TYPE;
             if ($2.val_type == BOOL_TYPE) {
                 $$.val_bool = !$2.val_bool;
             }
+            $$.linea = $2.linea;
+
     }
 OPERATION_BOOLEAN3:
     OPEN_PARENTHESIS OPERATION_BOOLEAN CLOSED_PARENTHESIS {
@@ -888,6 +899,7 @@ OPERATION_BOOLEAN3:
             } else {
                 $$.val_bool = $2.val_bool;
             }
+            $$.linea = $2.linea;
         }
     | TRUE {
             $$.val_type = BOOL_TYPE;
@@ -936,6 +948,8 @@ OPERATION_BOOLEAN3:
              else
                 generate_if_statement($1, $3, "EQ", 1, lines+1);
 
+         $$.linea = lines;
+
          }
 if_statements++;
 
@@ -963,6 +977,8 @@ if_statements++;
                 generate_if_statement($1, $3, "NE", 1, lines+1);
 
              }
+         $$.linea = lines;
+
 if_statements++;
          }
     | OPERATION GREATER_EQUAL OPERATION {
@@ -987,6 +1003,8 @@ if_statements++;
              else
                 generate_if_statement($1, $3, "GTE", 1, lines+1);
         if_statements++;
+         $$.linea = lines;
+
          }
     | OPERATION GREATER_THAN OPERATION {
          $$.val_type = BOOL_TYPE;
@@ -1015,6 +1033,8 @@ if_statements++;
                 generate_if_statement($1, $3, "GTI", 1, lines+1);
          }
         if_statements++;
+         $$.linea = lines;
+
     }
     | OPERATION LESS_THAN OPERATION {
          $$.val_type = BOOL_TYPE;
@@ -1038,6 +1058,7 @@ if_statements++;
                 generate_if_statement($1, $3, "LTI", 1, lines+1);
          }
         if_statements++;
+         $$.linea = lines;
 
     }
     | OPERATION LESS_EQUAL OPERATION {
@@ -1062,6 +1083,8 @@ if_statements++;
                 generate_if_statement($1, $3, "LTE", 1, lines+1);
          }
         if_statements++;
+         $$.linea = lines;
+
     }
 
 %%

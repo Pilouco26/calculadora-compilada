@@ -1,7 +1,19 @@
 1 : START
 2 : total := 4
-3 : IF total GT 9 GOTO 7
-4 : i := 111
-5 : total := total ADDI 1
-6 : GOTO 3
-7 : HALT
+3 : IF total EQ 3 GOTO 18
+4 : GOTO 5
+5 : IF total EQ 4 GOTO 7
+6 : GOTO 7
+7 : IF total EQ 5 GOTO 9
+8 : GOTO 9
+9 : IF total NE -1 GOTO 11
+10 : GOTO 11
+11 : IF total NE 2 GOTO 13
+12 : GOTO 19
+13 : i := 111
+14 : $t0 := IDF 9.000000
+15 : $t1 := $t0 MULF 8.100000
+16 : $t2 := IDF 47.000000
+17 : jota := 47.000000 ADDF $t1 
+18 : GOTO 3
+19 : HALT

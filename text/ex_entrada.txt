@@ -1,4 +1,5 @@
 total := 4
-    for total in 9 do
+while total = 3 or total = 4 and total = 5 or total <> -1 and total <> 2 do
      i := 111
-     done
+     jota := 47 + 9 * 8.1
+done
