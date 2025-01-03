@@ -21,6 +21,7 @@ char *id_list[1024];
 int number_list[1024];
 float float_list[1024];
 float result_list[1024];
+int goto_jump [];
 int list_size = 0;
 int number_size = 0;
 int float_size = 0;
@@ -139,26 +140,23 @@ for_header:  FOR ID IN INTEGER DO {
 if_header:  IF OPERATION_BOOLEAN THEN {
                 $$.linea = lines;
                 ifmode = 1;
-                lines++;
            }
 while_header:  WHILE OPERATION_BOOLEAN DO {
                 $$.linea = lines;
                 while_mode = 1;
-                lines++;
            }
 else_header: if_header ENDLINE expressio_list ELSE {
                  ifmode = 0;
                  char buffer[200];  // Buffer to hold the formatted output
                  int current_line = lines;
                  $$.linea = current_line;
-                 snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line+1); //tenir en compte el goto
-                 strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                  lines++;
+                 int line_to_go = if_headers($1.linea);
               }
 do_header : DO ENDLINE{
                do_mode = 1;
                $$.linea = lines;
-               do_lines = lines;
+               do_lines = lines-1;
             }
 expressio:
                 header DO ENDLINE expressio_list DONE ENDLINE{
@@ -174,7 +172,7 @@ expressio:
                     ifmode = 0;
                     int line_to_go = if_headers($1.linea);
                     if (or_mode) {
-                        or_if_headers(if_statements, $1.linea, line_to_go);
+                        //or_if_headers(if_statements, $1.linea, line_to_go);
                         or_mode = 0;
                         if_statements = 0;
                     }
@@ -186,15 +184,19 @@ expressio:
                     char buffer[200];  // Buffer to hold the formatted output
                     snprintf(buffer, sizeof(buffer), "%d : %s := %s ADDI 1\n", lines++, $1.lexema, $1.lexema);
                     strcat(program_lines[lines - 1], buffer);  // Append to program_lines[lines - 1]
+                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", lines++, $1.linea);
+                    strcat(program_lines[lines -1], buffer);  // Append to program_lines[lines - 1]
                     snprintf(buffer, sizeof(buffer), "%d : IF %s GT %d GOTO %d\n", $1.linea, $1.lexema, $1.contador, lines);
                     strcat(program_lines[$1.linea], buffer);
                 }
                 | while_header ENDLINE expressio_list DONE {
+                    int line_to_go = if_headers($1.linea);
+
                     while_mode = 0;
                     char buffer[200];  // Buffer to hold the formatted output
                     int current_line = lines;
-                    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line+1);
-                    strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
+                    //snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", $1.linea, current_line+1);
+                    //strcat(program_lines[$1.linea], buffer);  // Append to program_lines[$1.linia]
                     current_line = lines;
                     char buffer2[200];  // Buffer to hold the formatted output
                     snprintf(buffer2, sizeof(buffer2), "%d : GOTO %d\n", current_line, $1.linea-1);

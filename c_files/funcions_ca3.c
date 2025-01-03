@@ -22,6 +22,7 @@ extern int delta;
 extern int ifmode;
 extern int do_mode;
 extern int or_mode;
+extern int while_mode;
 
 extern bool mode_assign;
 extern char program_lines[200][200];
@@ -607,25 +608,25 @@ void generate_if_statement(value_info val1, value_info val3, const char *op, int
     if (integer == 1) {
 
         if (val1.id_name != NULL && val3.id_name != NULL) {
-            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %s GOTO %d\n", lines, val1.id_name, op, val3.id_name, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %s GOTO %d\n", lines, val1.id_name, op, val3.id_name, line+1);
         } else if (val1.id_name != NULL) {
-            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %d GOTO %d\n", lines, val1.id_name, op, val3.val_int, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %d GOTO %d\n", lines, val1.id_name, op, val3.val_int, line+1);
         } else if (val3.id_name != NULL) {
-            snprintf(buffer, sizeof(buffer), "%d : IF %d %s %s GOTO %d\n", lines, val1.val_int, op, val3.id_name, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %d %s %s GOTO %d\n", lines, val1.val_int, op, val3.id_name, line+1);
         } else {
-            snprintf(buffer, sizeof(buffer), "%d : IF %d %s %d GOTO %d\n", lines, val1.val_int, op, val3.val_int, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %d %s %d GOTO %d\n", lines, val1.val_int, op, val3.val_int, line+1);
         }
 
     } else {
 
         if (val1.id_name != NULL && val3.id_name != NULL) {
-            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %s GOTO %d\n", lines, val1.id_name, op, val3.id_name, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %s GOTO %d\n", lines, val1.id_name, op, val3.id_name, line+1);
         } else if (val1.id_name != NULL) {
-            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %f GOTO %d\n", lines, val1.id_name, op, val3.val_float, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %s %s %f GOTO %d\n", lines, val1.id_name, op, val3.val_float, line+1);
         } else if (val3.id_name != NULL) {
-            snprintf(buffer, sizeof(buffer), "%d : IF %f %s %s GOTO %d\n", lines, val1.val_float, op, val3.id_name, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %f %s %s GOTO %d\n", lines, val1.val_float, op, val3.id_name, line+1);
         } else {
-            snprintf(buffer, sizeof(buffer), "%d : IF %f %s %f GOTO %d\n", lines, val1.val_float, op, val3.val_float, line);
+            snprintf(buffer, sizeof(buffer), "%d : IF %f %s %f GOTO %d\n", lines, val1.val_float, op, val3.val_float, line+1);
         }
 
     }
@@ -635,6 +636,14 @@ void generate_if_statement(value_info val1, value_info val3, const char *op, int
 
     // Increment lines after appending
     lines++;
+    int next_line = lines+1;
+    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", lines, next_line);
+        // Append the string to the current line in program_line
+    strcat(program_lines[lines], buffer);
+
+    // Increment lines after appending
+    lines++;
+
 }
 void generate_if_statement_simple(int val1, int val3, const char *op) {
 
@@ -650,11 +659,12 @@ void generate_if_statement_simple(int val1, int val3, const char *op) {
 }
 int if_headers(int line) {
     char buffer[200];  // Buffer to hold the formatted output
-    int current_line = lines;
-
-    // Append formatted GOTO statement to program_lines[line]
-    snprintf(buffer, sizeof(buffer), "%d : GOTO %d\n", line, current_line);
-    strcat(program_lines[line], buffer);
+    int current_line = lines-1;
+    // Append formatted GOTO statement to program_lines[line
+    if(while_mode)
+		snprintf(program_lines[line - 1], sizeof(program_lines[line - 1]), "%d : GOTO %d\n", line - 1, current_line+1);
+    else
+      	snprintf(program_lines[line - 1], sizeof(program_lines[line - 1]), "%d : GOTO %d\n", line - 1, current_line);
 
     int modified_value = -1;  // Default to -1 to indicate no modification happened
 
@@ -704,7 +714,7 @@ int if_headers(int line) {
 void or_if_headers(int if_statements, int line, int line_to_go) {
     char buffer[200]; // Buffer for appending lines
 
-    for (int i = 1, j = 0; i < if_statements; i++, j++) {
+    for (int i = 2, j = 0; i < if_statements; i++, j++) {
         // Get the line to modify
         char *line_to_modify = program_lines[line - i];
         int len = strlen(line_to_modify);

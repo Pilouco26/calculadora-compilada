@@ -1,9 +1,7 @@
 1 : START
 2 : total := 4
-3 : IF total GTF 666.599976 GOTO 4
-4 : IF total EQ 500.000000 GOTO 8
-5 : IF total EQ 400.000000 GOTO 8
-6 : IF total EQ 350 GOTO 8
-7 : GOTO 9
-8 : i := 111
-9 : HALT
+3 : IF total GT 9 GOTO 7
+4 : i := 111
+5 : total := total ADDI 1
+6 : GOTO 3
+7 : HALT

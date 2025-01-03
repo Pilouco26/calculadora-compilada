@@ -1,4 +1,4 @@
 total := 4
-if total > 666.6 and total = 500.0 or total = 400.0 or total = 350 then
- i := 111
-fi
+    for total in 9 do
+     i := 111
+     done

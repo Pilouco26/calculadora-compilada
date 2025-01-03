@@ -1,1 +1,1 @@
-floatfloatfloatEnd of input reached.
+End of input reached.
